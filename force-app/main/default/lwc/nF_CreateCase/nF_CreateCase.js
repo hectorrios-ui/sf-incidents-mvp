@@ -33,4 +33,10 @@ export default class NF_CreateCase extends LightningElement {
                 this.isLoading = false;
             });
     }
+
+    handleReset() {
+        this.showSuccess = false;
+        this.caseNumber = '';
+        this.errorMessage = '';
+    }
 }
