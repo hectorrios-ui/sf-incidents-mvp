@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>TimeToResolveHours__c</fullName>
+    <description>Hours elapsed from feedback creation to first terminal resolution (Resolved or UAT Complete).</description>
+    <externalId>false</externalId>
+    <label>Time To Resolve (hrs)</label>
+    <precision>10</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,27 @@
+# Salesforce
+.sf/
+.sfdx/
+*.bak
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/settings.json
+.cursor/
+
+# Secrets — never commit
+# (credential shells with REPLACE_ME are safe and intentionally tracked)
+
+# Assets not needed in repo
+assets/canvas/
+assets/presentation/
+"Agentforce Exam Preparation.md"
+"Agentforce Exam Preparation 2.md"
+"Agentforce Study Guide.md"
+Agentforce-Decision-Diagram.html
+Screenshots-Index.md
+figma-prototype-screens-documentation.md
+figma-to-lwc/
+aws/
+seed-data/

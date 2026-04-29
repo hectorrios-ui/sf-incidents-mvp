@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <description>Status of the feedback item tracked</description>
+    <label>Status</label>
+    <required>true</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>New</fullName>
+                <default>true</default>
+                <label>New</label>
+            </value>
+            <value>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+                <label>In Progress</label>
+            </value>
+            <value>
+                <fullName>Dev Ready</fullName>
+                <default>false</default>
+                <label>Dev Ready</label>
+            </value>
+            <value>
+                <fullName>Dev In-Progress</fullName>
+                <default>false</default>
+                <label>Dev In-Progress</label>
+            </value>
+            <value>
+                <fullName>Ready for QA (Dev Complete)</fullName>
+                <default>false</default>
+                <label>Ready for QA (Dev Complete)</label>
+            </value>
+            <value>
+                <fullName>QA Fail - Defect Resolution</fullName>
+                <default>false</default>
+                <label>QA Fail - Defect Resolution</label>
+            </value>
+            <value>
+                <fullName>Ready for UAT</fullName>
+                <default>false</default>
+                <label>Ready for UAT</label>
+            </value>
+            <value>
+                <fullName>UAT Complete</fullName>
+                <default>false</default>
+                <label>UAT Complete</label>
+            </value>
+            <value>
+                <fullName>Resolved</fullName>
+                <default>false</default>
+                <label>Resolved</label>
+            </value>
+            <value>
+                <fullName>Deferred - Future Phase</fullName>
+                <default>false</default>
+                <label>Deferred - Future Phase</label>
+            </value>
+            <value>
+                <fullName>Blocked</fullName>
+                <default>false</default>
+                <label>Blocked</label>
+            </value>
+            <value>
+                <fullName>Reopened</fullName>
+                <default>false</default>
+                <label>Reopened</label>
+            </value>
+            <value>
+                <fullName>Cancelled</fullName>
+                <default>false</default>
+                <label>Cancelled</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

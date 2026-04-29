@@ -1,0 +1,12 @@
+# Excluded from deploy: GenAi metadata uses org-specific schema (versionIdentifier, etc.)
+# Configure these in the org via Setup / Prompt Builder / Agent Builder if needed.
+force-app/main/default/genAiPromptTemplates/
+force-app/main/default/genAiFunctions/
+
+# Credential files are safe to commit — secrets are replaced with REPLACE_ME placeholders.
+# After deploying to a new org, update the actual values in Setup:
+#   - Slack_Webhook NC → paste the Slack incoming webhook URL
+#   - LLM_Provider_API_Key External Credential → paste the AI API key
+
+**/jsconfig.json
+**/.eslintrc.json
