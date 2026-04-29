@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <customErrors>
+        <name>Processing_Method_should_match_Record_Type</name>
+        <label>Processing Method should match Record Type</label>
+        <locationX>459</locationX>
+        <locationY>528</locationY>
+        <customErrorMessages>
+            <errorMessage>Processing Method should match Record Type.</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <decisions>
+        <name>Check_if_RecordType_and_Processing_Method_mismatch</name>
+        <label>Check if RecordType and Processing Method mismatch</label>
+        <locationX>448</locationX>
+        <locationY>343</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>RecordType_and_Processing_Method_mismatch</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.RecordType.Name</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.ProcessingMethod__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Processing_Method_should_match_Record_Type</targetReference>
+            </connector>
+            <label>RecordType and Processing Method mismatch</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <interviewLabel>Record Type Processing Method Validation {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Record Type Processing Method Validation</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>330</locationX>
+        <locationY>48</locationY>
+        <connector>
+            <targetReference>Check_if_RecordType_and_Processing_Method_mismatch</targetReference>
+        </connector>
+        <object>LoyaltyPartnerProcessConfiguration__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Draft</status>
+</Flow>

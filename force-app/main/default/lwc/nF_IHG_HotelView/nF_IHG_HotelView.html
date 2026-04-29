@@ -1,0 +1,235 @@
+<template>
+    <div class="hotel-view-wrapper">
+
+        <!-- Top Nav Bar -->
+        <div class="top-nav">
+            <div class="nav-logo">IHG® Hotels &amp; Resorts</div>
+            <div class="nav-search">
+                <lightning-input
+                    placeholder="Search..."
+                    variant="label-hidden"
+                    class="nav-search-input"
+                ></lightning-input>
+            </div>
+            <div class="nav-icons">
+                <lightning-button-icon icon-name="utility:apps" variant="bare" alternative-text="Apps" class="nav-icon"></lightning-button-icon>
+                <lightning-button-icon icon-name="utility:notification" variant="bare" alternative-text="Notifications" class="nav-icon"></lightning-button-icon>
+                <lightning-button-icon icon-name="utility:help" variant="bare" alternative-text="Help" class="nav-icon"></lightning-button-icon>
+                <lightning-button-icon icon-name="utility:settings" variant="bare" alternative-text="Settings" class="nav-icon"></lightning-button-icon>
+            </div>
+        </div>
+
+        <!-- Record Header -->
+        <div class="record-header">
+            <div class="record-breadcrumb">SCC IHG RU Prod &rsaquo; Hotels</div>
+            <div class="record-title-row">
+                <lightning-icon icon-name="standard:account" size="small" class="record-icon"></lightning-icon>
+                <h1 class="record-name">{hotelName}</h1>
+                <div class="record-actions">
+                    <lightning-button label="Follow" variant="neutral" onclick={handleFollow}></lightning-button>
+                    <lightning-button label="Edit" variant="neutral" onclick={handleEdit}></lightning-button>
+                    <lightning-button label="New Note" variant="neutral" onclick={handleNewNote}></lightning-button>
+                </div>
+            </div>
+        </div>
+
+        <!-- No Account state -->
+        <template if:true={showNoRecord}>
+            <div class="no-record-state">
+                <lightning-icon icon-name="utility:account" size="large" class="no-record-icon"></lightning-icon>
+                <h2 class="no-record-heading">No Hotel Selected</h2>
+                <p class="no-record-body">Open this component from an Account record page, or select a hotel from a case to load the hotel view.</p>
+            </div>
+        </template>
+
+        <!-- Error state -->
+        <template if:true={showRecordError}>
+            <div class="no-record-state">
+                <lightning-icon icon-name="utility:error" size="large" variant="error" class="no-record-icon"></lightning-icon>
+                <h2 class="no-record-heading">Could Not Load Hotel</h2>
+                <p class="no-record-body">The account record could not be retrieved. Check that you have access to this record and try again.</p>
+            </div>
+        </template>
+
+        <!-- Main Layout -->
+        <template if:true={_accountRecord}>
+        <div class="hotel-layout">
+
+            <!-- Left Sidebar: Recent Open Cases -->
+            <aside class="cases-sidebar">
+                <div class="sidebar-header">
+                    <span class="sidebar-title">Recent Open Cases ({openCaseCount})</span>
+                </div>
+                <template if:true={isLoadingCases}>
+                    <div class="sidebar-spinner">
+                        <lightning-spinner size="small" alternative-text="Loading cases..."></lightning-spinner>
+                    </div>
+                </template>
+                <ul class="cases-sidebar-list">
+                    <template for:each={recentCases} for:item="cs">
+                        <li key={cs.id} class="sidebar-case-item" data-caseid={cs.id} onclick={handleCaseClick}>
+                            <div class="sidebar-case-top">
+                                <lightning-icon icon-name="standard:case" size="x-small" class="case-sidebar-icon"></lightning-icon>
+                                <div class="sidebar-case-info">
+                                    <div class="sidebar-case-contact">{cs.contactName}</div>
+                                    <div class="sidebar-case-subject">{cs.subject}</div>
+                                    <div class="sidebar-case-date">{cs.formattedDate}</div>
+                                </div>
+                            </div>
+                        </li>
+                    </template>
+                    <template if:false={hasCases}>
+                        <li class="no-cases-sidebar">No open cases found.</li>
+                    </template>
+                </ul>
+                <div class="sidebar-footer">
+                    <a href="#" class="view-all-link" onclick={handleViewAll}>View All</a>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="hotel-main">
+
+                <!-- Tabs -->
+                <lightning-tabset active-tab-value="details" class="hotel-tabs">
+                    <lightning-tab label="Search" value="search">
+                        <div class="tab-content">
+                            <lightning-input
+                                label="Search cases, contacts, reservations..."
+                                placeholder="Type to search..."
+                                class="tab-search-input"
+                            ></lightning-input>
+                        </div>
+                    </lightning-tab>
+                    <lightning-tab label="Related" value="related">
+                        <div class="tab-content">
+                            <p class="tab-placeholder">Related records will appear here.</p>
+                        </div>
+                    </lightning-tab>
+                    <lightning-tab label="Timeline" value="timeline">
+                        <div class="tab-content">
+                            <p class="tab-placeholder">Timeline activities will appear here.</p>
+                        </div>
+                    </lightning-tab>
+                    <lightning-tab label="Details" value="details">
+                        <div class="hotel-detail-content">
+
+                            <!-- Hotel Logo -->
+                            <div class="hotel-logo-card">
+                                <div class="hotel-logo-text">{hotelBrand}</div>
+                            </div>
+
+                            <!-- Hotel Information Section -->
+                            <div class="detail-section">
+                                <div class="section-header" onclick={toggleHotelInfo} role="button" tabindex="0">
+                                    <lightning-icon
+                                        icon-name={hotelInfoIcon}
+                                        size="x-small"
+                                        class="section-toggle-icon"
+                                    ></lightning-icon>
+                                    <span class="section-title">Hotel Information</span>
+                                </div>
+                                <template if:true={showHotelInfo}>
+                                    <div class="section-body">
+                                        <div class="field-row">
+                                            <span class="field-label">Name</span>
+                                            <span class="field-value">{hotelData.name}</span>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">Hotel ID</span>
+                                            <span class="field-value">{hotelData.hotelId}</span>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">Phone</span>
+                                            <span class="field-value">{hotelData.phone}</span>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">Brand</span>
+                                            <span class="field-value">{hotelData.brand}</span>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">Type</span>
+                                            <span class="field-value">{hotelData.type}</span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Address Information Section -->
+                            <div class="detail-section">
+                                <div class="section-header" onclick={toggleAddressInfo} role="button" tabindex="0">
+                                    <lightning-icon
+                                        icon-name={addressInfoIcon}
+                                        size="x-small"
+                                        class="section-toggle-icon"
+                                    ></lightning-icon>
+                                    <span class="section-title">Address Information</span>
+                                </div>
+                                <template if:true={showAddressInfo}>
+                                    <div class="section-body">
+                                        <div class="field-row">
+                                            <span class="field-label">Street</span>
+                                            <span class="field-value">{hotelData.street}</span>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">City</span>
+                                            <span class="field-value">{hotelData.city}</span>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">State</span>
+                                            <span class="field-value">{hotelData.state}</span>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">Zip</span>
+                                            <span class="field-value">{hotelData.zip}</span>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">Country</span>
+                                            <span class="field-value">{hotelData.country}</span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Additional Information Section -->
+                            <div class="detail-section">
+                                <div class="section-header" onclick={toggleAdditionalInfo} role="button" tabindex="0">
+                                    <lightning-icon
+                                        icon-name={additionalInfoIcon}
+                                        size="x-small"
+                                        class="section-toggle-icon"
+                                    ></lightning-icon>
+                                    <span class="section-title">Additional Information</span>
+                                </div>
+                                <template if:true={showAdditionalInfo}>
+                                    <div class="section-body">
+                                        <div class="field-row">
+                                            <span class="field-label">ILA Exp. Date</span>
+                                            <span class="field-value">{hotelData.ilaExpirationDate}</span>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">Website</span>
+                                            <span class="field-value">{hotelData.website}</span>
+                                        </div>
+                                        <div class="field-row">
+                                            <span class="field-label">Fax</span>
+                                            <span class="field-value">{hotelData.fax}</span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                        </div>
+                    </lightning-tab>
+                    <lightning-tab label="Reservations" value="reservations">
+                        <div class="tab-content">
+                            <p class="tab-placeholder">Reservations will appear here.</p>
+                        </div>
+                    </lightning-tab>
+                </lightning-tabset>
+
+            </main>
+        </div>
+        </template>
+    </div>
+</template>

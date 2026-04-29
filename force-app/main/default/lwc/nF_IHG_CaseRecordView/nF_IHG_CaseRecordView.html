@@ -1,0 +1,301 @@
+<template>
+    <div class="case-record-wrapper">
+
+        <!-- Top Nav -->
+        <div class="top-nav">
+            <div class="nav-logo">IHG® Hotels &amp; Resorts</div>
+            <div class="nav-search">
+                <lightning-input
+                    placeholder="Search..."
+                    variant="label-hidden"
+                    class="nav-search-input"
+                ></lightning-input>
+            </div>
+            <div class="nav-icons">
+                <lightning-button-icon icon-name="utility:apps" variant="bare" alternative-text="Apps"></lightning-button-icon>
+                <lightning-button-icon icon-name="utility:notification" variant="bare" alternative-text="Notifications"></lightning-button-icon>
+                <lightning-button-icon icon-name="utility:help" variant="bare" alternative-text="Help"></lightning-button-icon>
+                <lightning-button-icon icon-name="utility:settings" variant="bare" alternative-text="Settings"></lightning-button-icon>
+            </div>
+        </div>
+
+        <!-- Record Header -->
+        <div class="record-header">
+            <div class="breadcrumb">{breadcrumb}</div>
+            <div class="case-title-row">
+                <span class="case-icon-box"></span>
+                <h1 class="case-title">{caseData.subject}</h1>
+            </div>
+
+            <!-- Case Progress Path -->
+            <div class="case-path">
+                <template for:each={caseStages} for:item="stage">
+                    <div key={stage.value} class={stage.cssClass} data-stage={stage.value} onclick={handleStageClick}>
+                        <span class="stage-label">{stage.label}</span>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <template if:true={isLoading}>
+            <div class="loading-overlay">
+                <lightning-spinner alternative-text="Loading case..." size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- 3-Column Layout -->
+        <div class="case-columns">
+
+            <!-- Left Column: Case Details -->
+            <aside class="left-panel">
+
+                <!-- Case Details -->
+                <div class="detail-card">
+                    <div class="card-header" onclick={toggleCaseDetails} role="button" tabindex="0">
+                        <lightning-icon icon-name={caseDetailsIcon} size="x-small"></lightning-icon>
+                        <span class="card-title">Case Details</span>
+                        <lightning-button-icon
+                            icon-name="utility:edit"
+                            variant="bare"
+                            size="x-small"
+                            alternative-text="Edit"
+                            onclick={handleEditCase}
+                            class="edit-btn"
+                        ></lightning-button-icon>
+                    </div>
+                    <template if:true={showCaseDetails}>
+                        <div class="card-body">
+                            <div class="field-row">
+                                <span class="field-label">Case Number</span>
+                                <span class="field-value">{caseData.caseNumber}</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">Case Owner</span>
+                                <span class="field-value link-value">{caseData.ownerName}</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">Status</span>
+                                <span class={caseStatusClass}>{caseData.status}</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">Case Reason</span>
+                                <span class="field-value">{caseData.caseReason}</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">Description</span>
+                                <span class="field-value">{caseData.description}</span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Primary Guest Information -->
+                <div class="detail-card">
+                    <div class="card-header" onclick={toggleGuestInfo} role="button" tabindex="0">
+                        <lightning-icon icon-name={guestInfoIcon} size="x-small"></lightning-icon>
+                        <span class="card-title">Primary Guest Information</span>
+                        <lightning-button-icon
+                            icon-name="utility:edit"
+                            variant="bare"
+                            size="x-small"
+                            alternative-text="Edit"
+                            onclick={handleEditGuest}
+                            class="edit-btn"
+                        ></lightning-button-icon>
+                    </div>
+                    <template if:true={showGuestInfo}>
+                        <div class="card-body">
+                            <div class="field-row">
+                                <span class="field-label">IHG Rewards #</span>
+                                <span class="field-value">{caseData.guestRewardsNumber}</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">Name</span>
+                                <span class="field-value link-value">{caseData.contactName}</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">Email</span>
+                                <span class="field-value">{caseData.contactEmail}</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">Phone</span>
+                                <span class="field-value">{caseData.contactPhone}</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">Language</span>
+                                <span class="field-value">{caseData.primaryLanguage}</span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Reservation Information -->
+                <div class="detail-card">
+                    <div class="card-header" onclick={toggleReservationInfo} role="button" tabindex="0">
+                        <lightning-icon icon-name={reservationInfoIcon} size="x-small"></lightning-icon>
+                        <span class="card-title">Reservation Information</span>
+                    </div>
+                    <template if:true={showReservationInfo}>
+                        <div class="card-body">
+                            <div class="field-row">
+                                <span class="field-label">Reservation #</span>
+                                <span class="field-value">{caseData.reservationNumber}</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">Property</span>
+                                <span class="field-value">{caseData.propertyName}</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">Hotel</span>
+                                <span class="field-value">{caseData.accountName}</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">Check-In</span>
+                                <span class="field-value">{caseData.checkInDate}</span>
+                            </div>
+                            <div class="field-row">
+                                <span class="field-label">Check-Out</span>
+                                <span class="field-value">{caseData.checkOutDate}</span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+            </aside>
+
+            <!-- Center Column: Timeline -->
+            <div class="center-panel">
+                <lightning-tabset active-tab-value="timeline">
+                    <lightning-tab label="Timeline" value="timeline">
+                        <div class="timeline-content">
+
+                            <!-- Upcoming & Overdue -->
+                            <div class="timeline-section">
+                                <div class="timeline-section-label">Upcoming &amp; Overdue</div>
+                                <template if:true={hasActivities}>
+                                    <template for:each={activities} for:item="act">
+                                        <div key={act.id} class="activity-item">
+                                            <lightning-icon
+                                                icon-name={act.icon}
+                                                size="x-small"
+                                                class="activity-icon"
+                                            ></lightning-icon>
+                                            <div class="activity-info">
+                                                <div class="activity-title">{act.title}</div>
+                                                <div class="activity-meta">{act.who} &middot; {act.date}</div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </template>
+                                <template if:false={hasActivities}>
+                                    <div class="no-activities">
+                                        <p class="no-activities-text">No activities to show.</p>
+                                        <p class="no-activities-sub">Use email or a task to track activities.</p>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Past Activities -->
+                            <div class="timeline-section">
+                                <div class="timeline-section-label">Past Activities</div>
+                                <template for:each={pastActivities} for:item="act">
+                                    <div key={act.id} class="activity-item">
+                                        <lightning-icon
+                                            icon-name={act.icon}
+                                            size="x-small"
+                                            class="activity-icon"
+                                        ></lightning-icon>
+                                        <div class="activity-info">
+                                            <div class="activity-title">{act.title}</div>
+                                            <div class="activity-meta">{act.who} &middot; {act.date}</div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <div class="timeline-footer">
+                                <p class="timeline-footer-text">To change what's shown, try changing your filters.</p>
+                                <lightning-button label="Show More" variant="brand" size="small"></lightning-button>
+                            </div>
+                        </div>
+                    </lightning-tab>
+                    <lightning-tab label="Related" value="related">
+                        <div class="tab-placeholder-content">
+                            <p>Related records will appear here.</p>
+                        </div>
+                    </lightning-tab>
+                </lightning-tabset>
+            </div>
+
+            <!-- Right Column: Milestones + AI Summary -->
+            <aside class="right-panel">
+
+                <!-- Milestones -->
+                <div class="milestones-card">
+                    <div class="milestones-header">
+                        <span class="milestones-title">Milestones</span>
+                        <span class="milestones-stats">{milestonesStats}</span>
+                    </div>
+                    <div class="milestones-body">
+                        <div class="milestone-item">
+                            <lightning-icon icon-name="utility:check" size="x-small" class="milestone-icon"></lightning-icon>
+                            <span class="milestone-label">Case Completed</span>
+                        </div>
+                        <a href="#" class="show-more-link">Show More</a>
+                    </div>
+                </div>
+
+                <!-- AI Summary -->
+                <c-n-f_-i-h-g_-guest-ai-summary
+                    record-id={recordId}
+                    record-title={aiSummaryTitle}
+                ></c-n-f_-i-h-g_-guest-ai-summary>
+
+            </aside>
+
+        </div>
+
+        <!-- Edit Case Modal -->
+        <c-n-f_-i-h-g_-modal
+            title="Edit Case"
+            confirm-label="Save"
+            cancel-label="Cancel"
+            show-confirm
+            is-open={showEditModal}
+            is-loading={isSaving}
+            onclose={handleEditModalClose}
+            onconfirm={handleEditModalSave}
+        >
+            <div class="modal-form">
+                <lightning-input
+                    label="Subject"
+                    value={editForm.subject}
+                    data-field="subject"
+                    onchange={handleEditFormChange}
+                ></lightning-input>
+                <lightning-combobox
+                    label="Status"
+                    value={editForm.status}
+                    options={statusOptions}
+                    data-field="status"
+                    onchange={handleEditFormChange}
+                ></lightning-combobox>
+                <lightning-combobox
+                    label="Case Reason"
+                    value={editForm.caseReason}
+                    options={caseReasonOptions}
+                    data-field="caseReason"
+                    onchange={handleEditFormChange}
+                ></lightning-combobox>
+                <lightning-textarea
+                    label="Description"
+                    value={editForm.description}
+                    data-field="description"
+                    onchange={handleEditFormChange}
+                ></lightning-textarea>
+            </div>
+        </c-n-f_-i-h-g_-modal>
+
+    </div>
+</template>

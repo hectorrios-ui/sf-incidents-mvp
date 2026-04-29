@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Segment_Volume_Variance_High</name>
+        <label>Segment Volume Variance High</label>
+        <locationX>782</locationX>
+        <locationY>574</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <stringValue>{!$Record.Name} refresh volume variance is high.  Previous volume was {!$Record__Prior.LastSegmentMemberCount}.  This run volume is {!$Record.LastSegmentMemberCount}.  This is a variance of {!VolumeVariance}</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <stringValue>guestdatasupport@ihg.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>PROD - {!$Record.Name} refresh volume variance is high. </stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Email_for_Segment_Refresh_Errors</name>
+        <label>Send Email for Segment Refresh Errors</label>
+        <locationX>540</locationX>
+        <locationY>353</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <stringValue>{!$Record.Name} refresh incomplete</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <stringValue>guestdatacloudsupport@ihg.com</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>PROD {!$Record.Name} segment refresh incomplete</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+    </actionCalls>
+    <apiVersion>57.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Decision_1</name>
+        <label>Decision 1</label>
+        <locationX>768</locationX>
+        <locationY>347</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Segment_Refresh_Errorred</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.PublishStatus</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>ERROR</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Email_for_Segment_Refresh_Errors</targetReference>
+            </connector>
+            <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+            <label>Segment Refresh Errorred</label>
+        </rules>
+        <rules>
+            <name>Check_Volume_Variance</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>VolumeVariance</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <numberValue>20.0</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Segment_Volume_Variance_High</targetReference>
+            </connector>
+            <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+            <label>Check Volume Variance</label>
+        </rules>
+    </decisions>
+    <description>F36326 Data Cloud Data Stream Failure Monitoring</description>
+    <environments>Default</environments>
+    <formulas>
+        <description>Checks volume variance from the previous segment refresh run</description>
+        <name>VolumeVariance</name>
+        <dataType>Number</dataType>
+        <expression>ABS(({!$Record.LastSegmentMemberCount}-{!$Record__Prior.LastSegmentMemberCount})/{!$Record__Prior.LastSegmentMemberCount}*100)</expression>
+        <scale>0</scale>
+    </formulas>
+    <interviewLabel>Data Cloud Segment Refresh Failure {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Data Cloud Segment Refresh Failure</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>650</locationX>
+        <locationY>48</locationY>
+        <connector>
+            <targetReference>Decision_1</targetReference>
+        </connector>
+        <object>MarketSegment</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Obsolete</status>
+</Flow>

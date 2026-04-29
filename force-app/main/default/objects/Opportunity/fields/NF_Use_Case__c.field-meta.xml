@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NF_Use_Case__c</fullName>
+    <label>Use Case / Scope</label>
+    <length>255</length>
+    <type>Text</type>
+    <description>Brief description of the main use case or scope of this engagement. Used by the Accelerator Recommender to improve matching accuracy.</description>
+</CustomField>

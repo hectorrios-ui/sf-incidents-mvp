@@ -1,0 +1,34 @@
+<template>
+    <div class="landing-wrapper">
+        <!-- IHG Header -->
+        <div class="landing-header">
+            <div class="ihg-logo-text">IHG® HOTELS &amp; RESORTS</div>
+            <p class="landing-tagline">Click on a tile below to view the design.</p>
+        </div>
+
+        <!-- Tile Grid -->
+        <div class="tile-grid">
+            <template for:each={tiles} for:item="tile">
+                <div
+                    key={tile.id}
+                    class="tile-card"
+                    data-tile={tile.id}
+                    onclick={handleTileClick}
+                    role="button"
+                    tabindex="0"
+                    onkeypress={handleTileKeyPress}
+                >
+                    <div class="tile-icon">
+                        <lightning-icon
+                            icon-name={tile.icon}
+                            size="medium"
+                            class="tile-icon-el"
+                        ></lightning-icon>
+                    </div>
+                    <h3 class="tile-title">{tile.title}</h3>
+                    <p class="tile-description">{tile.description}</p>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>

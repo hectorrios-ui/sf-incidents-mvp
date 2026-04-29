@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <constants>
+        <description>Error Message to be shown if there are related records to the triggering Guest Preference Code</description>
+        <name>ErrorMessage</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Guest Preference Code cannot be deleted because it is currently selected by one or more guests in Salesforce.</stringValue>
+        </value>
+    </constants>
+    <customErrors>
+        <description>If there is at least one Special Request or Guest Preference related to the triggering Guest Preference Code - prevent it</description>
+        <name>PreventDeletionOfGuestPreferenceCode</name>
+        <label>Prevent Deletion Of Guest Preference Code</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <customErrorMessages>
+            <errorMessage>{!ErrorMessage}</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <decisions>
+        <description>Checks if there is at least one related Guest Preference to the triggering Guest Preference Code</description>
+        <name>AreThereRelatedGuestPreferences</name>
+        <label>Are There Related Guest Preferences?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Yes_AreThereRelatedGuestPreferences</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>QueryRelatedGuestPreferences</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>PreventDeletionOfGuestPreferenceCode</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Checks if there is at least one related Special Request to the triggering Guest Preference Code</description>
+        <name>AreThereRelatedSpecialRequests</name>
+        <label>Are There Related Special Requests?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>QueryRelatedGuestPreferences</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Yes_AreThereRelatedSpecialRequests</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>QueryRelatedSpecialRequests</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <isGoTo>true</isGoTo>
+                <targetReference>PreventDeletionOfGuestPreferenceCode</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <description>The flow prevents deletion of Guest Preference Code is there is at least one related Special Request or Guest Preference</description>
+    <environments>Default</environments>
+    <interviewLabel>Guest Preference Code - Before Delete - Restrict deletion if in use - {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Guest Preference Code - Before Delete - Restrict deletion if in use</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Queries Guest Preferences linked to the Guest Preference Code which is being deleted</description>
+        <name>QueryRelatedGuestPreferences</name>
+        <label>Query Related Guest Preferences</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>AreThereRelatedGuestPreferences</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>hapi__GuestPreferenceCode__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>hapi__GuestPreference__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Queries Special Requests linked to the Guest Preference Code which is being deleted</description>
+        <name>QueryRelatedSpecialRequests</name>
+        <label>Query Related Special Requests</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>AreThereRelatedSpecialRequests</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>hapi__PreferenceCode__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>hapi__SpecialRequest__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>QueryRelatedSpecialRequests</targetReference>
+        </connector>
+        <object>hapi__GuestPreferenceCode__c</object>
+        <recordTriggerType>Delete</recordTriggerType>
+        <triggerType>RecordBeforeDelete</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

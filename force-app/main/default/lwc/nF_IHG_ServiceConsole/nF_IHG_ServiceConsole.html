@@ -1,0 +1,58 @@
+<template>
+    <div class="console-wrapper">
+
+        <!-- Back Button (shown when not on landing) -->
+        <template if:false={isLanding}>
+            <div class="back-bar">
+                <lightning-button-icon
+                    icon-name="utility:left"
+                    variant="bare"
+                    size="small"
+                    alternative-text="Back to Home"
+                    onclick={handleBackToLanding}
+                    class="back-icon"
+                ></lightning-button-icon>
+                <span class="back-label" onclick={handleBackToLanding}>Back to Home</span>
+                <span class="current-view-label">/ {currentViewLabel}</span>
+            </div>
+        </template>
+
+        <!-- Landing Page -->
+        <template if:true={isLanding}>
+            <c-n-f_-i-h-g_-landing-page
+                ontileselect={handleTileSelect}
+            ></c-n-f_-i-h-g_-landing-page>
+        </template>
+
+        <!-- Case Creation LWC -->
+        <template if:true={isCaseCreation}>
+            <c-n-f_-i-h-g_-case-creation
+                oncaseselected={handleCaseSelected}
+            ></c-n-f_-i-h-g_-case-creation>
+        </template>
+
+        <!-- AI Summary LWC -->
+        <template if:true={isAiSummary}>
+            <c-n-f_-i-h-g_-guest-ai-summary
+                record-id={activeRecordId}
+                record-title={activeRecordTitle}
+            ></c-n-f_-i-h-g_-guest-ai-summary>
+        </template>
+
+        <!-- Hotel View -->
+        <template if:true={isHotelView}>
+            <c-n-f_-i-h-g_-hotel-view
+                record-id={activeRecordId}
+                oncaseopen={handleHotelCaseOpen}
+            ></c-n-f_-i-h-g_-hotel-view>
+        </template>
+
+        <!-- Case Record View (SCC) -->
+        <template if:true={isCaseRecordView}>
+            <c-n-f_-i-h-g_-case-record-view
+                record-id={activeRecordId}
+            ></c-n-f_-i-h-g_-case-record-view>
+        </template>
+
+    </div>
+</template>

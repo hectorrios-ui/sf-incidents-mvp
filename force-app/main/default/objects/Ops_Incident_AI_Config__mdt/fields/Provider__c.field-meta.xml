@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Provider__c</fullName>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <label>Provider</label>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>OpenAI_Chat</fullName><default>true</default><label>OpenAI Chat Completions</label></value>
+            <value><fullName>Anthropic_Messages</fullName><default>false</default><label>Anthropic Messages (Claude)</label></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

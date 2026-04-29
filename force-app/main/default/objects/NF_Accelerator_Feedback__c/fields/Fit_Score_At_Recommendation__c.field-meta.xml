@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Fit_Score_At_Recommendation__c</fullName>
+    <label>Fit Score at Recommendation</label>
+    <precision>5</precision>
+    <scale>2</scale>
+    <type>Number</type>
+    <description>The score (0-100) the system assigned when this accelerator was recommended. Used to calibrate ranking over time.</description>
+</CustomField>

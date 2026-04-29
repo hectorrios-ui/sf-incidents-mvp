@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>In case of any exception is thrown during Contact Point Email creation the correspondent log entries are added to buffer.</description>
+        <name>AddCreateContactPointEmailErrorLog</name>
+        <label>Add Create Contact Point Email Error Log</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>IHGFlowRecordLogEntry</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>IsContactPhoneNull</targetReference>
+        </connector>
+        <dataTypeMappings>
+            <typeName>T__record</typeName>
+            <typeValue>ContactPointEmail</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>faultMessage</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>flowName</name>
+            <value>
+                <elementReference>FlowAPIName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>loggingLevelName</name>
+            <value>
+                <elementReference>ErrorLoggingLevel</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>FailedToCreateContactPointEmailErrorMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>record</name>
+            <value>
+                <elementReference>ContactPointEmailToCreate</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>IHGFlowRecordLogEntry</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <description>In case of any exception is thrown during Contact Point Phone creation the correspondent log entries are added to buffer.</description>
+        <name>AddCreateContactPointPhoneErrorLog</name>
+        <label>Add Create Contact Point Phone Error Log</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>IHGFlowRecordLogEntry</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>CreateDefaultOptInCommSubscriptionConsents</targetReference>
+        </connector>
+        <dataTypeMappings>
+            <typeName>T__record</typeName>
+            <typeValue>ContactPointPhone</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>faultMessage</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>flowName</name>
+            <value>
+                <elementReference>FlowAPIName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>loggingLevelName</name>
+            <value>
+                <elementReference>ErrorLoggingLevel</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>FailedToCreateContactPointPhoneErrorMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>record</name>
+            <value>
+                <elementReference>ContactPointPhoneToCreate</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>IHGFlowRecordLogEntry</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <description>In case of any exception is thrown during Individual creation the correspondent log entries are added to buffer.</description>
+        <name>AddCreateIndividualErrorLog</name>
+        <label>Add Create Individual Error Log</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>IHGFlowRecordLogEntry</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>SaveAllLogs</targetReference>
+        </connector>
+        <dataTypeMappings>
+            <typeName>T__record</typeName>
+            <typeValue>Individual</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>faultMessage</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>flowName</name>
+            <value>
+                <elementReference>FlowAPIName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>loggingLevelName</name>
+            <value>
+                <elementReference>ErrorLoggingLevel</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>FailedToCreateIndividualErrorMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>record</name>
+            <value>
+                <elementReference>IndividualRecordToCreate</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>IHGFlowRecordLogEntry</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <description>In case of any exception is thrown during Contact update the correspondent log entries are added to buffer.</description>
+        <name>AddUpdateContactErrorLog</name>
+        <label>Add Update Contact Error Log</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>IHGFlowRecordLogEntry</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>SaveUpdateContactErrorLogs</targetReference>
+        </connector>
+        <dataTypeMappings>
+            <typeName>T__record</typeName>
+            <typeValue>Contact</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>faultMessage</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>flowName</name>
+            <value>
+                <elementReference>FlowAPIName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>loggingLevelName</name>
+            <value>
+                <elementReference>ErrorLoggingLevel</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>FailedToUpdateContactErrorMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>record</name>
+            <value>
+                <elementReference>ContactWithPopulatedIndividualId</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>IHGFlowRecordLogEntry</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <description>Calls InvocableMethod that creates default Communication Subscription Consents with Status = &quot;OptIn&quot; based on provided inputs.</description>
+        <name>CreateDefaultOptInCommSubscriptionConsents</name>
+        <label>Create Default OptIn Comm Subscription Consents</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>DefaultCommSubscriptionConsentsCreator</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>SaveAllLogs</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>contact</name>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>primaryContactPointEmailId</name>
+            <value>
+                <elementReference>ContactPointEmailToCreate.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>primaryContactPointPhoneId</name>
+            <value>
+                <elementReference>ContactPointPhoneToCreate.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>DefaultCommSubscriptionConsentsCreator</nameSegment>
+        <offset>0</offset>
+    </actionCalls>
+    <actionCalls>
+        <description>Saves all logs added in Logger internal buffer during the flow execution</description>
+        <name>SaveAllLogs</name>
+        <label>Save All Logs</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>IHGFlowSaveLog</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <nameSegment>IHGFlowSaveLog</nameSegment>
+        <offset>0</offset>
+    </actionCalls>
+    <actionCalls>
+        <description>Save only those logs which generated for Contact Update failure. Cannot be intersected with &quot;Save All Logs&quot; as &quot;Delete Individual&quot; below can fail and with this element we are ready for it</description>
+        <name>SaveUpdateContactErrorLogs</name>
+        <label>Save Update Contact Error Logs</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>IHGFlowSaveLog</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>DeleteIndividual</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <nameSegment>IHGFlowSaveLog</nameSegment>
+        <offset>0</offset>
+    </actionCalls>
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <description>Element populates all necessary fields for Contact Point Email</description>
+        <name>PrepareContactPointEmailRecord</name>
+        <label>Prepare Contact Point Email Record</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>ContactPointEmailToCreate.ActiveFromDate</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Flow.CurrentDate</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>ContactPointEmailToCreate.EmailAddress</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Email</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>ContactPointEmailToCreate.IsPrimary</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>ContactPointEmailToCreate.ParentId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>IndividualRecordToCreate.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>CreateContactPointEmailForIndividual</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Element populates all necessary fields for Contact Point Phone</description>
+        <name>PrepareContactPointPhoneRecord</name>
+        <label>Prepare Contact Point Phone Record</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>ContactPointPhoneToCreate.ActiveFromDate</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Flow.CurrentDate</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>ContactPointPhoneToCreate.TelephoneNumber</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Phone</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>ContactPointPhoneToCreate.IsPrimary</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>ContactPointPhoneToCreate.ParentId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>IndividualRecordToCreate.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>CreateContactPointPhoneForIndividual</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Sets Contact Id and IndividualId to the record</description>
+        <name>PrepareContactRecordForUpdate</name>
+        <label>Prepare Contact Record for Update</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>ContactWithPopulatedIndividualId.Id</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>ContactWithPopulatedIndividualId.IndividualId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>IndividualRecordToCreate.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>UpdateContactWithIndividualId</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Populates all the fields on Individual record based on Contact information</description>
+        <name>PrepareIndividualRecord</name>
+        <label>Prepare Individual Record</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>IndividualRecordToCreate.FirstName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.FirstName</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>IndividualRecordToCreate.LastName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.LastName</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>IndividualRecordToCreate.ContactID__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>CreateIndividual</targetReference>
+        </connector>
+    </assignments>
+    <constants>
+        <description>Logging level to be used for Flow errors</description>
+        <name>ErrorLoggingLevel</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>ERROR</stringValue>
+        </value>
+    </constants>
+    <constants>
+        <description>Current Flow API Name used for logging</description>
+        <name>FlowAPIName</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Create_Individual_and_Contact_Point_Records</stringValue>
+        </value>
+    </constants>
+    <decisions>
+        <description>Checks if the Contact has an email address</description>
+        <name>IsContactEmailNull</name>
+        <label>Is Contact Email null?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>IsContactPhoneNull</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Yes, it&apos;s null</defaultConnectorLabel>
+        <rules>
+            <name>IsContactEmailNull_No</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Email</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>PrepareContactPointEmailRecord</targetReference>
+            </connector>
+            <label>No, it&apos;s populated</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Checks if the Contact has a phone</description>
+        <name>IsContactPhoneNull</name>
+        <label>Is Contact Phone null?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>CreateDefaultOptInCommSubscriptionConsents</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Yes, it&apos;s null</defaultConnectorLabel>
+        <rules>
+            <name>IsContactPhoneNull_No</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Phone</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>PrepareContactPointPhoneRecord</targetReference>
+            </connector>
+            <label>No, it&apos;s populated</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Checks if Individual Id on Contact is null in order to understand the further steps. If it&apos;s null, we need to create records, if it&apos;s not - all necessary records have already been created.</description>
+        <name>IsIndividualIdNull</name>
+        <label>Is Individual Id null?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>PrepareIndividualRecord</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Yes, it&apos;s null</defaultConnectorLabel>
+        <rules>
+            <name>IsIndividualIdNull_No</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.IndividualId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <label>No, it&apos;s populated</label>
+        </rules>
+    </decisions>
+    <description>Creates Individual and Contact Point records when a Member Contact is created or an existing contact is changed to a Member Contact.</description>
+    <environments>Default</environments>
+    <formulas>
+        <description>Error message to be logged for the case when a Contact Point Email record creation failed</description>
+        <name>FailedToCreateContactPointEmailErrorMessage</name>
+        <dataType>String</dataType>
+        <expression>&quot;Failed to create a Contact Point Email record for the Contact with ID=&quot; + {!$Record.Id}</expression>
+    </formulas>
+    <formulas>
+        <description>Error message to be logged for the case when a Contact Point Phone record creation failed</description>
+        <name>FailedToCreateContactPointPhoneErrorMessage</name>
+        <dataType>String</dataType>
+        <expression>&quot;Failed to create a Contact Point Phone record for the Contact with ID=&quot; + {!$Record.Id}</expression>
+    </formulas>
+    <formulas>
+        <description>Error message to be logged for the case when an Individual record creation failed</description>
+        <name>FailedToCreateIndividualErrorMessage</name>
+        <dataType>String</dataType>
+        <expression>&quot;Failed to create an Individual record for the Contact with ID=&quot; + {!$Record.Id}</expression>
+    </formulas>
+    <formulas>
+        <description>Error message to be logged for the case when a Contact record update failed</description>
+        <name>FailedToUpdateContactErrorMessage</name>
+        <dataType>String</dataType>
+        <expression>&quot;Failed to update the Contact (ID=&quot; + {!$Record.Id} + &quot;) with the Individual lookup; the Individual record creation was rolled back&quot;</expression>
+    </formulas>
+    <interviewLabel>Create Individual and Contact Point Records {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Create Individual and Contact Point Records</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <description>Creates Contact Point Email for Individual. All fields must be set in the previous element.</description>
+        <name>CreateContactPointEmailForIndividual</name>
+        <label>Create Contact Point Email for Individual</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>IsContactPhoneNull</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>AddCreateContactPointEmailErrorLog</targetReference>
+        </faultConnector>
+        <inputReference>ContactPointEmailToCreate</inputReference>
+    </recordCreates>
+    <recordCreates>
+        <description>Creates Contact Point Phone for Individual. All fields must be set in the previous element.</description>
+        <name>CreateContactPointPhoneForIndividual</name>
+        <label>Create Contact Point Phone for Individual</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>CreateDefaultOptInCommSubscriptionConsents</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>AddCreateContactPointPhoneErrorLog</targetReference>
+        </faultConnector>
+        <inputReference>ContactPointPhoneToCreate</inputReference>
+    </recordCreates>
+    <recordCreates>
+        <description>Creates an Individual record based on the info from Contact record</description>
+        <name>CreateIndividual</name>
+        <label>Create Individual for Contact</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>PrepareContactRecordForUpdate</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>AddCreateIndividualErrorLog</targetReference>
+        </faultConnector>
+        <inputReference>IndividualRecordToCreate</inputReference>
+    </recordCreates>
+    <recordDeletes>
+        <description>In case if Contact cannot be updated with IndividualId we want to roll back the creation of the Individual record.
+
+As of Feb 26, Roll Back elements is not available in this flow. This element is a workaround to achieve the same behavior. &quot;Custom Error&quot; element doesn&apos;t work properly in Async Path (or in Fault Path) and in case if Contact update is failed we want to roll back creation of Individual. This element handles success and fail scenario: if it gets deleted - roll back has happened, if deletion has failed - unhandled exception is thrown and the transaction is rolled back.
+
+NOTE: Since &quot;Delete Individual&quot; can fail and we are ok with that - ensure that logging method is always ahead of this element.</description>
+        <name>DeleteIndividual</name>
+        <label>Delete Individual</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <inputReference>IndividualRecordToCreate</inputReference>
+    </recordDeletes>
+    <recordUpdates>
+        <description>Updates the triggering Contact with created Individual ID.</description>
+        <name>UpdateContactWithIndividualId</name>
+        <label>Update Contact with Individual Id</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>IsContactEmailNull</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>AddUpdateContactErrorLog</targetReference>
+        </faultConnector>
+        <inputReference>ContactWithPopulatedIndividualId</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+        <filterFormula>{!$Record.RecordType.DeveloperName} = &quot;Member_Contact&quot;</filterFormula>
+        <object>Contact</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <scheduledPaths>
+            <connector>
+                <targetReference>IsIndividualIdNull</targetReference>
+            </connector>
+            <pathType>AsyncAfterCommit</pathType>
+        </scheduledPaths>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>In case if Triggering Contact has Email populated the flow creates ContactPointEmail record. This variable is populated with the necessary fields if the condition is met.</description>
+        <name>ContactPointEmailToCreate</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>ContactPointEmail</objectType>
+    </variables>
+    <variables>
+        <description>In case if Triggering Contact has Phone populated the flow creates ContactPointPhone record. This variable is populated with the necessary fields if the condition is met.</description>
+        <name>ContactPointPhoneToCreate</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>ContactPointPhone</objectType>
+    </variables>
+    <variables>
+        <description>Contact record with IndividualId field is populated after it&apos;s creation</description>
+        <name>ContactWithPopulatedIndividualId</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Contact</objectType>
+    </variables>
+    <variables>
+        <description>A record of Individual object populated with fields from Contact</description>
+        <name>IndividualRecordToCreate</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Individual</objectType>
+    </variables>
+</Flow>

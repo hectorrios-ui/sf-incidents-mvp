@@ -1,0 +1,91 @@
+<template>
+    <div class="ai-summary-wrapper">
+
+        <!-- Header -->
+        <div class="summary-header">
+            <div class="header-left">
+                <lightning-icon
+                    icon-name="utility:einstein"
+                    size="small"
+                    class="ai-icon"
+                ></lightning-icon>
+                <span class="header-title">Guest AI Summary</span>
+            </div>
+            <lightning-button
+                label="Generate AI Summary"
+                icon-name="utility:einstein"
+                variant="neutral"
+                onclick={handleGenerate}
+                disabled={isGenerating}
+            ></lightning-button>
+        </div>
+
+        <!-- Loading -->
+        <template if:true={isGenerating}>
+            <div class="loading-container">
+                <lightning-spinner alternative-text="Generating AI Summary..." size="medium"></lightning-spinner>
+                <p class="loading-label">Generating summary with AI...</p>
+            </div>
+        </template>
+
+        <!-- Empty State -->
+        <template if:true={showEmptyState}>
+            <div class="empty-state">
+                <div class="illustration">
+                    <lightning-icon
+                        icon-name="utility:einstein"
+                        size="large"
+                        class="illustration-icon"
+                    ></lightning-icon>
+                </div>
+                <h2 class="empty-heading">Would you like to see key insights into this guest?</h2>
+                <p class="empty-body">
+                    Create a record summary using generative AI by pressing 'Generate AI Summary' above.
+                    Always validate AI responses.
+                    <a href="#" class="learn-more-link" onclick={handleLearnMore}>Learn More</a>
+                </p>
+            </div>
+        </template>
+
+        <!-- Generated Summary -->
+        <template if:true={showSummary}>
+            <div class="summary-content">
+                <div class="summary-meta">
+                    <div class="summary-title">
+                        <lightning-icon
+                            icon-name="utility:einstein"
+                            size="x-small"
+                            class="summary-icon"
+                        ></lightning-icon>
+                        <strong>Case Summary</strong>
+                        <template if:true={summaryTitle}>
+                            &nbsp;— {summaryTitle}
+                        </template>
+                    </div>
+                    <div class="summary-generated">
+                        Generated: {generatedDate}
+                    </div>
+                </div>
+                <div class="summary-body">
+                    <p>{summaryText}</p>
+                </div>
+                <div class="summary-footer">
+                    <lightning-icon
+                        icon-name="utility:info"
+                        size="x-small"
+                        class="info-icon"
+                    ></lightning-icon>
+                    <span class="disclaimer">Always validate AI responses before taking action.</span>
+                    <lightning-button
+                        label="Regenerate"
+                        icon-name="utility:refresh"
+                        variant="base"
+                        onclick={handleGenerate}
+                        class="regenerate-btn"
+                    ></lightning-button>
+                </div>
+            </div>
+        </template>
+
+    </div>
+</template>

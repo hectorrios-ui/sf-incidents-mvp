@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <constants>
+        <description>Error Message to be shown by the validation</description>
+        <name>ErrorMessage</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Creation blocked: A Guest Preference Code with the specified Service Code cannot be created because Guest Special Requests already reference this Service Code.</stringValue>
+        </value>
+    </constants>
+    <customErrors>
+        <name>ShowErrorMessage</name>
+        <label>Show Error Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <customErrorMessages>
+            <errorMessage>{!ErrorMessage}</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <decisions>
+        <description>Checks if the query above returned at least one record</description>
+        <name>AreThereSpecialRequestsWithTheSameServiceCode</name>
+        <label>Are There Special Requests With The Same Service Code?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Yes_AreThereSpecialRequestsWithTheSameServiceCode</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>QuerySpecialRequestsWithTheSameServiceCode</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>ShowErrorMessage</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <description>Whenever a user tries to create a Guest Preference Code with non-blank Service Code, the system checks if this code is not used on Special Requests. If there is at least one Special Request with the same Service Code - the creation is prevented</description>
+    <environments>Default</environments>
+    <interviewLabel>Guest Preference Code - Before Save - Service Code Validation - {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Guest Preference Code - Before Save - Service Code Validation</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Queries Special Requests where Service Code equals to Service Code specified on triggering Guest Preference Code</description>
+        <name>QuerySpecialRequestsWithTheSameServiceCode</name>
+        <label>Query Special Requests With The Same Service Code</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>AreThereSpecialRequestsWithTheSameServiceCode</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>ServiceCode__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.ServiceCode__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>hapi__SpecialRequest__c</object>
+        <queriedFields>Id</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>QuerySpecialRequestsWithTheSameServiceCode</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>ServiceCode__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <object>hapi__GuestPreferenceCode__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NF_Cloud__c</fullName>
+    <label>Primary Cloud</label>
+    <type>Picklist</type>
+    <description>The primary Salesforce cloud for this engagement. Used by the Accelerator Recommender to surface relevant assets.</description>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>Sales Cloud</fullName><default>false</default><label>Sales Cloud</label></value>
+            <value><fullName>Service Cloud</fullName><default>false</default><label>Service Cloud</label></value>
+            <value><fullName>Marketing Cloud</fullName><default>false</default><label>Marketing Cloud</label></value>
+            <value><fullName>Commerce Cloud</fullName><default>false</default><label>Commerce Cloud</label></value>
+            <value><fullName>Experience Cloud</fullName><default>false</default><label>Experience Cloud</label></value>
+            <value><fullName>Agentforce</fullName><default>false</default><label>Agentforce</label></value>
+            <value><fullName>MuleSoft</fullName><default>false</default><label>MuleSoft</label></value>
+            <value><fullName>Platform</fullName><default>false</default><label>Platform</label></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

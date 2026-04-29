@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Assign_multi_select_value</name>
+        <label>Assign multi select value</label>
+        <locationX>264</locationX>
+        <locationY>458</locationY>
+        <assignmentItems>
+            <assignToReference>Multiselect_Display_collection</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Multiselect_Input_String</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>For_each_Occurance_of_comma</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_multi_select_values_to_collection</name>
+        <label>Assign multi select values to collection</label>
+        <locationX>528</locationX>
+        <locationY>458</locationY>
+        <assignmentItems>
+            <assignToReference>Multiselect_Display_collection</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Multiselect_Display_split</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Occurrences_of_comma_collection</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Occurrences_of_comma_max</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Multiselect_Input_String</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Multiselect_Display_substitute</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>For_each_Occurance_of_comma</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Occurence_Assignment</name>
+        <label>Occurence Assignment</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <assignmentItems>
+            <assignToReference>Occurrences_of_comma_collection</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <numberValue>0.0</numberValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>For_each_Occurance_of_comma</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>End_Loop</name>
+        <label>End Loop</label>
+        <locationX>396</locationX>
+        <locationY>350</locationY>
+        <defaultConnector>
+            <targetReference>Assign_multi_select_values_to_collection</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>If_all_comma_occurrences_finished</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Occurrences_of_comma_max</leftValueReference>
+                <operator>LessThanOrEqualTo</operator>
+                <rightValue>
+                    <numberValue>0.0</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_multi_select_value</targetReference>
+            </connector>
+            <label>If all comma occurrences finished</label>
+        </rules>
+    </decisions>
+    <description>Split String with delimiter</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>Multiselect_Display_split</name>
+        <dataType>String</dataType>
+        <expression>LEFT( {!Multiselect_Input_String}, FIND({!SEPERATOR},  {!Multiselect_Input_String})-1)</expression>
+    </formulas>
+    <formulas>
+        <name>Multiselect_Display_substitute</name>
+        <dataType>String</dataType>
+        <expression>RIGHT({!Multiselect_Input_String}, LEN({!Multiselect_Input_String})-FIND(&apos;,&apos;,  {!Multiselect_Input_String}))</expression>
+    </formulas>
+    <formulas>
+        <name>Occurrences_of_comma_max</name>
+        <dataType>Number</dataType>
+        <expression>(LEN({!Multiselect_Input_String}) - LEN(SUBSTITUTE(LOWER({!Multiselect_Input_String}),&quot;,&quot;,&quot;&quot;)))</expression>
+        <scale>0</scale>
+    </formulas>
+    <interviewLabel>LOY - Split String with delimiter {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>LOY - Split String with delimiter</label>
+    <loops>
+        <description>For each occurance of commas</description>
+        <name>For_each_Occurance_of_comma</name>
+        <label>For each Occurance of comma</label>
+        <locationX>176</locationX>
+        <locationY>242</locationY>
+        <collectionReference>Occurrences_of_comma_collection</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>End_Loop</targetReference>
+        </nextValueConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Occurence_Assignment</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>Multiselect_Display_collection</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>Multiselect_Input_String</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Number of the</description>
+        <name>Occurrences_of_comma_collection</name>
+        <dataType>Number</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <scale>2</scale>
+    </variables>
+    <variables>
+        <name>SEPERATOR</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>;</stringValue>
+        </value>
+    </variables>
+</Flow>

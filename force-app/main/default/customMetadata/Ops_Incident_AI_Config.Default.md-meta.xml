@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Default</label>
+    <protected>false</protected>
+    <values>
+        <field>Enabled__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Named_Credential_Api_Name__c</field>
+        <value xsi:type="xsd:string">LLM_Provider_API</value>
+    </values>
+    <values>
+        <field>Model__c</field>
+        <value xsi:type="xsd:string">claude-sonnet-4-6</value>
+    </values>
+    <values>
+        <field>Provider__c</field>
+        <value xsi:type="xsd:string">Anthropic_Messages</value>
+    </values>
+    <values>
+        <field>Temperature__c</field>
+        <value xsi:type="xsd:double">0.2</value>
+    </values>
+    <values>
+        <field>Max_Output_Tokens__c</field>
+        <value xsi:type="xsd:double">600</value>
+    </values>
+    <values>
+        <field>Relative_Api_Path__c</field>
+        <value xsi:type="xsd:string">v1/messages</value>
+    </values>
+</CustomMetadata>

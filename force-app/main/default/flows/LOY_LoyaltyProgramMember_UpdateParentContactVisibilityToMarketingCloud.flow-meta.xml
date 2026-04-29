@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>63.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <constants>
+        <description>Membership Status Code value when the account is closed.</description>
+        <name>constantClosedStatusCode</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>C</stringValue>
+        </value>
+    </constants>
+    <decisions>
+        <description>F: Suspected Fraud | 
+O: Duplicate | 
+Z: Frozen</description>
+        <name>Decision_Contact_StatusReasonCode</name>
+        <label>What is the Status Reason Code?</label>
+        <locationX>886</locationX>
+        <locationY>647</locationY>
+        <defaultConnector>
+            <targetReference>Decision_TimeSinceLastActivity_Month</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Different Reason</defaultConnectorLabel>
+        <rules>
+            <name>Outcome_1_of_What_is_the_Reason_Status_Code</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Contact.MBRSHP_STAT_RSN_CD__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>F</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Contact.MBRSHP_STAT_RSN_CD__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>O</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Contact.MBRSHP_STAT_RSN_CD__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Z</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Decision_TimeSinceLastActivity_Year</targetReference>
+            </connector>
+            <label>F, O, Z</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Decision_LastActivityDate</name>
+        <label>What is the value on Last Activity Date?</label>
+        <locationX>600</locationX>
+        <locationY>539</locationY>
+        <defaultConnector>
+            <targetReference>Decision_Contact_StatusReasonCode</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>With previous activity</defaultConnectorLabel>
+        <rules>
+            <name>LastActivityDate_NoData</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Contact.CMM_lst_actv_dt__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <isGoTo>true</isGoTo>
+                <targetReference>Update_ParentContact_SetNotVisible</targetReference>
+            </connector>
+            <label>No activity</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Decision_NewMembershipStatusCode</name>
+        <label>What is the new membership status code?</label>
+        <locationX>666</locationX>
+        <locationY>431</locationY>
+        <defaultConnectorLabel>Not specified</defaultConnectorLabel>
+        <rules>
+            <name>NewStatusCode_Removed</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.IHG_LOY_Membership_Status_Code__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>R</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_ParentContact_SetNotVisible</targetReference>
+            </connector>
+            <label>Removed</label>
+        </rules>
+        <rules>
+            <name>NewStatusCode_Open</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.IHG_LOY_Membership_Status_Code__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>O</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_ParentContact_SetVisible</targetReference>
+            </connector>
+            <label>Open</label>
+        </rules>
+        <rules>
+            <name>NewStatusCode_Closed</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.IHG_LOY_Membership_Status_Code__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>C</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Decision_LastActivityDate</targetReference>
+            </connector>
+            <label>Closed</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Decision_ParentContactRecordType</name>
+        <label>What is the Parent Contact Record Type?</label>
+        <locationX>1194</locationX>
+        <locationY>323</locationY>
+        <defaultConnectorLabel>Other Record Type</defaultConnectorLabel>
+        <rules>
+            <name>Member_Contact</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Contact.RecordType.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Member_Contact</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Decision_NewMembershipStatusCode</targetReference>
+            </connector>
+            <label>Member Contact</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Decision_TimeSinceLastActivity_Month</name>
+        <label>How long has it been since Last Activity?</label>
+        <locationX>1106</locationX>
+        <locationY>755</locationY>
+        <defaultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Update_ParentContact_SetVisible</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>One month or less</defaultConnectorLabel>
+        <rules>
+            <name>TimeSinceLastActivity_OneMonth</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Formula_DaysSinceLastActivity</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <elementReference>Formula_OneMonthThreshold</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_ParentContact_SetNotVisible</targetReference>
+            </connector>
+            <label>More than 1 month</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Decision_TimeSinceLastActivity_Year</name>
+        <label>How long has it been since Last Activity?</label>
+        <locationX>666</locationX>
+        <locationY>755</locationY>
+        <defaultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Update_ParentContact_SetVisible</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>One year or less</defaultConnectorLabel>
+        <rules>
+            <name>TimeSinceLastActivity_OneYear</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Formula_DaysSinceLastActivity</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <elementReference>Formula_OneYearThreshold</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_ParentContact_SetNotVisible</targetReference>
+            </connector>
+            <label>More than 1 year</label>
+        </rules>
+    </decisions>
+    <description>Flow Type: Record-Triggered Flow
+Object: Loyalty Program Member
+Context: After Update
+Description: Update Parent Contact (Record.ContactId) to make it visible or not to Marketing Cloud, according to its Membership Status Code.</description>
+    <environments>Default</environments>
+    <formulas>
+        <description>Difference between current day and Last Activity Date of Contact / Loyalty Program Member.</description>
+        <name>Formula_DaysSinceLastActivity</name>
+        <dataType>Number</dataType>
+        <expression>TODAY() - {!$Record.Contact.CMM_lst_actv_dt__c}</expression>
+        <scale>0</scale>
+    </formulas>
+    <formulas>
+        <description>Threshold to Closed LPMs with a Status Reason Code different than F, O, Z. Current value: 31</description>
+        <name>Formula_OneMonthThreshold</name>
+        <dataType>Number</dataType>
+        <expression>VALUE({!$Label.LOY_LoyaltyProgramMemberInactivityThreshold02})</expression>
+        <scale>0</scale>
+    </formulas>
+    <formulas>
+        <description>Threshold to Closed LPMs with F, O, Z Status Reason Codes. Current value: 366</description>
+        <name>Formula_OneYearThreshold</name>
+        <dataType>Number</dataType>
+        <expression>VALUE({!$Label.LOY_LoyaltyProgramMemberInactivityThreshold01})</expression>
+        <scale>0</scale>
+    </formulas>
+    <interviewLabel>LOY - Loyalty Program Member - Update Parent Contact Visibility to Marketing Cloud {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>LOY - Loyalty Program Member - Update Parent Contact Visibility to Marketing Cloud</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <description>Update fields at Related Contact:
+- SFMC Visible = False</description>
+        <name>Update_ParentContact_SetNotVisible</name>
+        <label>Update Parent Contact - Set Not Visible</label>
+        <locationX>666</locationX>
+        <locationY>1265</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>IsSFMCVisible__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>IsSFMCVisible__c</field>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record.Contact</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <description>Update fields at Related Contact:
+- SFMC Visible = True</description>
+        <name>Update_ParentContact_SetVisible</name>
+        <label>Update Parent Contact - Set Visible</label>
+        <locationX>50</locationX>
+        <locationY>539</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>IsSFMCVisible__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>IsSFMCVisible__c</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record.Contact</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>1068</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Decision_ParentContactRecordType</targetReference>
+        </connector>
+        <filterFormula>OR(
+ISNEW(),
+ISCHANGED({!$Record.IHG_LOY_Membership_Status_Code__c})
+)</filterFormula>
+        <object>LoyaltyProgramMember</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <triggerOrder>1</triggerOrder>
+</Flow>

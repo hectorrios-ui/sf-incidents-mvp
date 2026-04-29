@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Calculate_and_Update_Overlapping_Stay</name>
+        <label>Calculate and Update Overlapping Stay</label>
+        <locationX>308</locationX>
+        <locationY>431</locationY>
+        <actionName>IHGCalculateOverlappingStay</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>stay</name>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>IHGCalculateOverlappingStay</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Check_member_existance</name>
+        <label>Check member existance</label>
+        <locationX>176</locationX>
+        <locationY>323</locationY>
+        <defaultConnector>
+            <targetReference>Calculate_and_Update_Overlapping_Stay</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Non_Member</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.LOY_LoyaltyProgramMember__r.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <label>Non Member</label>
+        </rules>
+    </decisions>
+    <description>Record Trigger Flow triggered to Calculate Overlapping stay outputs when the sub status update from Contact Assigned to OS Processed.</description>
+    <environments>Default</environments>
+    <interviewLabel>Calculate OverlappingStay RTFlow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Calculate OverlappingStay RTFlow</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Check_member_existance</targetReference>
+        </connector>
+        <filterFormula>AND( ISCHANGED({!$Record.StayProcessingSubStatus__c}), ISPICKVAL ({!$Record__Prior.StayProcessingSubStatus__c}, &quot;Contact Assigned&quot;),  ISPICKVAL ({!$Record.StayProcessingSubStatus__c}, &quot;OS Processed&quot;) )</filterFormula>
+        <object>hapi__Stay__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

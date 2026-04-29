@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Flow_Error_Exception</name>
+        <label>Flow Error Exception</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>IHGFlowLogEntryV2</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>IHG_Save_Log</targetReference>
+        </connector>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>faultMessage</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>flowName</name>
+            <value>
+                <elementReference>FlowName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>loggingLevelName</name>
+            <value>
+                <elementReference>LoggingLevel</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>ExceptionMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>parentTransactionId</name>
+            <value>
+                <elementReference>$Flow.InterviewGuid</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>IHGFlowLogEntryV2</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>IHG_Save_Log</name>
+        <label>IHG Save Log</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>IHGFlowSaveLog</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <nameSegment>IHGFlowSaveLog</nameSegment>
+        <offset>0</offset>
+    </actionCalls>
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <environments>Default</environments>
+    <formulas>
+        <name>ExceptionMessage</name>
+        <dataType>String</dataType>
+        <expression>IF({!ExceptionDetails} != &apos;&apos;, {!ExceptionDetails}, &apos;Error message: Something went wrong while executing the flow&apos;)</expression>
+    </formulas>
+    <formulas>
+        <name>FlowUniqueName</name>
+        <dataType>String</dataType>
+        <expression>&quot;Flow Exception in Utility_Publish_Exception_Event&quot; + &apos;  &apos; + TEXT(NOW())</expression>
+    </formulas>
+    <interviewLabel>Utility - Publish Exception Event {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Utility - Publish Exception Event</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <runInMode>SystemModeWithoutSharing</runInMode>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Flow_Error_Exception</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>UnabletoPublishExceptionEvent</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;Fault path was event when attempting to publish an exception event.  &lt;/p&gt;</text>
+    </textTemplates>
+    <variables>
+        <name>DebugNotes</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>Error message: Something went wrong while executing the flow</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <name>ExceptionDetails</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>Error message: Something went wrong while executing the flow</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <name>FlowName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <elementReference>FlowUniqueName</elementReference>
+        </value>
+    </variables>
+    <variables>
+        <description>Use only below Logging level values:
+ERROR
+WARN
+INFO
+DEBUG
+FINE
+FINER
+FINEST</description>
+        <name>LoggingLevel</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>ERROR</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <name>Object</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>Operation</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>RecordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

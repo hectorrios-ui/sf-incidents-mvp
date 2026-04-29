@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Update_MemberBenefit_Start_End_date</name>
+        <label>Update MemberBenefit Start/End date</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.StartDate</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_LoyaltyMemberTier_Record.EffectiveDate</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.EndDate</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>MemberBenefit_Enddate</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <name>Is_LoyaltyMemberTier_not_Null</name>
+        <label>Is LoyaltyMemberTier not Null</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Not_Empty</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_LoyaltyMemberTier_Record</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Is_RAM_OR_KIC</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_MemberBenefit_Start_End_date</targetReference>
+            </connector>
+            <label>Not Empty</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Is_Member_benefit_has_PrimaryRefObjectRecord</name>
+        <label>Is Member benefit has PrimaryRefObjectRecord</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>PrimaryRefObjectRecord_not_Null</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.PrimaryRefObjectRecord</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_LoyaltyTierGroup</targetReference>
+            </connector>
+            <label>PrimaryRefObjectRecord not Null</label>
+        </rules>
+    </decisions>
+    <description>Created as part of US457103 || RAM| Vouchers Expiration date</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>Is_RAM_OR_KIC</name>
+        <dataType>Boolean</dataType>
+        <expression>OR(
+        LOWER({!Get_LoyaltyTierGroup.Name}) = LOWER({!$Label.LOY_Kimpton_Inner_Circle_Label_Text}),
+        LOWER({!Get_LoyaltyTierGroup.Name}) = LOWER({!$Label.LOY_Royal_Ambassador_Label_Text})
+)</expression>
+    </formulas>
+    <formulas>
+        <name>MemberBenefit_Enddate</name>
+        <dataType>Date</dataType>
+        <expression>IF(
+    ISBLANK({!Get_LoyaltyMemberTier_Record.EffectiveDate}),
+    NULL,
+    DATE(
+        YEAR({!Get_LoyaltyMemberTier_Record.EffectiveDate}),
+        12,
+        31
+    )
+)</expression>
+    </formulas>
+    <interviewLabel>LOY Before Insert {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>LOY Member Benefit Before Insert</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_LoyaltyMemberTier_Record</name>
+        <label>Get LoyaltyMemberTier Record</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Is_LoyaltyMemberTier_not_Null</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>LoyaltyTierGroupId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.PrimaryRefObjectRecord</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>LoyaltyMemberId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.MemberId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>EffectiveDate</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Status</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Active</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>LoyaltyMemberTier</object>
+        <sortField>LastModifiedDate</sortField>
+        <sortOrder>Desc</sortOrder>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_LoyaltyTierGroup</name>
+        <label>Get LoyaltyTierGroup</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_LoyaltyMemberTier_Record</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.PrimaryRefObjectRecord</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>LoyaltyTierGroup</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Is_Member_benefit_has_PrimaryRefObjectRecord</targetReference>
+        </connector>
+        <object>MemberBenefit</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

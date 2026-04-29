@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <description>Does the contact associated with the member have a value in the mailing country field?</description>
+        <name>Member_Country_Set</name>
+        <label>Member Country Set?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Update_Member_Choice</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Country_Set</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>forB_MemberCountrySet</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Country_Currency</targetReference>
+            </connector>
+            <label>Country Set</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Record_State</name>
+        <label>Record State</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>New_Outcome</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>forB_IsNew</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Member_Country_Set</targetReference>
+            </connector>
+            <label>New</label>
+        </rules>
+    </decisions>
+    <description>DE65920 RE Currency and Face Value:  Updated to set the Member&apos;s Country to be the value of Contact.MailingCountry.</description>
+    <formulas>
+        <name>forB_IsNew</name>
+        <dataType>Boolean</dataType>
+        <expression>ISNEW()</expression>
+    </formulas>
+    <formulas>
+        <name>forB_MemberCountrySet</name>
+        <dataType>Boolean</dataType>
+        <expression>IF ( ISBLANK({!$Record.Member_Benefit__r.Member.Contact.MailingCountry}), FALSE, TRUE )</expression>
+    </formulas>
+    <formulas>
+        <name>forD_ExpirationDate</name>
+        <dataType>Date</dataType>
+        <expression>{!$Record.Issue_Date__c} + {!$Record.Member_Benefit__r.Benefit.Choice_Expiration_Days__c} + 1 - 1/1000</expression>
+    </formulas>
+    <formulas>
+        <description>Currency from Country record or USD as default</description>
+        <name>forT_CurrencyCode</name>
+        <dataType>String</dataType>
+        <expression>IF ( ISNULL({!varT_CurrencyCode}), {!$Label.LOY_Default_Currency_ISO_Code}, {!varT_CurrencyCode} )</expression>
+    </formulas>
+    <formulas>
+        <name>forT_MemberCountry</name>
+        <dataType>String</dataType>
+        <expression>{!$Record.Member_Benefit__r.Member.Contact.MailingCountry}</expression>
+    </formulas>
+    <interviewLabel>LOY - Member Choice Before Save {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>LOY - Member Choice Before Save</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Retrieve the Currency for the Country.</description>
+        <name>Get_Country_Currency</name>
+        <label>Get Currency Code</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Update_Member_Choice</targetReference>
+        </connector>
+        <filterLogic>or</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>forT_MemberCountry</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Country_Code__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>forT_MemberCountry</elementReference>
+            </value>
+        </filters>
+        <object>Country__c</object>
+        <outputAssignments>
+            <assignToReference>varT_CurrencyCode</assignToReference>
+            <field>CurrencyIsoCode</field>
+        </outputAssignments>
+    </recordLookups>
+    <recordUpdates>
+        <name>Update_Member_Choice</name>
+        <label>Update Member Choice</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <inputAssignments>
+            <field>Contact__c</field>
+            <value>
+                <elementReference>$Record.Member_Benefit__r.Member.ContactId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>CurrencyIsoCode</field>
+            <value>
+                <elementReference>forT_CurrencyCode</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Expiration_Date__c</field>
+            <value>
+                <elementReference>forD_ExpirationDate</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Member_Number__c</field>
+            <value>
+                <elementReference>$Record.Member_Benefit__r.Member.MembershipNumber</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Members_Country__c</field>
+            <value>
+                <elementReference>forT_MemberCountry</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Record_State</targetReference>
+        </connector>
+        <object>Member_Choice__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>varT_CurrencyCode</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>USD</stringValue>
+        </value>
+    </variables>
+</Flow>

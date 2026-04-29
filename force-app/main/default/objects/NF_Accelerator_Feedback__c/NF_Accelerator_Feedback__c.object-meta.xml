@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Tracks whether a recommended accelerator was useful for a given project context. Feeds the ranking improvement loop.</description>
+    <enableActivities>false</enableActivities>
+    <enableHistory>false</enableHistory>
+    <enableReports>true</enableReports>
+    <label>NF Accelerator Feedback</label>
+    <nameField>
+        <displayFormat>FB-{0000}</displayFormat>
+        <label>Feedback Number</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>NF Accelerator Feedback</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ControlledByParent</sharingModel>
+</CustomObject>

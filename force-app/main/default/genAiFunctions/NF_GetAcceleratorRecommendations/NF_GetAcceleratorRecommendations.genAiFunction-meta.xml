@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>Get Accelerator Recommendations</masterLabel>
+    <description>Recommends NeuraFlash reusable accelerators and templates based on project cloud, industry, use case, and keywords. Returns a ranked list with fit scores, estimated hours saved, direct links to each asset, and a Knowledge Article URL for full documentation. Use this when a user asks about reusable assets, starter packs, or templates for a project.</description>
+    <invocationTargetType>apex</invocationTargetType>
+    <invocationTargetName>NF_AcceleratorRecommendAction</invocationTargetName>
+</GenAiFunction>

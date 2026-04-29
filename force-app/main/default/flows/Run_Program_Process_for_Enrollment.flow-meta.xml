@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>Process TJ record for enrollment</description>
+        <name>Process_TJ</name>
+        <label>Process TJ</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>runProgramProcessForTransactionJournal</actionName>
+        <actionType>runProgramProcessForTransactionJournal</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>transactionJournalId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>runProgramProcessForTransactionJournal</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <description>Save TJ Record Log before process</description>
+        <name>Save_TJ_Record_Log</name>
+        <label>Save TJ Record Log</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>IHGFlowRecordLogEntry</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Process_TJ</targetReference>
+        </connector>
+        <dataTypeMappings>
+            <typeName>T__record</typeName>
+            <typeValue>TransactionJournal</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>flowName</name>
+            <value>
+                <stringValue>Run_Program_Process_for_Enrollment</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Record.Status</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>record</name>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>IHGFlowRecordLogEntry</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <description>Creates or Updates Loyalty Member Partnership from One Rewards Enrollment</description>
+    <environments>Default</environments>
+    <interviewLabel>Run Program Process for Enrollment {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Run Program Process for Enrollment</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Save_TJ_Record_Log</targetReference>
+        </connector>
+        <filterFormula>AND({!$Record.JournalType.Name} == &quot;Enrollment&quot; , {!$Record.JournalSubType.Name} = &quot;One Rewards&quot;)</filterFormula>
+        <object>TransactionJournal</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <collectionProcessors>
+        <name>Filter_with_Missed_Eligibility</name>
+        <elementSubtype>FilterCollectionProcessor</elementSubtype>
+        <label>Records with Missed Eligibility</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNextValueToReference>currentItem_Filter_with_Missed_Eligibility</assignNextValueToReference>
+        <collectionProcessorType>FilterCollectionProcessor</collectionProcessorType>
+        <collectionReference>Get_Eligibility_Records_With_Missed_Type</collectionReference>
+        <conditionLogic>and</conditionLogic>
+        <conditions>
+            <leftValueReference>currentItem_Filter_with_Missed_Eligibility.Eligibility_Type__c</leftValueReference>
+            <operator>Contains</operator>
+            <rightValue>
+                <elementReference>Missed_Type</elementReference>
+            </rightValue>
+        </conditions>
+        <connector>
+            <targetReference>Check_If_Records_Found</targetReference>
+        </connector>
+    </collectionProcessors>
+    <customErrors>
+        <name>Eligibility_Type_Missing_Error</name>
+        <label>Eligibility Type Missing Error</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <customErrorMessages>
+            <errorMessage>Check related Preference Eligibility Rules. Preference Type must include the associated Preference Eligibility Rules&apos; Eligibility Type.</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <decisions>
+        <name>Check_If_Missed_Type_Empty</name>
+        <label>Check If Missed Type Empty</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Get_Eligibility_Records_With_Missed_Type</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Has Missed Type</defaultConnectorLabel>
+        <rules>
+            <name>Missed_Type_Is_Empty</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Missed_Type</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <label>Missed Type Is Empty</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Check_If_Records_Found</name>
+        <label>Check If Records Found</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>No Records Found</defaultConnectorLabel>
+        <rules>
+            <name>Records_Found</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Filter_with_Missed_Eligibility</leftValueReference>
+                <operator>IsEmpty</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Eligibility_Type_Missing_Error</targetReference>
+            </connector>
+            <label>Records Found</label>
+        </rules>
+    </decisions>
+    <description>Before-save validation: Ensure that a Guest Preference Code&apos;s Preference Type includes the related Eligibility Rules&apos; Eligibility Type selections.</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>Missed_Type</name>
+        <dataType>String</dataType>
+        <expression>IF(
+    AND(
+        INCLUDES({!$Record.PreferenceType__c}, &apos;Profile&apos;),
+        INCLUDES({!$Record.PreferenceType__c}, &apos;Stay&apos;)
+    ),
+    null,
+    IF(
+        NOT(INCLUDES({!$Record.PreferenceType__c}, &apos;Profile&apos;)),
+        &apos;Profile&apos;,
+        IF(
+            NOT(INCLUDES({!$Record.PreferenceType__c}, &apos;Stay&apos;)),
+            &apos;Stay&apos;,
+            null
+        )
+    )
+)</expression>
+    </formulas>
+    <interviewLabel>LOY - Guest Preference Code Eligibility - Before Save {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>LOY - Guest Preference Code Eligibility - Before Save</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Eligibility_Records_With_Missed_Type</name>
+        <label>Get Eligibility Records With Missed Type</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Filter_with_Missed_Eligibility</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Preference_Code__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Preference_Code_Eligibility__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Check_If_Missed_Type_Empty</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>PreferenceType__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>hapi__GuestPreferenceCode__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>currentItem_Filter_with_Missed_Eligibility</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Preference_Code_Eligibility__c</objectType>
+    </variables>
+</Flow>

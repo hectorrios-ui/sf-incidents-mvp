@@ -1,0 +1,145 @@
+.ai-summary-wrapper {
+    background: #ffffff;
+    border-radius: 8px;
+    height: 100%;
+}
+
+/* Header */
+.summary-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #dddbda;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.ai-icon {
+    --sds-c-icon-color-foreground-default: #0176d3;
+}
+
+.header-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #181818;
+}
+
+/* Loading */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 1rem;
+    gap: 1rem;
+}
+
+.loading-label {
+    font-size: 0.875rem;
+    color: #444;
+}
+
+/* Empty State */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.illustration {
+    margin-bottom: 1.25rem;
+}
+
+.illustration-icon {
+    --sds-c-icon-color-foreground-default: #a8d5e2;
+    transform: scale(2);
+    display: block;
+    margin: 1rem auto;
+}
+
+.empty-heading {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #181818;
+    margin: 0 0 0.5rem;
+}
+
+.empty-body {
+    font-size: 0.875rem;
+    color: #444;
+    line-height: 1.6;
+    max-width: 380px;
+}
+
+.learn-more-link {
+    color: #0176d3;
+    margin-left: 0.25rem;
+}
+
+/* Generated Summary */
+.summary-content {
+    padding: 1rem;
+}
+
+.summary-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.summary-title {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.875rem;
+    color: #181818;
+}
+
+.summary-icon {
+    --sds-c-icon-color-foreground-default: #0176d3;
+}
+
+.summary-generated {
+    font-size: 0.75rem;
+    color: #706e6b;
+    white-space: nowrap;
+}
+
+.summary-body {
+    background: #f9f9f9;
+    border-left: 3px solid #0176d3;
+    border-radius: 0 4px 4px 0;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: #181818;
+}
+
+.summary-body p {
+    margin: 0;
+}
+
+.summary-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: #706e6b;
+}
+
+.info-icon {
+    --sds-c-icon-color-foreground-default: #706e6b;
+    flex-shrink: 0;
+}
+
+.disclaimer {
+    flex: 1;
+}

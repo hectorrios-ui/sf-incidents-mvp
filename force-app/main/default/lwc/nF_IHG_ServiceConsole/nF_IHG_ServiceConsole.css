@@ -1,0 +1,32 @@
+.console-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #f3f3f3;
+}
+
+.back-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 1rem;
+    background: #ffffff;
+    border-bottom: 1px solid #dddbda;
+    cursor: pointer;
+}
+
+.back-label {
+    font-size: 0.875rem;
+    color: #0176d3;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.back-label:hover {
+    text-decoration: underline;
+}
+
+.current-view-label {
+    font-size: 0.875rem;
+    color: #706e6b;
+}

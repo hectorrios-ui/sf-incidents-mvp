@@ -1,0 +1,2864 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Execute_Stay_Qualification_DT</name>
+        <label>Execute Stay Qualification DT</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>LOY_StayQualificationDecisionTable_Default</actionName>
+        <actionType>decisionTableAction</actionType>
+        <connector>
+            <targetReference>Assign_Stay_Qualification_DT_Results</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>LOY_End_Date__c</name>
+            <value>
+                <elementReference>$Record.LOY_CheckoutDate__c</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>LOY_RateCategoryQualification__c</name>
+            <value>
+                <elementReference>RateCategoryQualificationCalculated</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>LOY_RoomRevenueMin__c</name>
+            <value>
+                <elementReference>$Record.LOY_CumulativeRoomRevenueUSD__c</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>LOY_RateCategoriesExcluded__c</name>
+            <value>
+                <elementReference>$Record.LOY_RateCategory__r.Name</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>LOY_HotelsIncluded__c</name>
+            <value>
+                <elementReference>$Record.LOY_Hotel__r.Hotel_Code__c</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>LOY_Active__c</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>LOY_RateCategoryRN_FNIndicator__c</name>
+            <value>
+                <elementReference>RNFNIndicatorCalculated</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>LOY_IsEnrollingStay__c</name>
+            <value>
+                <elementReference>$Record.LOY_EnrollingStayIndicator__c</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>LOY_StartDate__c</name>
+            <value>
+                <elementReference>$Record.LOY_CheckoutDate__c</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>LOY_HotelsExcluded__c</name>
+            <value>
+                <elementReference>$Record.LOY_Hotel__r.Hotel_Code__c</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>LOY_RateCategoriesIncluded__c</name>
+            <value>
+                <elementReference>$Record.LOY_RateCategory__r.Name</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>LOY_TotalQualifyingRevenueMax__c</name>
+            <value>
+                <elementReference>TotalQRevenueUSDOrig</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>LOY_RoomRevenueMax__c</name>
+            <value>
+                <elementReference>$Record.LOY_CumulativeRoomRevenueUSD__c</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>LOY_TotalQualifyingRevenueMin__c</name>
+            <value>
+                <elementReference>TotalQRevenueUSDOrig</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>RecordTypeId</name>
+            <value>
+                <elementReference>Get_LOY_StayQualification_RT.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>LOY_StayQualificationDecisionTable_Default</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>Get_Currency_Rate</name>
+        <label>Get Currency Rate</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>CurrencyRateUtility</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Check_If_Conversion_Rate_Found</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>isoCode</name>
+            <value>
+                <elementReference>$Record.CurrencyIsoCode</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>rateDate</name>
+            <value>
+                <elementReference>$Record.LOY_CheckoutDate__c</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>recordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>CurrencyRateUtility</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>Log_Conversion_Rate</name>
+        <label>Log Conversion Rate</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>FlowLogEntry</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Assign</targetReference>
+        </connector>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>flowName</name>
+            <value>
+                <stringValue>StayRequalificationRT</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>loggingLevelName</name>
+            <value>
+                <stringValue>INFO</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>LogConversionRateMsg</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>recordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>tagsString</name>
+            <value>
+                <stringValue>LPU</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>FlowLogEntry</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>Log_Created_Matched_Rule</name>
+        <label>Log Created Matched Rule</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>FlowCollectionLogEntry</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Check_Stay_Qualification_Status</targetReference>
+        </connector>
+        <dataTypeMappings>
+            <typeName>T__records</typeName>
+            <typeValue>LOY_MatchedLoyaltyRule__c</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>flowName</name>
+            <value>
+                <stringValue>StayRequalificationRT</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>Matched Rules Created</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>records</name>
+            <value>
+                <elementReference>StayMatchedRules</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>tagsString</name>
+            <value>
+                <stringValue>LPU</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>FlowCollectionLogEntry</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>Log_Missing_Conversion_Rate</name>
+        <label>Log Missing Conversion Rate</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>FlowRecordLogEntry</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Log_Conversion_Rate</targetReference>
+        </connector>
+        <dataTypeMappings>
+            <typeName>T__record</typeName>
+            <typeValue>hapi__Stay__c</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>flowName</name>
+            <value>
+                <stringValue>StayRequalificationRT</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>loggingLevelName</name>
+            <value>
+                <stringValue>INFO</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>Currency Rate cant be found</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>record</name>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>FlowRecordLogEntry</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>Log_Requalification_finished</name>
+        <label>Log Requalification finished</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>FlowLogEntry</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Save_Logs</targetReference>
+        </connector>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>flowName</name>
+            <value>
+                <stringValue>StayRequalificationRT</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>Requalification finished</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>FlowLogEntry</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>Log_Stay_Qualification_Start</name>
+        <label>Log Stay Qualification Start</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>FlowLogEntry</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Check_ISO_Code_And_Check_in_Date</targetReference>
+        </connector>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>flowName</name>
+            <value>
+                <stringValue>StayRequalificationRT</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>loggingLevelName</name>
+            <value>
+                <stringValue>INFO</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>Stay Requalification started</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>recordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>tagsString</name>
+            <value>
+                <stringValue>LPU</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>FlowLogEntry</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>Log_Updated_Stay</name>
+        <label>Log Updated Stay</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>FlowRecordLogEntry</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Log_Requalification_finished</targetReference>
+        </connector>
+        <dataTypeMappings>
+            <typeName>T__record</typeName>
+            <typeValue>hapi__Stay__c</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>flowName</name>
+            <value>
+                <stringValue>StayRequalificationRT</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>loggingLevelName</name>
+            <value>
+                <stringValue>INFO</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>Stay after Requalification:</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>record</name>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>tagsString</name>
+            <value>
+                <stringValue>LPU</stringValue>
+            </value>
+        </inputParameters>
+        <nameSegment>FlowRecordLogEntry</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>Save_Logs</name>
+        <label>Save Logs</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>IHGFlowSaveLog</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <nameSegment>IHGFlowSaveLog</nameSegment>
+        <offset>0</offset>
+    </actionCalls>
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Assign</name>
+        <label>Assign Caclulated USD Fields</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_CumulativeRoomRevenueUSD__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>CumulativeRoomRevenue</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_CumulativeFoodRevenueUSD__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>CumulativeFoodRevenue</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_CumulativeTelephoneRevenueUSD__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>CumulativeTelephoneRevenue</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_CumulativeMeetingBanquetRevenueUSD__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>CumulativeMeetingBanquetRevenue</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_CumulativeBeverageRevenueUSD__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>CumulativeBeverageRevenue</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_MiscellaneousOtherLoyaltyRevUSD__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>MiscellaneousOtherLoyaltyRevenue</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_MiscellaneousNoLoyaltyRevenueUSD__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>MiscellaneousNoLoyaltyRevenue</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_MiscellaneousMandatoryLoyaltyRevUSD__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>MiscellaneousMandatoryLoyaltyRevenue</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_TotalRevenue_USD__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>TotalRevenue</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_CumulativeNonRevIncludesTaxUSD__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>CumulativeNonRevenueIncludesTax</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Assign_Revenue_Qualification_Fields</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Conversion_Rate</name>
+        <label>Assign Conversion Rate</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>ConversionRate</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Currency_Rate.rate</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Log_Conversion_Rate</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Disqualify_Reasons</name>
+        <label>Assign Disqualify Reasons</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>QualificationReasonsList</assignToReference>
+            <operator>AddItem</operator>
+            <value>
+                <elementReference>Stay_Qualification_Results_Loop.LOY_StayQualificationReason__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Build_Disqualified_Matched_Rules_List</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Initial_Bucket_Value</name>
+        <label>Assign Initial Bucket Value</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>RevenueQualifiedBucket</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.LOY_RevenueBucketQualified__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>OriginalBucket</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.RevenueBucketQualifiedOrig__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Update_Stay</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Qualify_Reasons</name>
+        <label>Assign Qualify Reasons</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>QualificationReasonsList</assignToReference>
+            <operator>AddItem</operator>
+            <value>
+                <elementReference>Stay_Qualification_Results_Loop.LOY_StayQualificationReason__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Build_Qualified_Matched_Rules_List</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Revenue_Qualification_Fields</name>
+        <label>Assign Revenue Qualification Fields</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_Total_NonQualifying_Revenue__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>TotalNonQRevenueOrig</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_Total_NonQualifying_Revenue_USD__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>TotalNonQRevenueUSDOrig</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_Total_Qualifying_Revenue__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>TotalQRevenueOrig</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_Total_Qualifying_Revenue_USD__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>TotalQRevenueUSDOrig</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Assign_Initial_Bucket_Value</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Reward_Reason</name>
+        <label>Assign Reward Reason</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>QualificationReasonsList</assignToReference>
+            <operator>AddItem</operator>
+            <value>
+                <elementReference>Stay_Qualification_Results_Loop.LOY_StayQualificationReason__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Build_Matched_Rules_List</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Status_Note</name>
+        <label>Assign Status Note</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_StayProcessingStatus__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Invalid</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_Stay_Processing_Status_Note__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>No valid exchange rate is found</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.StayProcessingSubStatus__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Invalid</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Update_Stay</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Stay_Qualification_DT_Results</name>
+        <label>Assign Stay Qualification DT Results</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>StayQualificationDTResults</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Execute_Stay_Qualification_DT.outcomeList</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>StayQualificationDTResult</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Execute_Stay_Qualification_DT.singleOutcome</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Check_Incidentals</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_The_Reward_Rule</name>
+        <label>Assign The Reward Rule</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>StayMatchOutputSingleReward</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Stay_Qualification_Results_Loop</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Assign_Reward_Reason</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Build_Disqualified_Matched_Rules_List</name>
+        <label>Build Disqualified Matched Rules List</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>StayMatchedRule.LOY_RuleType__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Stay Qualification [Post LPU]</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>StayMatchedRule.LOY_Stay__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>StayMatchedRule.LOY_RuleCategory__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Stay Processing</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>StayMatchedRule.LOY_RuleProcessingDate__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Flow.CurrentDate</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>StayMatchedRule.LOY_StayProcessingRule__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Stay_Qualification_Results_Loop.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>StayMatchedRules</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>StayMatchedRule</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Check_Reward_Night</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Build_Matched_Rules_List</name>
+        <label>Build Matched Rules List</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>StayMatchedRule.LOY_RuleType__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Stay Qualification [Post LPU]</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>StayMatchedRule.LOY_Stay__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>StayMatchedRule.LOY_RuleCategory__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Stay Processing</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>StayMatchedRule.LOY_RuleProcessingDate__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Flow.CurrentDate</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>StayMatchedRule.LOY_StayProcessingRule__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Stay_Qualification_Results_Loop.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>StayMatchedRules</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>StayMatchedRule</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Stay_Qualification_Results_Loop</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Build_Qualified_Matched_Rules_List</name>
+        <label>Build Qualified Matched Rules List</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>StayMatchedRule.LOY_RuleType__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Stay Qualification [Post LPU]</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>StayMatchedRule.LOY_Stay__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>StayMatchedRule.LOY_RuleCategory__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Stay Processing</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>StayMatchedRule.LOY_RuleProcessingDate__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Flow.CurrentDate</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>StayMatchedRule.LOY_StayProcessingRule__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Stay_Qualification_Results_Loop.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>StayMatchedRules</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>StayMatchedRule</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Check_Reward_Night</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Empty_Qualifying_Bucket</name>
+        <label>Empty Qualifying Bucket</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>RevenueQualifiedBucket</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>RevBucket_String</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Update_Stay_Disqualified</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Empty_Qualifying_Bucket_String</name>
+        <label>Empty Qualifying Bucket String</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>RevBucket_String</assignToReference>
+            <operator>Assign</operator>
+        </assignmentItems>
+        <connector>
+            <targetReference>Empty_Qualifying_Bucket</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Remove_Room_Revenue_from_Original_Bucket</name>
+        <label>Remove Room Revenue from Original Bucket</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>OriginRevBucket_String</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>fRemoveRoomRevenueFromOrigBucket</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Save_Original_Bucket_to_the_Variable</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Save_Original_Bucket_to_String_Variable</name>
+        <label>Assign Original Bucket to String Variable</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>OriginRevBucket_String</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>OriginalBucket</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Remove_Room_Revenue_from_Original_Bucket</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Save_Original_Bucket_to_the_Variable</name>
+        <label>Save Original Bucket to the Variable</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>OriginalBucketWithoutRoom</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>OriginRevBucket_String</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Update_Stay_Diqualified_Room_Rev_included</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Conversion_Rate_To_1</name>
+        <label>Set Conversion Rate To 1</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>ConversionRate</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <numberValue>1.0</numberValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Log_Conversion_Rate</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Has_Incidentals</name>
+        <label>Set Has Incidentals</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>HasIncidentals</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Yes</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Stay_Qualification_Results_Loop</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Has_No_Incidentals</name>
+        <label>Set Has No Incidentals</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>HasIncidentals</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>No</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Stay_Qualification_Results_Loop</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Check_If_Conversion_Rate_Found</name>
+        <label>Check If Conversion Rate Found</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Assign_Status_Note</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Rate_Found</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Currency_Rate.rate</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <numberValue>0.0</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_Conversion_Rate</targetReference>
+            </connector>
+            <label>Rate Found</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Check_if_Disqualify_All_Incidentals_Room</name>
+        <label>Check if Disqualify All (Incidentals + Room)</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Check_If_Room_Is_Included_In_Output</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Disqualified_Incidental_Revenue</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>HasIncidentals</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Yes</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>StayQualificationDTResult.LOY_RevenueQualificationBucket__c</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>IHG_RQRevenue01</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Empty_Qualifying_Bucket_String</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Check_If_Room_Is_Included_In_Output</name>
+        <label>Check If Room Is Included In Output</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Check_if_Stay_Match_Reward_Night_Rule</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Included</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>StayQualificationDTResult.LOY_RevenueQualificationBucket__c</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>IHG_RQRevenue01</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Save_Original_Bucket_to_String_Variable</targetReference>
+            </connector>
+            <label>Included</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Check_if_Stay_Match_Reward_Night_Rule</name>
+        <label>Check if Stay Match Reward Night Rule</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Update_Record_No_Reward</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes_Stay_Match_Reward_Night_Reward_Rule_Exist</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>StayMatchOutputSingleReward</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Record_with_Reward</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Check_Incidentals</name>
+        <label>Check Incidentals</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Set_Has_No_Incidentals</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Outcome_1_of_Check_Incidentals</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>StayQualificationDTResult.LOY_IsRoomIncidentalsDisqualified__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Yes</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Has_Incidentals</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Check_ISO_Code_And_Check_in_Date</name>
+        <label>Check ISO Code And Check-in Date</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Log_Missing_Conversion_Rate</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>If_Non_USD</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.CurrencyIsoCode</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>USD</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.LOY_CheckInDate__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.LOY_CheckoutDate__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Currency_Rate</targetReference>
+            </connector>
+            <label>If Non USD</label>
+        </rules>
+        <rules>
+            <name>If_USD</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.CurrencyIsoCode</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>USD</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Conversion_Rate_To_1</targetReference>
+            </connector>
+            <label>If USD</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Check_Result</name>
+        <label>Check Result</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Check_Reward_Night</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Disqualified</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>StayQualificationDTResult.LOY_StayQualificationResult__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Disqualify</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Stay_Qualification_Results_Loop.LOY_StayQualificationResult__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Disqualify</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_Disqualify_Reasons</targetReference>
+            </connector>
+            <label>Disqualified</label>
+        </rules>
+        <rules>
+            <name>Qualified</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>StayQualificationDTResult.LOY_StayQualificationResult__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Qualify</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Stay_Qualification_Results_Loop.LOY_StayQualificationResult__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Qualify</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_Qualify_Reasons</targetReference>
+            </connector>
+            <label>Qualified</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Check_Reward_Night</name>
+        <label>Check Reward Night</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Stay_Qualification_Results_Loop</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Is_Reward_Night</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Stay_Qualification_Results_Loop.LOY_StayQualificationResult__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Reward Night</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_The_Reward_Rule</targetReference>
+            </connector>
+            <label>Is Reward Night</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Check_Stay_Qualification_Status</name>
+        <label>Check Stay Qualification Status</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Update_Stay_Default_Qualified</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Qualify</defaultConnectorLabel>
+        <rules>
+            <name>Stay_Disqualified</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>StayQualificationDTResult.LOY_StayQualificationResult__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Disqualify</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Check_if_Disqualify_All_Incidentals_Room</targetReference>
+            </connector>
+            <label>Stay Disqualified</label>
+        </rules>
+        <rules>
+            <name>Stay_Qualified</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>StayQualificationDTResult.LOY_StayQualificationResult__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Qualify</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Stay_Qualified</targetReference>
+            </connector>
+            <label>Stay Qualified</label>
+        </rules>
+    </decisions>
+    <description>Stay Requalification process
+1. USD Conversion
+2. Qualification</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>CumulativeBeverageRevenue</name>
+        <dataType>Number</dataType>
+        <expression>IF({!ConversionRate}&gt;0, {!$Record.LOY_CumulativeBeverageRevenue__c}/{!ConversionRate}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>CumulativeFoodRevenue</name>
+        <dataType>Number</dataType>
+        <expression>IF({!ConversionRate}&gt;0, {!$Record.LOY_CumulativeFoodRevenue__c}/{!ConversionRate}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>CumulativeMeetingBanquetRevenue</name>
+        <dataType>Number</dataType>
+        <expression>IF({!ConversionRate}&gt;0, {!$Record.LOY_CumulativeMeetingBanquetRevenue__c}/{!ConversionRate}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>CumulativeNonRevenueIncludesTax</name>
+        <dataType>Number</dataType>
+        <expression>IF({!ConversionRate}&gt;0, {!$Record.LOY_CumulativeNonRevenueIncludesTax__c}/{!ConversionRate}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>CumulativeRoomRevenue</name>
+        <dataType>Number</dataType>
+        <expression>IF({!ConversionRate}&gt;0, {!$Record.LOY_CumulativeRoomRevenue__c}/{!ConversionRate}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>CumulativeTelephoneRevenue</name>
+        <dataType>Number</dataType>
+        <expression>IF({!ConversionRate}&gt;0, {!$Record.LOY_CumulativeTelephoneRevenue__c}/{!ConversionRate}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>FD_TotalNonQRevenue</name>
+        <dataType>Number</dataType>
+        <expression>0 +
+
+IF(
+OR(
+INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue02&quot;),
+INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue02&quot;)
+),
+0,
+{!$Record.LOY_CumulativeFoodRevenue__c}
+) +
+
+IF(
+OR(
+INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue03&quot;),
+INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue03&quot;)
+),
+0,
+{!$Record.LOY_CumulativeBeverageRevenue__c}
+) +
+
+IF(
+OR(
+INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue04&quot;),
+INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue04&quot;)
+),
+0,
+{!$Record.LOY_CumulativeTelephoneRevenue__c}
+) +
+
+IF(
+OR(
+INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue05&quot;),
+INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue05&quot;)
+),
+0,
+{!$Record.LOY_CumulativeMeetingBanquetRevenue__c}
+) +
+
+IF(
+OR(
+INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue06&quot;),
+INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue06&quot;)
+),
+0,
+{!$Record.LOY_MiscellaneousMandatoryLoyaltyRevenue__c}
+) +
+
+IF(
+OR(
+INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue07&quot;),
+INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue07&quot;)
+),
+0,
+{!$Record.LOY_MiscellaneousOtherLoyaltyRevenue__c}
+) +
+
+IF(
+OR(
+INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue08&quot;),
+INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue08&quot;)
+),
+0,
+{!$Record.LOY_MiscellaneousNoLoyaltyRevenue__c}
+) +
+
+IF(
+OR(
+INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue09&quot;),
+INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue09&quot;)
+),
+0,
+{!$Record.LOY_CumulativeNonRevenueIncludesTax__c}
+)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>FD_TotalNonQRevenueUSD</name>
+        <dataType>Number</dataType>
+        <expression>0 +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue02&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue02&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeFoodRevenueUSD__c}
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue03&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue03&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeBeverageRevenueUSD__c}
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue04&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue04&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeTelephoneRevenueUSD__c}
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue05&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue05&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeMeetingBanquetRevenueUSD__c}
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue06&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue06&quot;)
+  ),
+  0,
+  {!$Record.LOY_MiscellaneousMandatoryLoyaltyRevUSD__c}
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue07&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue07&quot;)
+  ),
+  0,
+  {!$Record.LOY_MiscellaneousOtherLoyaltyRevUSD__c}
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue08&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue08&quot;)
+  ),
+  0,
+  {!$Record.LOY_MiscellaneousNoLoyaltyRevenueUSD__c}
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue09&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue09&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeNonRevIncludesTaxUSD__c}
+)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>FD_TotalQRevenue</name>
+        <dataType>Number</dataType>
+        <expression>IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue01&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue01&quot;)
+  ),
+  {!$Record.LOY_CumulativeRoomRevenue__c},
+  0
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue02&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue02&quot;)
+  ),
+  {!$Record.LOY_CumulativeFoodRevenue__c},
+  0
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue03&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue03&quot;)
+  ),
+  {!$Record.LOY_CumulativeBeverageRevenue__c},
+  0
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue04&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue04&quot;)
+  ),
+  {!$Record.LOY_CumulativeTelephoneRevenue__c},
+  0
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue05&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue05&quot;)
+  ),
+  {!$Record.LOY_CumulativeMeetingBanquetRevenue__c},
+  0
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue06&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue06&quot;)
+  ),
+  {!$Record.LOY_MiscellaneousMandatoryLoyaltyRevenue__c},
+  0
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue07&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue07&quot;)
+  ),
+  {!$Record.LOY_MiscellaneousOtherLoyaltyRevenue__c},
+  0
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue08&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue08&quot;)
+  ),
+  {!$Record.LOY_MiscellaneousNoLoyaltyRevenue__c},
+  0
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue09&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue09&quot;)
+  ),
+  {!$Record.LOY_CumulativeNonRevenueIncludesTax__c},
+  0
+)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>FD_TotalQRevenueUSD</name>
+        <dataType>Number</dataType>
+        <expression>IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue01&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue01&quot;)
+  ),
+  {!$Record.LOY_CumulativeRoomRevenueUSD__c},
+  0
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue02&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue02&quot;)
+  ),
+  {!$Record.LOY_CumulativeFoodRevenueUSD__c},
+  0
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue03&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue03&quot;)
+  ),
+  {!$Record.LOY_CumulativeBeverageRevenueUSD__c},
+  0
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue04&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue04&quot;)
+  ),
+  {!$Record.LOY_CumulativeTelephoneRevenueUSD__c},
+  0
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue05&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue05&quot;)
+  ),
+  {!$Record.LOY_CumulativeMeetingBanquetRevenueUSD__c},
+  0
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue06&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue06&quot;)
+  ),
+  {!$Record.LOY_MiscellaneousMandatoryLoyaltyRevUSD__c},
+  0
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue07&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue07&quot;)
+  ),
+  {!$Record.LOY_MiscellaneousOtherLoyaltyRevUSD__c},
+  0
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue08&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue08&quot;)
+  ),
+  {!$Record.LOY_MiscellaneousNoLoyaltyRevenueUSD__c},
+  0
+) +
+
+IF(
+  OR(
+    INCLUDES({!OriginalBucketWithoutRoom}, &quot;IHG_RQRevenue09&quot;),
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue09&quot;)
+  ),
+  {!$Record.LOY_CumulativeNonRevIncludesTaxUSD__c},
+  0
+)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <description>Total Non Q Revenue for the Force Qualified path</description>
+        <name>FQ_TotalNonQRevenue</name>
+        <dataType>Number</dataType>
+        <expression>IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue01&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue01&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeRoomRevenue__c}
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue02&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue02&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeFoodRevenue__c}
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue03&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue03&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeBeverageRevenue__c}
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue04&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue04&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeTelephoneRevenue__c}
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue05&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue05&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeMeetingBanquetRevenue__c}
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue06&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue06&quot;)
+  ),
+  0,
+  {!$Record.LOY_MiscellaneousMandatoryLoyaltyRevenue__c}
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue07&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue07&quot;)
+  ),
+  0,
+  {!$Record.LOY_MiscellaneousOtherLoyaltyRevenue__c}
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue08&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue08&quot;)
+  ),
+  0,
+  {!$Record.LOY_MiscellaneousNoLoyaltyRevenue__c}
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue09&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue09&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeNonRevenueIncludesTax__c}
+)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <description>Total Non Q Revenue USD for the Force Qualified path</description>
+        <name>FQ_TotalNonQRevenueUSD</name>
+        <dataType>Number</dataType>
+        <expression>IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue01&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue01&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeRoomRevenueUSD__c}
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue02&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue02&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeFoodRevenueUSD__c}
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue03&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue03&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeBeverageRevenueUSD__c}
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue04&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue04&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeTelephoneRevenueUSD__c}
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue05&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue05&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeMeetingBanquetRevenueUSD__c}
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue06&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue06&quot;)
+  ),
+  0,
+  {!$Record.LOY_MiscellaneousMandatoryLoyaltyRevUSD__c}
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue07&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue07&quot;)
+  ),
+  0,
+  {!$Record.LOY_MiscellaneousOtherLoyaltyRevUSD__c}
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue08&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue08&quot;)
+  ),
+  0,
+  {!$Record.LOY_MiscellaneousNoLoyaltyRevenueUSD__c}
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue09&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue09&quot;)
+  ),
+  0,
+  {!$Record.LOY_CumulativeNonRevIncludesTaxUSD__c}
+)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <description>Total Q Revenue for the Force Qualified path</description>
+        <name>FQ_TotalQRevenue</name>
+        <dataType>Number</dataType>
+        <expression>IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue01&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue01&quot;)
+  ),
+  {!$Record.LOY_CumulativeRoomRevenue__c},
+  0
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue02&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue02&quot;)
+  ),
+  {!$Record.LOY_CumulativeFoodRevenue__c},
+  0
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue03&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue03&quot;)
+  ),
+  {!$Record.LOY_CumulativeBeverageRevenue__c},
+  0
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue04&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue04&quot;)
+  ),
+  {!$Record.LOY_CumulativeTelephoneRevenue__c},
+  0
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue05&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue05&quot;)
+  ),
+  {!$Record.LOY_CumulativeMeetingBanquetRevenue__c},
+  0
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue06&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue06&quot;)
+  ),
+  {!$Record.LOY_MiscellaneousMandatoryLoyaltyRevenue__c},
+  0
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue07&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue07&quot;)
+  ),
+  {!$Record.LOY_MiscellaneousOtherLoyaltyRevenue__c},
+  0
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue08&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue08&quot;)
+  ),
+  {!$Record.LOY_MiscellaneousNoLoyaltyRevenue__c},
+  0
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue09&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue09&quot;)
+  ),
+  {!$Record.LOY_CumulativeNonRevenueIncludesTax__c},
+  0
+)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <description>Total Q Revenue for the Force Qualified path</description>
+        <name>FQ_TotalQRevenueUSD</name>
+        <dataType>Number</dataType>
+        <expression>IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue01&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue01&quot;)
+  ),
+  {!$Record.LOY_CumulativeRoomRevenueUSD__c},
+  0
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue02&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue02&quot;)
+  ),
+  {!$Record.LOY_CumulativeFoodRevenueUSD__c},
+  0
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue03&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue03&quot;)
+  ),
+  {!$Record.LOY_CumulativeBeverageRevenueUSD__c},
+  0
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue04&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue04&quot;)
+  ),
+  {!$Record.LOY_CumulativeTelephoneRevenueUSD__c},
+  0
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue05&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue05&quot;)
+  ),
+  {!$Record.LOY_CumulativeMeetingBanquetRevenueUSD__c},
+  0
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue06&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue06&quot;)
+  ),
+  {!$Record.LOY_MiscellaneousMandatoryLoyaltyRevUSD__c},
+  0
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue07&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue07&quot;)
+  ),
+  {!$Record.LOY_MiscellaneousOtherLoyaltyRevUSD__c},
+  0
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue08&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue08&quot;)
+  ),
+  {!$Record.LOY_MiscellaneousNoLoyaltyRevenueUSD__c},
+  0
+)
++
+IF(
+  OR(
+    INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue09&quot;),
+    INCLUDES({!$Record.RevenueBucketQualifiedOrig__c}, &quot;IHG_RQRevenue09&quot;)
+  ),
+  {!$Record.LOY_CumulativeNonRevIncludesTaxUSD__c},
+  0
+)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>fRemoveRoomRevenue</name>
+        <dataType>String</dataType>
+        <expression>IF(
+  CONTAINS(&quot;;&quot; &amp; {!RevBucket_String} &amp; &quot;;&quot;, &quot;;IHG_RQRevenue01;&quot;),
+  TRIM(
+    SUBSTITUTE(
+      SUBSTITUTE(&quot;;&quot; &amp; {!RevBucket_String} &amp; &quot;;&quot;, &quot;;IHG_RQRevenue01;&quot;, &quot;;&quot;),
+      &quot;;;&quot;, 
+      &quot;;&quot;
+    )
+  ),
+  {!RevBucket_String}
+)</expression>
+    </formulas>
+    <formulas>
+        <name>fRemoveRoomRevenueFromOrigBucket</name>
+        <dataType>String</dataType>
+        <expression>TRIM(
+    SUBSTITUTE(
+        SUBSTITUTE(
+            SUBSTITUTE(
+                &quot;;&quot; &amp; {!OriginRevBucket_String} &amp; &quot;;&quot;,
+                &quot;;IHG_RQRevenue01;&quot;,
+                &quot;;&quot;
+            ),
+            &quot;;;&quot;,
+            &quot;;&quot;
+        ),
+        &quot;;;&quot;,
+        &quot;;&quot;
+    )
+)</expression>
+    </formulas>
+    <formulas>
+        <name>LogConversionRateMsg</name>
+        <dataType>String</dataType>
+        <expression>&quot;Conversion rate is: &quot; + TEXT({!ConversionRate})</expression>
+    </formulas>
+    <formulas>
+        <name>MiscellaneousMandatoryLoyaltyRevenue</name>
+        <dataType>Number</dataType>
+        <expression>IF({!ConversionRate}&gt;0, {!$Record.LOY_MiscellaneousMandatoryLoyaltyRevenue__c}/{!ConversionRate}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>MiscellaneousNoLoyaltyRevenue</name>
+        <dataType>Number</dataType>
+        <expression>IF({!ConversionRate}&gt;0, {!$Record.LOY_MiscellaneousNoLoyaltyRevenue__c}/{!ConversionRate}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>MiscellaneousOtherLoyaltyRevenue</name>
+        <dataType>Number</dataType>
+        <expression>IF({!ConversionRate}&gt;0, {!$Record.LOY_MiscellaneousOtherLoyaltyRevenue__c}/{!ConversionRate}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>NightsCalcFormula</name>
+        <dataType>Number</dataType>
+        <expression>{!$Record.LOY_NightsStayed__c} - {!$Record.LOY_OverlappingNights__c}</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>NumberOfQNights</name>
+        <dataType>Number</dataType>
+        <expression>{!$Record.LOY_NightsStayed__c} - {!$Record.LOY_OverlappingNights__c}</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>RateCategoryQualificationCalculated</name>
+        <dataType>String</dataType>
+        <expression>IF(OR(ISBLANK({!$Record.LOY_RateCategory__c}),ISBLANK(TEXT({!$Record.LOY_RateCategory__r.Rewards_Qualify__c}))), &quot;Qualify&quot;, TEXT({!$Record.LOY_RateCategory__r.Rewards_Qualify__c}))</expression>
+    </formulas>
+    <formulas>
+        <name>RNFNIndicatorCalculated</name>
+        <dataType>String</dataType>
+        <expression>IF(OR(ISBLANK({!$Record.LOY_RateCategory__c}),ISBLANK(TEXT({!$Record.LOY_RateCategory__r.LOY_RNFNIndicator__c}))), &quot;Not Applicable&quot;, TEXT({!$Record.LOY_RateCategory__r.LOY_RNFNIndicator__c}))</expression>
+    </formulas>
+    <formulas>
+        <name>TotalNonQRevenue</name>
+        <dataType>Number</dataType>
+        <expression>IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue01&quot;), 0, {!$Record.LOY_CumulativeRoomRevenue__c}) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue02&quot;), 0, {!$Record.LOY_CumulativeFoodRevenue__c}) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue03&quot;), 0, {!$Record.LOY_CumulativeBeverageRevenue__c}) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue04&quot;), 0, {!$Record.LOY_CumulativeTelephoneRevenue__c}) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue05&quot;), 0, {!$Record.LOY_CumulativeMeetingBanquetRevenue__c}) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue06&quot;), 0, {!$Record.LOY_MiscellaneousMandatoryLoyaltyRevenue__c}) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue07&quot;), 0, {!$Record.LOY_MiscellaneousOtherLoyaltyRevenue__c}) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue08&quot;), 0, {!$Record.LOY_MiscellaneousNoLoyaltyRevenue__c}) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue09&quot;), 0, {!$Record.LOY_CumulativeNonRevenueIncludesTax__c})</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>TotalNonQRevenueOrig</name>
+        <dataType>Number</dataType>
+        <expression>IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue01&quot;), 0, {!$Record.LOY_CumulativeRoomRevenue__c}) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue02&quot;), 0, {!$Record.LOY_CumulativeFoodRevenue__c}) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue03&quot;), 0, {!$Record.LOY_CumulativeBeverageRevenue__c}) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue04&quot;), 0, {!$Record.LOY_CumulativeTelephoneRevenue__c}) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue05&quot;), 0, {!$Record.LOY_CumulativeMeetingBanquetRevenue__c}) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue06&quot;), 0, {!$Record.LOY_MiscellaneousMandatoryLoyaltyRevenue__c}) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue07&quot;), 0, {!$Record.LOY_MiscellaneousOtherLoyaltyRevenue__c}) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue08&quot;), 0, {!$Record.LOY_MiscellaneousNoLoyaltyRevenue__c}) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue09&quot;), 0, {!$Record.LOY_CumulativeNonRevenueIncludesTax__c})</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>TotalNonQRevenueUSD</name>
+        <dataType>Number</dataType>
+        <expression>IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue01&quot;), 0, {!$Record.LOY_CumulativeRoomRevenueUSD__c}) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue02&quot;), 0, {!$Record.LOY_CumulativeFoodRevenueUSD__c}) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue03&quot;), 0, {!$Record.LOY_CumulativeBeverageRevenueUSD__c}) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue04&quot;), 0, {!$Record.LOY_CumulativeTelephoneRevenueUSD__c}) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue05&quot;), 0, {!$Record.LOY_CumulativeMeetingBanquetRevenueUSD__c}) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue06&quot;), 0, {!$Record.LOY_MiscellaneousMandatoryLoyaltyRevUSD__c}) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue07&quot;), 0, {!$Record.LOY_MiscellaneousOtherLoyaltyRevUSD__c}) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue08&quot;), 0, {!$Record.LOY_MiscellaneousNoLoyaltyRevenueUSD__c}) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue09&quot;), 0, {!$Record.LOY_CumulativeNonRevIncludesTaxUSD__c})</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>TotalNonQRevenueUSDOrig</name>
+        <dataType>Number</dataType>
+        <expression>IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue01&quot;), 0, {!$Record.LOY_CumulativeRoomRevenueUSD__c}) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue02&quot;), 0, {!$Record.LOY_CumulativeFoodRevenueUSD__c}) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue03&quot;), 0, {!$Record.LOY_CumulativeBeverageRevenueUSD__c}) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue04&quot;), 0, {!$Record.LOY_CumulativeTelephoneRevenueUSD__c}) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue05&quot;), 0, {!$Record.LOY_CumulativeMeetingBanquetRevenueUSD__c}) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue06&quot;), 0, {!$Record.LOY_MiscellaneousMandatoryLoyaltyRevUSD__c}) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue07&quot;), 0, {!$Record.LOY_MiscellaneousOtherLoyaltyRevUSD__c}) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue08&quot;), 0, {!$Record.LOY_MiscellaneousNoLoyaltyRevenueUSD__c}) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue09&quot;), 0, {!$Record.LOY_CumulativeNonRevIncludesTaxUSD__c})</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>TotalQAfterQualificationDisqualified</name>
+        <dataType>Number</dataType>
+        <expression>{!TotalQRevenue} + {!TotalNonQRevenue}</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>TotalQAfterQualificationDisqualifiedUSD</name>
+        <dataType>Number</dataType>
+        <expression>{!TotalQRevenueUSD} + {!TotalNonQRevenueUSD}</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>TotalQRevenue</name>
+        <dataType>Number</dataType>
+        <expression>IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue01&quot;), {!$Record.LOY_CumulativeRoomRevenue__c}, 0) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue02&quot;), {!$Record.LOY_CumulativeFoodRevenue__c}, 0) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue03&quot;), {!$Record.LOY_CumulativeBeverageRevenue__c}, 0) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue04&quot;), {!$Record.LOY_CumulativeTelephoneRevenue__c}, 0) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue05&quot;), {!$Record.LOY_CumulativeMeetingBanquetRevenue__c}, 0) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue06&quot;), {!$Record.LOY_MiscellaneousMandatoryLoyaltyRevenue__c}, 0) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue07&quot;), {!$Record.LOY_MiscellaneousOtherLoyaltyRevenue__c}, 0) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue08&quot;), {!$Record.LOY_MiscellaneousNoLoyaltyRevenue__c}, 0) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue09&quot;), {!$Record.LOY_CumulativeNonRevenueIncludesTax__c}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <description>Total Q Revenue based on Original bucket value</description>
+        <name>TotalQRevenueOrig</name>
+        <dataType>Number</dataType>
+        <expression>IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue01&quot;), {!$Record.LOY_CumulativeRoomRevenue__c}, 0) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue02&quot;), {!$Record.LOY_CumulativeFoodRevenue__c}, 0) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue03&quot;), {!$Record.LOY_CumulativeBeverageRevenue__c}, 0) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue04&quot;), {!$Record.LOY_CumulativeTelephoneRevenue__c}, 0) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue05&quot;), {!$Record.LOY_CumulativeMeetingBanquetRevenue__c}, 0) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue06&quot;), {!$Record.LOY_MiscellaneousMandatoryLoyaltyRevenue__c}, 0) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue07&quot;), {!$Record.LOY_MiscellaneousOtherLoyaltyRevenue__c}, 0) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue08&quot;), {!$Record.LOY_MiscellaneousNoLoyaltyRevenue__c}, 0) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue09&quot;), {!$Record.LOY_CumulativeNonRevenueIncludesTax__c}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>TotalQRevenueUSD</name>
+        <dataType>Number</dataType>
+        <expression>IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue01&quot;), {!$Record.LOY_CumulativeRoomRevenueUSD__c}, 0) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue02&quot;), {!$Record.LOY_CumulativeFoodRevenueUSD__c}, 0) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue03&quot;), {!$Record.LOY_CumulativeBeverageRevenueUSD__c}, 0) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue04&quot;), {!$Record.LOY_CumulativeTelephoneRevenueUSD__c}, 0) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue05&quot;), {!$Record.LOY_CumulativeMeetingBanquetRevenueUSD__c}, 0) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue06&quot;), {!$Record.LOY_MiscellaneousMandatoryLoyaltyRevUSD__c}, 0) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue07&quot;), {!$Record.LOY_MiscellaneousOtherLoyaltyRevUSD__c}, 0) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue08&quot;), {!$Record.LOY_MiscellaneousNoLoyaltyRevenueUSD__c}, 0) +
+IF(INCLUDES({!RevenueQualifiedBucket}, &quot;IHG_RQRevenue09&quot;), {!$Record.LOY_CumulativeNonRevIncludesTaxUSD__c}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>TotalQRevenueUSDOrig</name>
+        <dataType>Number</dataType>
+        <expression>IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue01&quot;), {!$Record.LOY_CumulativeRoomRevenueUSD__c}, 0) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue02&quot;), {!$Record.LOY_CumulativeFoodRevenueUSD__c}, 0) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue03&quot;), {!$Record.LOY_CumulativeBeverageRevenueUSD__c}, 0) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue04&quot;), {!$Record.LOY_CumulativeTelephoneRevenueUSD__c}, 0) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue05&quot;), {!$Record.LOY_CumulativeMeetingBanquetRevenueUSD__c}, 0) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue06&quot;), {!$Record.LOY_MiscellaneousMandatoryLoyaltyRevUSD__c}, 0) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue07&quot;), {!$Record.LOY_MiscellaneousOtherLoyaltyRevUSD__c}, 0) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue08&quot;), {!$Record.LOY_MiscellaneousNoLoyaltyRevenueUSD__c}, 0) +
+IF(INCLUDES({!$Record.LOY_RevenueBucketQualified__c}, &quot;IHG_RQRevenue09&quot;), {!$Record.LOY_CumulativeNonRevIncludesTaxUSD__c}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>TotalRevenue</name>
+        <dataType>Number</dataType>
+        <expression>IF({!ConversionRate}&gt;0, {!$Record.LOY_TotalRevenue__c}/{!ConversionRate}, 0)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>TotalWithoutRoomNonQRev</name>
+        <dataType>Number</dataType>
+        <expression>{!TotalNonQRevenue} + {!$Record.LOY_CumulativeRoomRevenue__c}</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>TotalWithoutRoomNonQRevUSD</name>
+        <dataType>Number</dataType>
+        <expression>{!TotalNonQRevenueUSD} + {!$Record.LOY_CumulativeRoomRevenueUSD__c}</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>TotalWithoutRoomRev</name>
+        <dataType>Number</dataType>
+        <expression>{!TotalQRevenue} - {!$Record.LOY_CumulativeRoomRevenue__c}</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>TotalWithoutRoomRevUSD</name>
+        <dataType>Number</dataType>
+        <expression>{!TotalQRevenueUSD} - {!$Record.LOY_CumulativeRoomRevenueUSD__c}</expression>
+        <scale>2</scale>
+    </formulas>
+    <interviewLabel>StayRequlification {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Stay Requalification RT</label>
+    <loops>
+        <name>Stay_Qualification_Results_Loop</name>
+        <label>Stay Qualification Results Loop</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>StayQualificationDTResults</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Check_Result</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Create_Matched_Rules_Stay</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <name>Create_Matched_Rules_Stay</name>
+        <label>Create Matched Rules Stay</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Log_Created_Matched_Rule</targetReference>
+        </connector>
+        <inputReference>StayMatchedRules</inputReference>
+    </recordCreates>
+    <recordCreates>
+        <description>Create a Platform Event to notify the LWC component after the flow is completed</description>
+        <name>Notify_Component</name>
+        <label>Notify Component</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Log_Updated_Stay</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Payload__c</field>
+            <value>
+                <elementReference>UpdatedStayResultJSON</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Record_Id__c</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status__c</field>
+            <value>
+                <stringValue>Ok</stringValue>
+            </value>
+        </inputAssignments>
+        <object>LPU_Processing_Event__e</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordLookups>
+        <name>Get_LOY_StayQualification_RT</name>
+        <label>Get LOY_StayQualification RT</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Execute_Stay_Qualification_DT</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>LOY_StayQualification</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>RecordType</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Updated_Result_And_Reasons</name>
+        <label>Get Updated Result, Reasons and Room Rev Q Result</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Notify_Component</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>hapi__Stay__c</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>LOY_StayQualificationResult__c</queriedFields>
+        <queriedFields>LOY_StayQualificationReason__c</queriedFields>
+        <queriedFields>RoomRevQResult__c</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Update_Record_No_Reward</name>
+        <label>Update Record No Reward</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Updated_Result_And_Reasons</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>LOY_MarkAsRewardNight__c</field>
+            <value>
+                <stringValue>No</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_RewardNights__c</field>
+            <value>
+                <numberValue>0.0</numberValue>
+            </value>
+        </inputAssignments>
+        <object>hapi__Stay__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Record_with_Reward</name>
+        <label>Update Record with Reward</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Updated_Result_And_Reasons</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>LOY_MarkAsRewardNight__c</field>
+            <value>
+                <stringValue>Yes</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_RewardNights__c</field>
+            <value>
+                <elementReference>NightsCalcFormula</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_TierQualifyingNights__c</field>
+            <value>
+                <elementReference>NightsCalcFormula</elementReference>
+            </value>
+        </inputAssignments>
+        <object>hapi__Stay__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Stay</name>
+        <label>Update Stay</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_LOY_StayQualification_RT</targetReference>
+        </connector>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Stay_Default_Qualified</name>
+        <label>Update Stay Default Qualified</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Check_if_Stay_Match_Reward_Night_Rule</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>LOY_FinalTotalNonQualifyingRevenue_USD__c</field>
+            <value>
+                <elementReference>TotalNonQRevenueUSD</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_FinalTotalNonQualifyingRevenue__c</field>
+            <value>
+                <elementReference>TotalNonQRevenue</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_FinalTotalQualifyingRevenue_USD__c</field>
+            <value>
+                <elementReference>TotalQRevenueUSD</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_FinalTotalQualifyingRevenue__c</field>
+            <value>
+                <elementReference>TotalQRevenue</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_NonQualifyingNights__c</field>
+            <value>
+                <elementReference>$Record.LOY_OverlappingNights__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_QualifyingNights__c</field>
+            <value>
+                <elementReference>NightsCalcFormula</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_RevenueBucketQualified__c</field>
+            <value>
+                <elementReference>RevenueQualifiedBucket</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_StayQualificationReason__c</field>
+            <value>
+                <stringValue>Default Qualify</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_StayQualificationResult__c</field>
+            <value>
+                <stringValue>Qualify</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_TierQualifyingNights__c</field>
+            <value>
+                <elementReference>NightsCalcFormula</elementReference>
+            </value>
+        </inputAssignments>
+        <object>hapi__Stay__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Stay_Diqualified_Room_Rev_included</name>
+        <label>Update Stay Disqualified</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Check_if_Stay_Match_Reward_Night_Rule</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>LOY_FinalTotalNonQualifyingRevenue_USD__c</field>
+            <value>
+                <elementReference>FD_TotalNonQRevenueUSD</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_FinalTotalNonQualifyingRevenue__c</field>
+            <value>
+                <elementReference>FD_TotalNonQRevenue</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_FinalTotalQualifyingRevenue_USD__c</field>
+            <value>
+                <elementReference>FD_TotalQRevenueUSD</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_FinalTotalQualifyingRevenue__c</field>
+            <value>
+                <elementReference>FD_TotalQRevenue</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_NonQualifyingNights__c</field>
+            <value>
+                <elementReference>$Record.LOY_NightsStayed__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_QualifyingNights__c</field>
+            <value>
+                <numberValue>0.0</numberValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_RevenueBucketQualified__c</field>
+            <value>
+                <elementReference>fRemoveRoomRevenue</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_RoomIncidentalsDisqualified__c</field>
+            <value>
+                <stringValue>No</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_StayQualificationReason__c</field>
+            <value>
+                <elementReference>QualificationReasonsList</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_StayQualificationResult__c</field>
+            <value>
+                <elementReference>StayQualificationDTResult.LOY_StayQualificationResult__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_TierQualifyingNights__c</field>
+            <value>
+                <numberValue>0.0</numberValue>
+            </value>
+        </inputAssignments>
+        <object>hapi__Stay__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Stay_Disqualified</name>
+        <label>Update Stay Disqualified</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Check_if_Stay_Match_Reward_Night_Rule</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>LOY_FinalTotalNonQualifyingRevenue_USD__c</field>
+            <value>
+                <elementReference>TotalNonQRevenueUSD</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_FinalTotalNonQualifyingRevenue__c</field>
+            <value>
+                <elementReference>TotalNonQRevenue</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_FinalTotalQualifyingRevenue_USD__c</field>
+            <value>
+                <numberValue>0.0</numberValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_FinalTotalQualifyingRevenue__c</field>
+            <value>
+                <numberValue>0.0</numberValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_NonQualifyingNights__c</field>
+            <value>
+                <elementReference>$Record.LOY_NightsStayed__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_QualifyingNights__c</field>
+            <value>
+                <numberValue>0.0</numberValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_RevenueBucketQualified__c</field>
+            <value>
+                <elementReference>StayQualificationDTResult.LOY_RevenueQualificationBucket__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_RoomIncidentalsDisqualified__c</field>
+            <value>
+                <stringValue>Yes</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_StayQualificationReason__c</field>
+            <value>
+                <elementReference>QualificationReasonsList</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_StayQualificationResult__c</field>
+            <value>
+                <elementReference>StayQualificationDTResult.LOY_StayQualificationResult__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_TierQualifyingNights__c</field>
+            <value>
+                <numberValue>0.0</numberValue>
+            </value>
+        </inputAssignments>
+        <object>hapi__Stay__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Stay_Qualified</name>
+        <label>Update Stay Qualified</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Check_if_Stay_Match_Reward_Night_Rule</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>LOY_FinalTotalNonQualifyingRevenue_USD__c</field>
+            <value>
+                <elementReference>FQ_TotalNonQRevenueUSD</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_FinalTotalNonQualifyingRevenue__c</field>
+            <value>
+                <elementReference>FQ_TotalNonQRevenue</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_FinalTotalQualifyingRevenue_USD__c</field>
+            <value>
+                <elementReference>FQ_TotalQRevenueUSD</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_FinalTotalQualifyingRevenue__c</field>
+            <value>
+                <elementReference>FQ_TotalQRevenue</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_NonQualifyingNights__c</field>
+            <value>
+                <elementReference>$Record.LOY_OverlappingNights__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_QualifyingNights__c</field>
+            <value>
+                <elementReference>NumberOfQNights</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_RevenueBucketQualified__c</field>
+            <value>
+                <elementReference>RevenueQualifiedBucket</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_StayQualificationReason__c</field>
+            <value>
+                <elementReference>QualificationReasonsList</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_StayQualificationResult__c</field>
+            <value>
+                <elementReference>StayQualificationDTResult.LOY_StayQualificationResult__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>LOY_TierQualifyingNights__c</field>
+            <value>
+                <elementReference>NumberOfQNights</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Log_Stay_Qualification_Start</targetReference>
+        </connector>
+        <filterFormula>OR(
+    AND(
+        ISCHANGED({!$Record.LPUStatus__c}),
+        ISPICKVAL({!$Record__Prior.LPUStatus__c}, &quot;Pending&quot;),
+        ISPICKVAL({!$Record.LPUStatus__c}, &quot;Updated&quot;),
+        OR(
+            ISCHANGED({!$Record.LOY_RevenueBucketQualified__c}),
+            ISCHANGED({!$Record.LOY_TotalRevenue__c})
+        )
+    ),
+    AND(
+        OR(
+            ISCHANGED({!$Record.LOY_RevenueBucketQualified__c}),
+            ISCHANGED({!$Record.LOY_TotalRevenue__c})
+        ),
+        ISPICKVAL({!$Record.LPUStatus__c}, &quot;Updated&quot;)
+    )
+)</filterFormula>
+        <object>hapi__Stay__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>UpdatedStayResultJSON</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>{&quot;result&quot;:&quot;{!Get_Updated_Result_And_Reasons.LOY_StayQualificationResult__c}&quot;,
+&quot;reasons&quot;:&quot;{!Get_Updated_Result_And_Reasons.LOY_StayQualificationReason__c}&quot;}</text>
+    </textTemplates>
+    <variables>
+        <name>ConversionRate</name>
+        <dataType>Number</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <scale>2</scale>
+    </variables>
+    <variables>
+        <name>HasIncidentals</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>No</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <description>Original (static) bucket value</description>
+        <name>OriginalBucket</name>
+        <dataType>Multipicklist</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Original Bucket value without Room Revenue</description>
+        <name>OriginalBucketWithoutRoom</name>
+        <dataType>Multipicklist</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>OriginRevBucket_String</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>QualificationReasonsList</name>
+        <dataType>Multipicklist</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>RevBucket_String</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>RevenueQualifiedBucket</name>
+        <dataType>Multipicklist</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>StayMatchedRule</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>LOY_MatchedLoyaltyRule__c</objectType>
+    </variables>
+    <variables>
+        <name>StayMatchedRules</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>LOY_MatchedLoyaltyRule__c</objectType>
+    </variables>
+    <variables>
+        <name>StayMatchOutputSingleReward</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>LOY_StayProcessingRule__c</objectType>
+    </variables>
+    <variables>
+        <name>StayQualificationDTResult</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>LOY_StayProcessingRule__c</objectType>
+    </variables>
+    <variables>
+        <name>StayQualificationDTResults</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>LOY_StayProcessingRule__c</objectType>
+    </variables>
+</Flow>

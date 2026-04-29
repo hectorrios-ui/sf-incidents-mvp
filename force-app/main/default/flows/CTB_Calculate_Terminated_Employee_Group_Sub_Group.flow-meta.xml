@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Create_a_Log_for_Employee_Group_and_SubGroup</name>
+        <label>Create a Log for Employee Group and SubGroup</label>
+        <locationX>50</locationX>
+        <locationY>1466</locationY>
+        <actionName>IHGFlowRecordLogEntry</actionName>
+        <actionType>apex</actionType>
+        <dataTypeMappings>
+            <typeName>T__record</typeName>
+            <typeValue>Employee</typeValue>
+        </dataTypeMappings>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>flowName</name>
+            <value>
+                <elementReference>FlowName</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>loggingLevelName</name>
+            <value>
+                <stringValue>DEBUG</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>EmployeeGroupUpdateMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>record</name>
+            <value>
+                <elementReference>EmployeeRecordforLogs</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>saveLog</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <nameSegment>IHGFlowRecordLogEntry</nameSegment>
+        <offset>0</offset>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Assign_Employee_Record_for_Logs</name>
+        <label>Assign Employee Record for Logs</label>
+        <locationX>314</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>EmployeeRecordforLogs.Id</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Employee.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Iterate_Over_Retiree_Employee_Rules</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Assign decided Employee Sub Group and Group to the Employee</description>
+        <name>Assign_Retiree_Employee_Attributes</name>
+        <label>Assign Retiree Employee Attributes</label>
+        <locationX>402</locationX>
+        <locationY>890</locationY>
+        <assignmentItems>
+            <assignToReference>Get_Employee.Employee_Sub_Group__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Iterate_Over_Retiree_Employee_Rules.Target_Employee_Sub_Group__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Get_Employee.Employee_Group__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>SelectedEmployeeGroup</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>Get_Employee.Matched_Rule__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Iterate_Over_Retiree_Employee_Rules.Name</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>isFirstMatch</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Iterate_Over_Retiree_Employee_Rules</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Exception_Details</name>
+        <label>Set Exception Details</label>
+        <locationX>842</locationX>
+        <locationY>350</locationY>
+        <assignmentItems>
+            <assignToReference>var_Exception_details</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Error occured while trying to retrieve an Employee Record</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Publish_Query_Exception</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Exception_Details_1</name>
+        <label>Set Exception Details</label>
+        <locationX>1106</locationX>
+        <locationY>242</locationY>
+        <assignmentItems>
+            <assignToReference>var_Exception_details</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Error occured while trying to retrieve an Retiree Employee Rule</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Publish_Query_Exception</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <description>Flag to check if the Retriee Employee Rule exists  Default is isFirstMatch is False if match is found Flag is set to true</description>
+        <name>Check_Retiree_Rule</name>
+        <label>Check Retiree Rule</label>
+        <locationX>688</locationX>
+        <locationY>566</locationY>
+        <defaultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Retiree_Match_Rule_Found</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Rule Matched</defaultConnectorLabel>
+        <rules>
+            <name>No_Rule_Match</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>isFirstMatch</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>LOY_Split_String_With_Delimiter</targetReference>
+            </connector>
+            <label>No Rule Match</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Check  Retiree Rules which match Tenure Sub Group and Status</description>
+        <name>Check_Rules_for_Retiree</name>
+        <label>Check Rules for Retiree</label>
+        <locationX>534</locationX>
+        <locationY>782</locationY>
+        <defaultConnector>
+            <targetReference>Iterate_Over_Retiree_Employee_Rules</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Match not Found</defaultConnectorLabel>
+        <rules>
+            <name>Retiree_Rule_Found</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>IsTenureMatch</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_Retiree_Employee_Attributes</targetReference>
+            </connector>
+            <label>Retiree Rule Found</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>If Retiree Match Rule is found update the Employee</description>
+        <name>Retiree_Match_Rule_Found</name>
+        <label>Retiree Match Rule Found</label>
+        <locationX>314</locationX>
+        <locationY>1250</locationY>
+        <defaultConnectorLabel>No Match Found</defaultConnectorLabel>
+        <rules>
+            <name>Match_Found</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>isFirstMatch</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Employee</targetReference>
+            </connector>
+            <label>Match Found</label>
+        </rules>
+    </decisions>
+    <description>Calculate the terminated employee Group Sub group. (US382794) - Fix tenure calculation and set correct group &amp; subgroup if an employee&apos;s termination date and hire date are the same (DE103811)
+US400995 || CTB | Add Nebula logging on record creation, deletion and updates - Employee</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>EndDateTime</name>
+        <dataType>String</dataType>
+        <expression>TEXT({!$Flow.CurrentDateTime})</expression>
+    </formulas>
+    <formulas>
+        <name>FlowName</name>
+        <dataType>String</dataType>
+        <expression>&apos;CTB Calculate Terminated Employee Group Sub Group&apos;</expression>
+    </formulas>
+    <formulas>
+        <name>IsEmployeeStatusFound</name>
+        <dataType>Boolean</dataType>
+        <expression>TEXT({!Get_Employee.EmployeeStatus})= TEXT({!Iterate_Over_Retiree_Employee_Rules.Employee_Status__c})</expression>
+    </formulas>
+    <formulas>
+        <description>Checks if Employee Sub Group Exists</description>
+        <name>IsEmployeeSubGroupExist</name>
+        <dataType>Boolean</dataType>
+        <expression>AND(
+OR(
+    {!Multiselect_Display_collection} = &quot;[]&quot;,
+    CONTAINS({!Multiselect_Display_collection}, TEXT({!Get_Employee.Employee_Sub_Group__c}))
+),
+NOT(ISBLANK(TEXT({!Get_Employee.Employee_Sub_Group__c})))
+)</expression>
+    </formulas>
+    <formulas>
+        <description>This flag is used to check if the Employee Tenure falls with in the defined rules in Retiree Employee Rule object Min and Max ranges , updated this formula for US382794</description>
+        <name>IsEmployeeTenureMatch</name>
+        <dataType>Boolean</dataType>
+        <expression>OR( ISBLANK({!Get_Employee.Years__c}),
+    AND(
+        (
+            {!Get_Employee.Years__c}&gt;=
+            IF(
+                ISBLANK({!Iterate_Over_Retiree_Employee_Rules.Minimal_Tenure_Years__c}) || 
+                {!Iterate_Over_Retiree_Employee_Rules.Minimal_Tenure_Years__c} = 0,
+                0,
+                {!Iterate_Over_Retiree_Employee_Rules.Minimal_Tenure_Years__c}
+            )
+            ),
+        (
+            {!Get_Employee.Years__c} &lt;= 
+            IF(
+                ISBLANK({!Iterate_Over_Retiree_Employee_Rules.Maximum_Tenure_Years__c}) || 
+                {!Iterate_Over_Retiree_Employee_Rules.Maximum_Tenure_Years__c} = 0,
+                99999,
+                {!Iterate_Over_Retiree_Employee_Rules.Maximum_Tenure_Years__c}
+            )
+        )
+    )
+)</expression>
+    </formulas>
+    <formulas>
+        <description>Used to check Tenure is matched as per rules.
+
+99999 = Representing &quot;unlimited&quot; as a large number</description>
+        <name>IsTenureMatch</name>
+        <dataType>Boolean</dataType>
+        <expression>AND(
+        {!IsEmployeeStatusFound},
+        {!IsEmployeeSubGroupExist},
+        {!IsEmployeeTenureMatch},
+        NOT(ISBLANK(TEXT({!Get_Employee.Employee_Group__c})))
+)</expression>
+    </formulas>
+    <formulas>
+        <description>Sets the Selected Employee Group based on the conditions of number of years</description>
+        <name>SelectedEmployeeGroup</name>
+        <dataType>String</dataType>
+        <expression>If(  
+OR( OR(({!Get_Employee.Years__c}  &lt; 10) ,   ISBLANK({!Get_Employee.Years__c} )),
+
+AND(
+ISBLANK({!Iterate_Over_Retiree_Employee_Rules.Maximum_Tenure_Years__c}) ,
+({!Iterate_Over_Retiree_Employee_Rules.Minimal_Tenure_Years__c}==0 ) 
+)
+), &apos;&apos; , TEXT({!Get_Employee.Employee_Group__c}) 
+)</expression>
+    </formulas>
+    <formulas>
+        <name>StartDateTime</name>
+        <dataType>String</dataType>
+        <expression>TEXT({!$Flow.InterviewStartTime})</expression>
+    </formulas>
+    <interviewLabel>CTB Calculate Terminated Employee Group Sub Group {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>CTB Calculate Terminated Employee Group Sub Group</label>
+    <loops>
+        <description>Iterate over the Retiree Employee Rules</description>
+        <name>Iterate_Over_Retiree_Employee_Rules</name>
+        <label>Iterate Over Retiree Employee Rules</label>
+        <locationX>314</locationX>
+        <locationY>458</locationY>
+        <collectionReference>Get_Retiree_Employee_Rules</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Check_Retiree_Rule</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Retiree_Match_Rule_Found</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Get Employee Record from Salesforce</description>
+        <name>Get_Employee</name>
+        <label>Get Employee</label>
+        <locationX>314</locationX>
+        <locationY>242</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Assign_Employee_Record_for_Logs</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Exception_Details</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>var_employeeId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Employee</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Get Retiree Employee Rules</description>
+        <name>Get_Retiree_Employee_Rules</name>
+        <label>Get Retiree Employee Rules</label>
+        <locationX>314</locationX>
+        <locationY>134</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Employee</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Exception_Details_1</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Evaluate_Rule__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Y</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>Retiree_Employee_Rule__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <description>Update the Employee Record with appropriate Group Sub Group and Matched Rule</description>
+        <name>Update_Employee</name>
+        <label>Update Employee</label>
+        <locationX>50</locationX>
+        <locationY>1358</locationY>
+        <connector>
+            <targetReference>Create_a_Log_for_Employee_Group_and_SubGroup</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Publish_DML_Exception</targetReference>
+        </faultConnector>
+        <inputReference>Get_Employee</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>188</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Retiree_Employee_Rules</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <subflows>
+        <name>LOY_Split_String_With_Delimiter</name>
+        <label>Get Sub Groups</label>
+        <locationX>534</locationX>
+        <locationY>674</locationY>
+        <connector>
+            <targetReference>Check_Rules_for_Retiree</targetReference>
+        </connector>
+        <flowName>LOY_Split_String_with_delimiter</flowName>
+        <inputAssignments>
+            <name>Multiselect_Input_String</name>
+            <value>
+                <elementReference>Iterate_Over_Retiree_Employee_Rules.Eligible_Employee_Sub_Group_s__c</elementReference>
+            </value>
+        </inputAssignments>
+        <outputAssignments>
+            <assignToReference>Multiselect_Display_collection</assignToReference>
+            <name>Multiselect_Display_collection</name>
+        </outputAssignments>
+    </subflows>
+    <subflows>
+        <description>Publish DML Exception</description>
+        <name>Publish_DML_Exception</name>
+        <label>Publish DML Exception</label>
+        <locationX>314</locationX>
+        <locationY>1466</locationY>
+        <flowName>Utility_Publish_Exception_Event</flowName>
+        <inputAssignments>
+            <name>DebugNotes</name>
+            <value>
+                <stringValue>The Update Operation Failed when Terminating an Employee</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>ExceptionDetails</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>FlowName</name>
+            <value>
+                <stringValue>CTB Calculate Terminated Employee Group Sub Group </stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>Operation</name>
+            <value>
+                <stringValue>Update or Create</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>RecordId</name>
+            <value>
+                <elementReference>Get_Employee.ManagerId</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Publish_Query_Exception</name>
+        <label>Publish Query Exception</label>
+        <locationX>1106</locationX>
+        <locationY>350</locationY>
+        <flowName>Utility_Publish_Exception_Event</flowName>
+        <inputAssignments>
+            <name>DebugNotes</name>
+            <value>
+                <stringValue>Unable to Fetch the Retiree Employee Rule Objects</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>ExceptionDetails</name>
+            <value>
+                <elementReference>var_Exception_details</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>FlowName</name>
+            <value>
+                <stringValue>CTB Calculate Terminated Employee Group Sub Group  </stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>RecordId</name>
+            <value>
+                <elementReference>Get_Employee.Id</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <textTemplates>
+        <name>EmployeeGroupUpdateMessage</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>The Employee record has been successfully updated with the appropriate Group and Subgroup based on the matching rule by {!$User.Id} with Record Id: {!Get_Employee.Id}
+Start Time: {!StartDateTime}
+End Time: {!EndDateTime}</text>
+    </textTemplates>
+    <variables>
+        <name>EmployeeRecordforLogs</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Employee</objectType>
+    </variables>
+    <variables>
+        <description>Flag to check if the first match from the Retired Employee Rule is met or not</description>
+        <name>isFirstMatch</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
+    <variables>
+        <name>Multiselect_Display_collection</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>var_employeeId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>var_Exception_details</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

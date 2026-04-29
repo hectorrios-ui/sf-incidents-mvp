@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Set_VD</name>
+        <label>Set VD</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>varR_VoucherDefinition</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Definition</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Face_Value_on_VD</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Face_Value_on_VD</name>
+        <label>Face Value on VD?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Update_Choice_Option_0</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Face_Value_Present</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>forC_FaceValue</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <numberValue>0.0</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Determine_Face_Value_and_Currency</targetReference>
+            </connector>
+            <label>Face Value Present</label>
+        </rules>
+    </decisions>
+    <formulas>
+        <description>Represents the intended face value of the Member-Choice per the following logic: If the VD has no FaceValue then Choice has no FV or Currency</description>
+        <name>forC_FaceValue</name>
+        <dataType>Currency</dataType>
+        <expression>IF (
+{!varR_VoucherDefinition.FaceValue} &lt;= 0, 0, {!varR_VoucherDefinition.FaceValue}    
+)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>forT_Currency</name>
+        <dataType>String</dataType>
+        <expression>IF (
+{!forC_FaceValue} = 0, &quot;&quot;, {!varT_CurrencyCode} 
+)</expression>
+    </formulas>
+    <interviewLabel>LOY - Choice Option - After Save {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>LOY - Choice Option - After Save</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Definition</name>
+        <label>Get Definition</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Set_VD</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Voucher_Definition__r.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>VoucherDefinition</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Member</name>
+        <label>Get Member</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Definition</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>MembershipNumber</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Member_Choice__r.Member_Benefit__r.Member.MembershipNumber</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>LoyaltyProgramMember</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Update_Choice_Option</name>
+        <label>Update Choice Option</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <inputAssignments>
+            <field>CurrencyIsoCode</field>
+            <value>
+                <elementReference>Determine_Face_Value_and_Currency.varCurrencyISOCode</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Face_Value__c</field>
+            <value>
+                <elementReference>Determine_Face_Value_and_Currency.varFaceValue</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Choice_Option_0</name>
+        <label>Update Choice Option</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <inputAssignments>
+            <field>CurrencyIsoCode</field>
+            <value>
+                <stringValue></stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Face_Value__c</field>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Member</targetReference>
+        </connector>
+        <object>Choice_Option__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <subflows>
+        <name>Determine_Face_Value_and_Currency</name>
+        <label>Determine Face Value and Currency</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Update_Choice_Option</targetReference>
+        </connector>
+        <flowName>LOY_Voucher_Determine_FV_and_Currency</flowName>
+        <inputAssignments>
+            <name>inMember</name>
+            <value>
+                <elementReference>Get_Member</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>inVoucherDefinition</name>
+            <value>
+                <elementReference>Get_Definition</elementReference>
+            </value>
+        </inputAssignments>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </subflows>
+    <variables>
+        <description>List of VD-Currency records for the VD.</description>
+        <name>varL_VDCurrencies</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Voucher_Definition_Currency__c</objectType>
+    </variables>
+    <variables>
+        <description>VD associated with this ChoiceOption</description>
+        <name>varR_VoucherDefinition</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>VoucherDefinition</objectType>
+    </variables>
+    <variables>
+        <name>varT_CurrencyCode</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <elementReference>$Label.LOY_Default_Currency_ISO_Code</elementReference>
+        </value>
+    </variables>
+</Flow>

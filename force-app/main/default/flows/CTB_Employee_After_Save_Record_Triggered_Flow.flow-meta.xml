@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Save_log_Action_for_Non_Terminated</name>
+        <label>Save log Action for Non Terminated</label>
+        <locationX>314</locationX>
+        <locationY>539</locationY>
+        <actionName>Logger</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <nameSegment>Logger</nameSegment>
+        <offset>0</offset>
+    </actionCalls>
+    <actionCalls>
+        <name>Save_log_Action_for_Terminated_Process</name>
+        <label>Save log Action for Terminated Process</label>
+        <locationX>50</locationX>
+        <locationY>539</locationY>
+        <actionName>Logger</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <nameSegment>Logger</nameSegment>
+        <offset>0</offset>
+    </actionCalls>
+    <apiVersion>63.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Terminated_or_Active</name>
+        <label>Terminated or Active</label>
+        <locationX>182</locationX>
+        <locationY>323</locationY>
+        <defaultConnector>
+            <targetReference>Call_Group_Sub_Group_Flow</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Terminated</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.EmployeeStatus</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.EmployeeStatus</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Terminated</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Termination_Process</targetReference>
+            </connector>
+            <label>Terminated</label>
+        </rules>
+    </decisions>
+    <description>This Flow runs after the Employee Record is saved
+US400995 || CTB | Add Nebula logging on record creation, deletion and updates - Employee</description>
+    <environments>Default</environments>
+    <interviewLabel>CTB Employee After Save Record Triggered Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>CTB Employee After Save Record Triggered Flow</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Terminated_or_Active</targetReference>
+        </connector>
+        <filterFormula>OR(
+AND({!$Record.IsImported__c} == false,isNew()),
+AND( 
+ {!$Record.IsImported__c} == false,
+OR(
+isChanged({!$Record.EmployeeStatus}),
+isChanged({!$Record.Worker_HR_Org_Type__c}),
+isChanged({!$Record.Worker_Sub_Type__c}),
+isChanged({!$Record.Job_Title__c}),
+isChanged({!$Record.Primary_Work_Location__c}),
+isChanged({!$Record.Hotel__r.Brandx__r.Brand_Code__c}),
+isChanged({!$Record.Hotel__r.Hotel_Mgt_Category__c}),
+isChanged({!$Record.Hotel__r.Chain_Code__c}),
+isChanged({!$Record.Primary_Work_Country_Code__c}),
+isChanged({!$Record.Primary_Work_Country__r.Region__r.Region_Code__c})
+)
+)
+)</filterFormula>
+        <object>Employee</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <subflows>
+        <name>Call_Group_Sub_Group_Flow</name>
+        <label>Call Group Sub  Group Flow</label>
+        <locationX>314</locationX>
+        <locationY>431</locationY>
+        <connector>
+            <targetReference>Save_log_Action_for_Non_Terminated</targetReference>
+        </connector>
+        <flowName>CTBEmployeeCalculateGroup_SubGroup</flowName>
+        <inputAssignments>
+            <name>recordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Termination_Process</name>
+        <label>Termination Process</label>
+        <locationX>50</locationX>
+        <locationY>431</locationY>
+        <connector>
+            <targetReference>Save_log_Action_for_Terminated_Process</targetReference>
+        </connector>
+        <flowName>CTB_Calculate_Terminated_Employee_Group_Sub_Group</flowName>
+        <inputAssignments>
+            <name>var_employeeId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <triggerOrder>1</triggerOrder>
+</Flow>

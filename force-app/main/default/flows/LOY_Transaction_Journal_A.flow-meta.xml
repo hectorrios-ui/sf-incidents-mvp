@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <description>Determine the event type</description>
+        <name>Event_Type</name>
+        <label>Event Type?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Member_Event_Outcome</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>forB_IsMemberEventType</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Handle_Member_Event</targetReference>
+            </connector>
+            <label>Member Event</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>New_Record</name>
+        <label>New Record?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Updated</defaultConnectorLabel>
+        <rules>
+            <name>New_Record_Outcome</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>forB_IsNew</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Event_Type</targetReference>
+            </connector>
+            <label>New</label>
+        </rules>
+    </decisions>
+    <description>Executes after a Transaction Journal record is saved.</description>
+    <formulas>
+        <description>Represents if the Transaction Journal Type is a Member Event</description>
+        <name>forB_IsMemberEventType</name>
+        <dataType>Boolean</dataType>
+        <expression>IF ( {!$Record.JournalType.Name} = &quot;Member Event&quot;, TRUE, FALSE)</expression>
+    </formulas>
+    <formulas>
+        <description>Returns true if record is been created, false if updated.</description>
+        <name>forB_IsNew</name>
+        <dataType>Boolean</dataType>
+        <expression>ISNEW()</expression>
+    </formulas>
+    <formulas>
+        <description>Converts the Record.MilestoneUnit text to number</description>
+        <name>forN_MilestoneValue</name>
+        <dataType>Number</dataType>
+        <expression>VALUE({!$Record.Milestone_Units__c})</expression>
+        <scale>0</scale>
+    </formulas>
+    <interviewLabel>LOY - Transaction Journal - A {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>LOY - Transaction Journal - After Save</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>New_Record</targetReference>
+        </connector>
+        <object>TransactionJournal</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <subflows>
+        <name>Handle_Member_Event</name>
+        <label>Handle Member Event</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <flowName>LOY_AL_Member_Event_Handler</flowName>
+        <inputAssignments>
+            <name>varR_TransactionJournal</name>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </inputAssignments>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </subflows>
+    <variables>
+        <description>Stores the ID of the Member Event that was created</description>
+        <name>varID_MemberEventId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

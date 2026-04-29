@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Check_If_Employee_has_Data</name>
+        <label>Check If Employee has Data?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>End the Process</defaultConnectorLabel>
+        <rules>
+            <name>Employee_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Associated_Employee_for_LPM</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Reactivation_of_the_benefits_based_on_the_group_subgroup</targetReference>
+            </connector>
+            <label>Employee &gt; 0</label>
+        </rules>
+    </decisions>
+    <description>US414858 - Reactivate groups if a closed LPM becomes active again</description>
+    <environments>Default</environments>
+    <interviewLabel>LOY CTB Reactivate Benefits, LPM &amp; LPGMRs If LPM Reactived {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>LOY CTB Reactivate MemberBenefits If LPM Reactivated</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Associated_Employee_for_LPM</name>
+        <label>Get Associated Employee for LPM</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Check_If_Employee_has_Data</targetReference>
+        </connector>
+        <filterLogic>1 AND (2 OR 3)</filterLogic>
+        <filters>
+            <field>Loyalty_Program_Member__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>EmployeeStatus</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Active</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>EmployeeStatus</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Terminated</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Employee</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Associated_Employee_for_LPM</targetReference>
+        </connector>
+        <filterFormula>AND(
+ISCHANGED({!$Record.MembershipStatusCode__c}),
+({!$Record__Prior.MembershipStatusCode__c} = &apos;C&apos;),
+({!$Record.MembershipStatusCode__c} = &apos;O&apos;)
+)</filterFormula>
+        <object>LoyaltyProgramMember</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <subflows>
+        <name>Reactivation_of_the_benefits_based_on_the_group_subgroup</name>
+        <label>Reactivation of the benefits based on the group/subgroup</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <flowName>CTB_Active_Member_Benefit_Assignment</flowName>
+        <inputAssignments>
+            <name>recordId</name>
+            <value>
+                <elementReference>Get_Associated_Employee_for_LPM.Id</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <textTemplates>
+        <name>CustomMetadataQueryMessage</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>BenefitAPI record is successfully found 
+Start Time: TEXT({!$Flow.InterviewStartTime})
+End Time : TEXT({!$Flow.CurrentDateTime})</text>
+    </textTemplates>
+    <textTemplates>
+        <name>GroupLPMQueryMessage</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>Group LPM record is successfully found 
+Start Time: TEXT({!$Flow.InterviewStartTime})
+End Time : TEXT({!$Flow.CurrentDateTime})</text>
+    </textTemplates>
+    <textTemplates>
+        <name>LogForQueryMemberBenefits</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>Member Benefit records is successfully found 
+Start Time: TEXT({!$Flow.InterviewStartTime})
+End Time : TEXT({!$Flow.CurrentDateTime})</text>
+    </textTemplates>
+    <textTemplates>
+        <name>LogForUpdateMemberBenefits</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>Member Benefit records are successfully Updated by {!$User.Id} 
+Start Time: TEXT({!$Flow.InterviewStartTime})
+End Time : TEXT({!$Flow.CurrentDateTime})</text>
+    </textTemplates>
+    <textTemplates>
+        <name>LogLPGMRQueryMessage</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>Loyalty Program Group Member Relationship record is successfully queried
+Start Time: TEXT({!$Flow.InterviewStartTime})
+End Time : TEXT({!$Flow.CurrentDateTime})</text>
+    </textTemplates>
+    <textTemplates>
+        <name>UpdateGroupLPMMessage</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>GroupLPM record is successfully Updated by {!$User.Id} 
+Start Time: TEXT({!$Flow.InterviewStartTime})
+End Time : TEXT({!$Flow.CurrentDateTime})</text>
+    </textTemplates>
+    <textTemplates>
+        <name>UpdateLogQueryForLPGMR</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>Loyalty Program Group Member Relationship record is successfully Updated by {!$User.Id} 
+Start Time: TEXT({!$Flow.InterviewStartTime})
+End Time : TEXT({!$Flow.CurrentDateTime})</text>
+    </textTemplates>
+    <variables>
+        <name>DetermineNumberOfPoolTypesForLPMGroup</name>
+        <dataType>Picklist</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>DetermineNumberOfPoolTypesForLPMGroupCollection</name>
+        <dataType>Picklist</dataType>
+        <isCollection>true</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>DetermineNumberOfPoolTypesForLPMGroupMultiSelect</name>
+        <dataType>Multipicklist</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>FlowName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>LOY CTB Reactivate Benefits, LPM &amp; LPGMRs If LPM Reactived</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <name>ListOfGroupLPMIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>ListOfGroupLPMRecords</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>LoyaltyProgramMember</objectType>
+    </variables>
+    <variables>
+        <name>ListOfIndividualLPMIdsFromMemberBenefits</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>ListOfLPGMRRecords</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>LoyaltyPgmGroupMbrRlnsp</objectType>
+    </variables>
+    <variables>
+        <name>ListOfMemberBenefitRecords</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>MemberBenefit</objectType>
+    </variables>
+    <variables>
+        <name>SingleGroupLPMUpdatedRecord</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>LoyaltyProgramMember</objectType>
+    </variables>
+    <variables>
+        <name>SingleLPGMRUpdateRecord</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>LoyaltyPgmGroupMbrRlnsp</objectType>
+    </variables>
+    <variables>
+        <name>SingleMemberBenefitRecord</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>MemberBenefit</objectType>
+    </variables>
+</Flow>

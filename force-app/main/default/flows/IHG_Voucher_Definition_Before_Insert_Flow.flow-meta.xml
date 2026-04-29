@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>63.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <description>Initial version of this flow stamps values from the Product record onto the Voucher Definition to make them accessible to API queries.  Unable to use relational queries or formula fields for this purposes due to fact that ProductID could relate to Product record or Category record.</description>
+    <interviewLabel>IHG Voucher Definition Before Insert Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>IHG Voucher Definition Before Insert Flow</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Gets fields from the Product record for the purposes of stamping on the Voucher Defintion.</description>
+        <name>Get_Product_Category_Info</name>
+        <label>Get Product Category Info</label>
+        <locationX>176</locationX>
+        <locationY>311</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Stamp_Product_Category_Information_on_Voucher_Definition</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.ProductId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Product2</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>ProductCode</queriedFields>
+        <queriedFields>ProductIconURL__c</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <description>Stamps the Category Name, Category ID, And Product Icon fields onto the Voucher Definitions so that they can be returned in API requests.</description>
+        <name>Stamp_Product_Category_Information_on_Voucher_Definition</name>
+        <label>Stamp Product Category Information on Voucher Definition</label>
+        <locationX>176</locationX>
+        <locationY>431</locationY>
+        <inputAssignments>
+            <field>Category_Icon_URL__c</field>
+            <value>
+                <elementReference>Get_Product_Category_Info.ProductIconURL__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Category_Id__c</field>
+            <value>
+                <elementReference>Get_Product_Category_Info.ProductCode</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Category_Name__c</field>
+            <value>
+                <elementReference>Get_Product_Category_Info.Name</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Product_Category_Info</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>ProductId</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <object>VoucherDefinition</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

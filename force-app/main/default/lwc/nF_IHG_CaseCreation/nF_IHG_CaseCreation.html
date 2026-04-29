@@ -1,0 +1,407 @@
+<template>
+    <div class="case-creation-wrapper">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Case Creation LWC</h1>
+            <lightning-button
+                label="Create New Guest &amp; Case"
+                variant="brand"
+                onclick={handleNewGuestCase}
+            ></lightning-button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-section">
+            <div class="search-label">Search</div>
+            <div class="search-fields">
+                <lightning-input
+                    label="Reservation Number"
+                    placeholder="Enter reservation number"
+                    value={searchFields.reservationNumber}
+                    data-field="reservationNumber"
+                    onchange={handleSearchFieldChange}
+                    class="search-input"
+                ></lightning-input>
+                <lightning-input
+                    label="Guest First Name"
+                    placeholder="Enter first name"
+                    value={searchFields.firstName}
+                    data-field="firstName"
+                    onchange={handleSearchFieldChange}
+                    class="search-input"
+                ></lightning-input>
+                <lightning-input
+                    label="Guest Last Name"
+                    placeholder="Enter last name"
+                    value={searchFields.lastName}
+                    data-field="lastName"
+                    onchange={handleSearchFieldChange}
+                    class="search-input"
+                ></lightning-input>
+                <lightning-input
+                    label="Email"
+                    placeholder="Enter email"
+                    type="email"
+                    value={searchFields.email}
+                    data-field="email"
+                    onchange={handleSearchFieldChange}
+                    class="search-input"
+                ></lightning-input>
+                <lightning-input
+                    label="IHG Rewards Number"
+                    placeholder="Enter rewards number"
+                    value={searchFields.rewardsNumber}
+                    data-field="rewardsNumber"
+                    onchange={handleSearchFieldChange}
+                    class="search-input"
+                ></lightning-input>
+                <div class="search-btn-wrap">
+                    <lightning-button
+                        label="Search"
+                        icon-name="utility:search"
+                        variant="brand"
+                        onclick={handleSearch}
+                        disabled={isSearching}
+                    ></lightning-button>
+                </div>
+            </div>
+            <template if:true={searchError}>
+                <div class="search-error">
+                    <lightning-icon icon-name="utility:error" size="x-small" variant="error"></lightning-icon>
+                    <span>{searchError}</span>
+                </div>
+            </template>
+        </div>
+
+        <!-- Loading spinner -->
+        <template if:true={isSearching}>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text="Searching..." size="medium"></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Empty state -->
+        <template if:true={showEmptyState}>
+            <div class="empty-state">
+                <div class="empty-state-illustration">
+                    <lightning-icon icon-name="utility:search" size="large" class="empty-icon"></lightning-icon>
+                </div>
+                <h2 class="empty-state-heading">Search for Cases</h2>
+                <p class="empty-state-body">
+                    Use the search bar above to search for existing Guests or Reservations with Cases. Or, create a new Case by clicking the
+                    <strong>'Create New Guest &amp; Case'</strong> button above.
+                </p>
+            </div>
+        </template>
+
+        <!-- Search Results -->
+        <template if:true={showResults}>
+            <div class="results-layout">
+
+                <!-- Left Panel: Guest Results -->
+                <div class="guests-panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Guest Search Results ({guestCount})</h2>
+                    </div>
+                    <div class="guests-list">
+                        <template for:each={searchResults} for:item="guest">
+                            <div
+                                key={guest.id}
+                                class={guest.cardClass}
+                                data-guestid={guest.id}
+                                onclick={handleGuestSelect}
+                                role="button"
+                                tabindex="0"
+                            >
+                                <div class="guest-card-top">
+                                    <div class="guest-avatar">
+                                        <lightning-icon
+                                            icon-name="standard:contact"
+                                            size="small"
+                                            class="guest-avatar-icon"
+                                        ></lightning-icon>
+                                    </div>
+                                    <div class="guest-info">
+                                        <div class="guest-name">{guest.name}</div>
+                                        <template if:true={guest.ihgRewardsStatus}>
+                                            <div class="rewards-badge">
+                                                <lightning-icon
+                                                    icon-name="utility:priority"
+                                                    size="x-small"
+                                                    class="rewards-icon"
+                                                ></lightning-icon>
+                                                <span class="rewards-label">{guest.ihgRewardsStatus}</span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                                <div class="guest-details">
+                                    <template if:true={guest.ihgRewardsNumber}>
+                                        <div class="detail-row">
+                                            <span class="detail-label">Member #:</span>
+                                            <span class="detail-value">{guest.ihgRewardsNumber}</span>
+                                        </div>
+                                    </template>
+                                    <template if:true={guest.email}>
+                                        <div class="detail-row">
+                                            <span class="detail-label">Email:</span>
+                                            <span class="detail-value">{guest.email}</span>
+                                        </div>
+                                    </template>
+                                    <template if:true={guest.phone}>
+                                        <div class="detail-row">
+                                            <span class="detail-label">Phone:</span>
+                                            <span class="detail-value">{guest.phone}</span>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Center Arrow -->
+                <div class="center-arrow">
+                    <lightning-icon
+                        icon-name="utility:right"
+                        size="large"
+                        class="arrow-icon"
+                    ></lightning-icon>
+                </div>
+
+                <!-- Right Panel: Existing Cases -->
+                <div class="cases-panel">
+                    <template if:true={selectedGuest}>
+                        <div class="panel-header">
+                            <h2 class="panel-title">
+                                Select Existing Case ({existingCaseCount}) for {selectedGuest.name}
+                            </h2>
+                        </div>
+                        <template if:true={isLoadingCases}>
+                            <div class="spinner-container">
+                                <lightning-spinner alternative-text="Loading cases..." size="small"></lightning-spinner>
+                            </div>
+                        </template>
+                        <div class="cases-list">
+                            <template for:each={selectedGuestCases} for:item="cs">
+                                <div key={cs.id} class="case-card">
+                                    <div class="case-card-top">
+                                        <div class="case-icon-wrap">
+                                            <lightning-icon
+                                                icon-name="standard:case"
+                                                size="small"
+                                            ></lightning-icon>
+                                        </div>
+                                        <div class="case-info">
+                                            <div class="case-subject">{cs.subject}</div>
+                                            <div class="case-number">#{cs.caseNumber}</div>
+                                        </div>
+                                        <button
+                                            class="slds-button slds-button_base select-case-btn"
+                                            data-caseid={cs.id}
+                                            onclick={handleSelectCase}
+                                        >
+                                            Select Case
+                                        </button>
+                                    </div>
+                                    <div class="case-meta">
+                                        <span class="case-date">{cs.formattedDate}</span>
+                                        <span class={cs.statusClass}>{cs.status}</span>
+                                    </div>
+                                </div>
+                            </template>
+                            <template if:false={hasCases}>
+                                <div class="no-cases-msg">No open cases found for this guest.</div>
+                            </template>
+                        </div>
+                        <div class="new-case-footer">
+                            <span class="new-case-prompt">Need a new Case?</span>
+                            <lightning-button
+                                label="Create New Case"
+                                variant="brand"
+                                onclick={handleCreateCaseForGuest}
+                            ></lightning-button>
+                        </div>
+                    </template>
+                    <template if:false={selectedGuest}>
+                        <div class="select-guest-prompt">
+                            <lightning-icon
+                                icon-name="utility:left"
+                                size="small"
+                                class="prompt-icon"
+                            ></lightning-icon>
+                            <p>Select a guest to view their cases</p>
+                        </div>
+                    </template>
+                </div>
+
+            </div>
+        </template>
+
+    </div>
+
+    <!-- Create New Case Modal (for existing guest) -->
+    <c-n-f_-i-h-g_-modal
+        title={caseModalTitle}
+        confirm-label="Create Case"
+        cancel-label="Cancel"
+        show-confirm
+        is-open={showCaseModal}
+        is-loading={isSavingCase}
+        onclose={handleCaseModalClose}
+        onconfirm={handleCaseModalConfirm}
+    >
+        <div class="modal-form">
+            <lightning-input
+                label="Subject"
+                placeholder="Enter case subject"
+                value={newCaseForm.subject}
+                data-field="subject"
+                onchange={handleCaseFormChange}
+                required
+            ></lightning-input>
+            <lightning-combobox
+                label="Case Reason"
+                placeholder="Select a reason"
+                value={newCaseForm.caseReason}
+                options={caseReasonOptions}
+                data-field="caseReason"
+                onchange={handleCaseFormChange}
+            ></lightning-combobox>
+            <lightning-input
+                label="Reservation Number"
+                placeholder="Enter reservation number"
+                value={newCaseForm.reservationNumber}
+                data-field="reservationNumber"
+                onchange={handleCaseFormChange}
+            ></lightning-input>
+            <lightning-input
+                label="Property Name"
+                placeholder="Enter hotel / property name"
+                value={newCaseForm.propertyName}
+                data-field="propertyName"
+                onchange={handleCaseFormChange}
+            ></lightning-input>
+            <div class="date-row">
+                <lightning-input
+                    type="date"
+                    label="Check-In Date"
+                    value={newCaseForm.checkInDate}
+                    data-field="checkInDate"
+                    onchange={handleCaseFormChange}
+                    class="date-field"
+                ></lightning-input>
+                <lightning-input
+                    type="date"
+                    label="Check-Out Date"
+                    value={newCaseForm.checkOutDate}
+                    data-field="checkOutDate"
+                    onchange={handleCaseFormChange}
+                    class="date-field"
+                ></lightning-input>
+            </div>
+            <lightning-textarea
+                label="Description"
+                placeholder="Describe the guest issue..."
+                value={newCaseForm.description}
+                data-field="description"
+                onchange={handleCaseFormChange}
+                max-length="5000"
+            ></lightning-textarea>
+        </div>
+    </c-n-f_-i-h-g_-modal>
+
+    <!-- Create New Guest + Case Modal -->
+    <c-n-f_-i-h-g_-modal
+        title="Create New Guest &amp; Case"
+        confirm-label="Create Guest &amp; Case"
+        cancel-label="Cancel"
+        show-confirm
+        is-open={showNewGuestModal}
+        is-loading={isSavingCase}
+        onclose={handleNewGuestModalClose}
+        onconfirm={handleNewGuestModalConfirm}
+    >
+        <div class="modal-form">
+            <div class="form-section-label">Guest Information</div>
+            <div class="name-row">
+                <lightning-input
+                    label="First Name"
+                    placeholder="First name"
+                    value={newGuestForm.firstName}
+                    data-field="firstName"
+                    data-section="guest"
+                    onchange={handleGuestFormChange}
+                    required
+                    class="name-field"
+                ></lightning-input>
+                <lightning-input
+                    label="Last Name"
+                    placeholder="Last name"
+                    value={newGuestForm.lastName}
+                    data-field="lastName"
+                    data-section="guest"
+                    onchange={handleGuestFormChange}
+                    required
+                    class="name-field"
+                ></lightning-input>
+            </div>
+            <lightning-input
+                label="Email"
+                type="email"
+                placeholder="guest@email.com"
+                value={newGuestForm.email}
+                data-field="email"
+                data-section="guest"
+                onchange={handleGuestFormChange}
+            ></lightning-input>
+            <lightning-input
+                label="Phone"
+                type="tel"
+                placeholder="(000) 000-0000"
+                value={newGuestForm.phone}
+                data-field="phone"
+                data-section="guest"
+                onchange={handleGuestFormChange}
+            ></lightning-input>
+            <lightning-input
+                label="IHG Rewards Number"
+                placeholder="Enter rewards number"
+                value={newGuestForm.ihgRewardsNumber}
+                data-field="ihgRewardsNumber"
+                data-section="guest"
+                onchange={handleGuestFormChange}
+            ></lightning-input>
+
+            <div class="form-section-label slds-m-top_medium">Case Information</div>
+            <lightning-input
+                label="Subject"
+                placeholder="Enter case subject"
+                value={newGuestForm.subject}
+                data-field="subject"
+                data-section="case"
+                onchange={handleGuestFormChange}
+                required
+            ></lightning-input>
+            <lightning-combobox
+                label="Case Reason"
+                placeholder="Select a reason"
+                value={newGuestForm.caseReason}
+                options={caseReasonOptions}
+                data-field="caseReason"
+                data-section="case"
+                onchange={handleGuestFormChange}
+            ></lightning-combobox>
+            <lightning-textarea
+                label="Description"
+                placeholder="Describe the guest issue..."
+                value={newGuestForm.description}
+                data-field="description"
+                data-section="case"
+                onchange={handleGuestFormChange}
+            ></lightning-textarea>
+        </div>
+    </c-n-f_-i-h-g_-modal>
+
+</template>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Source__c</fullName>
+    <label>Source</label>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value><fullName>Playg</fullName><default>false</default><label>Playg</label></value>
+            <value><fullName>Google Drive</fullName><default>false</default><label>Google Drive</label></value>
+            <value><fullName>OneDrive</fullName><default>false</default><label>OneDrive</label></value>
+            <value><fullName>GitHub</fullName><default>false</default><label>GitHub</label></value>
+            <value><fullName>Internal</fullName><default>false</default><label>Internal</label></value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

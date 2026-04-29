@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>58.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Assign_To_Variable</name>
+        <label>Assign To Variable</label>
+        <locationX>50</locationX>
+        <locationY>278</locationY>
+        <assignmentItems>
+            <assignToReference>InBoundPlatformEvent</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Log_Platform_Event</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Global_Disable_Platform_Event_Logging</name>
+        <label>Global Disable Platform Event Logging</label>
+        <locationX>182</locationX>
+        <locationY>170</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Not_Disabled</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Label.Global_Disable_Platform_Event_Logging</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>TRUE</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_To_Variable</targetReference>
+            </connector>
+            <label>Not Disabled</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <name>PayloadOfReceivedEvent</name>
+        <dataType>String</dataType>
+        <expression>&quot;{&quot; &amp;&quot;\&quot;ReplayId\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.ReplayId}&amp; &quot;\&quot;,&quot; 
+&amp;&quot;\&quot;EventUuid\&quot;: \&quot;&quot;&amp; {!InBoundPlatformEvent.EventUuid}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;Correlation_Id__c\&quot;: \&quot;&quot;&amp; {!InBoundPlatformEvent.Correlation_Id__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;addressCountry__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.addressCountry__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;agencyId__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.agencyId__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;agencyType__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.agencyType__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;brandCode__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.brandCode__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;cancellationDateTime__c\&quot;: \&quot;&quot; &amp; TEXT({!InBoundPlatformEvent.cancellationDateTime__c})&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;cancellationDeadlineType__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.cancellationDeadlineType__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;cancellationDeadlineValue__c\&quot;: \&quot;&quot; &amp; TEXT({!InBoundPlatformEvent.cancellationDeadlineValue__c})&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;cancellationNumber__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.cancellationNumber__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;cancelPolicyDateTime__c\&quot;: \&quot;&quot; &amp; TEXT({!InBoundPlatformEvent.cancelPolicyDateTime__c})&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;chainCode__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.chainCode__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;channelId__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.channelId__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;checkInDate__c\&quot;: \&quot;&quot; &amp; TEXT({!InBoundPlatformEvent.checkInDate__c})&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;checkOutDate__c\&quot;: \&quot;&quot; &amp; TEXT({!InBoundPlatformEvent.checkOutDate__c})&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;committedSequenceNumber__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.committedSequenceNumber__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;confirmationNumber__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.confirmationNumber__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;creditCardType__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.creditCardType__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;Reservation_SubType__c\&quot;: \&quot;&quot; &amp; IF({!InBoundPlatformEvent.Reservation_SubType__c} = true, &quot;True&quot;,&quot;False&quot;)&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;definitionRatePlanCode__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.definitionRatePlanCode__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;EmailAddress__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.EmailAddress__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;frst_nm__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.frst_nm__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;hotelMnemonic__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.hotelMnemonic__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;hotelName__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.hotelName__c} &amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;hotelRegionCode__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.hotelRegionCode__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;isFreeNight__c\&quot;: \&quot;&quot; &amp; IF({!InBoundPlatformEvent.isFreeNight__c} = true, &quot;True&quot;,&quot;False&quot;)&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;isPaidByPoints__c\&quot;: \&quot;&quot; &amp; IF({!InBoundPlatformEvent.isPaidByPoints__c} = true, &quot;True&quot;,&quot;False&quot;)&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;isRewardNight__c\&quot;: \&quot;&quot; &amp; IF({!InBoundPlatformEvent.isRewardNight__c} = true, &quot;True&quot;,&quot;False&quot;) &amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;language__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.language__c} &amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;lst_nm__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.lst_nm__c} &amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;lastUpdatedDateTime__c\&quot;: \&quot;&quot; &amp; TEXT({!InBoundPlatformEvent.lastUpdatedDateTime__c}) &amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;number_nights__c\&quot;: \&quot;&quot; &amp; TEXT({!InBoundPlatformEvent.number_nights__c}) &amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;number_of_rooms__c\&quot;: \&quot;&quot; &amp; TEXT({!InBoundPlatformEvent.number_of_rooms__c}) &amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;propertyCurrency__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.propertyCurrency__c} &amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;ratePlanCode__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.ratePlanCode__c} &amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;reservationCreateDate__c\&quot;: \&quot;&quot; &amp; TEXT({!InBoundPlatformEvent.reservationCreateDate__c}) &amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;reservationCurrencyCode__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.reservationCurrencyCode__c} &amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;reservationFinalPriceAmt__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.reservationFinalPriceAmt__c} &amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;ReservationKeyId__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.ReservationKeyId__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;reservationPurchaseMethod__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.reservationPurchaseMethod__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;reservationStatus__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.reservationStatus__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;rewardsNumber__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.rewardsNumber__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;room_type__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.room_type__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;segmentId__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.segmentId__c}&amp; &quot;\&quot;,&quot;
+&amp;&quot;\&quot;synchroNumber__c\&quot;: \&quot;&quot; &amp; {!InBoundPlatformEvent.synchroNumber__c}&amp; &quot;\&quot;&quot;
+&amp;&quot;}&quot;</expression>
+    </formulas>
+    <interviewLabel>Log Reservation Event {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Log Reservation Event</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <description>This step logs the published platform event onto the big Object</description>
+        <name>Log_Platform_Event</name>
+        <label>Log Platform Event</label>
+        <locationX>50</locationX>
+        <locationY>386</locationY>
+        <inputAssignments>
+            <field>EventUUID__c</field>
+            <value>
+                <elementReference>InBoundPlatformEvent.EventUuid</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Hotel_Number__c</field>
+            <value>
+                <elementReference>InBoundPlatformEvent.hotelMnemonic__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Payload__c</field>
+            <value>
+                <elementReference>PayloadOfReceivedEvent</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Time_Stamp__c</field>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Triggering_Event_Name__c</field>
+            <value>
+                <stringValue>Reservation Event</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Platform_Event_Log__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Global_Disable_Platform_Event_Logging</targetReference>
+        </connector>
+        <flowRunAsUser>TriggeringUser</flowRunAsUser>
+        <object>Reservation_Event__e</object>
+        <triggerType>PlatformEvent</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>InBoundPlatformEvent</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <objectType>Reservation_Event__e</objectType>
+    </variables>
+</Flow>

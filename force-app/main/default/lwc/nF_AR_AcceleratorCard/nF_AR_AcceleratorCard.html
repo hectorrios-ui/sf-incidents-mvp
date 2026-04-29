@@ -1,0 +1,122 @@
+<template>
+    <div class={cardClass}>
+
+        <!-- Header row: name + fit score badge -->
+        <div class="card-header">
+            <div class="card-title-group">
+                <div class="card-name">{accelerator.name}</div>
+                <div class="card-badges">
+                    <template if:true={accelerator.qualityBadge}>
+                        <span class={qualityBadgeClass}>{accelerator.qualityBadge}</span>
+                    </template>
+                    <span class={sourceClass}>
+                        <lightning-icon icon-name={sourceIcon} size="xx-small" class="source-icon"></lightning-icon>
+                        {accelerator.source}
+                    </span>
+                </div>
+            </div>
+            <div class="fit-score-ring">
+                <span class="fit-score-value">{accelerator.fitScore}</span>
+                <span class="fit-score-label">%</span>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <p class="card-description">{accelerator.description}</p>
+
+        <!-- Fit reason -->
+        <div class="fit-reason">
+            <lightning-icon icon-name="utility:info" size="xx-small" class="fit-icon"></lightning-icon>
+            <span>{accelerator.fitReason}</span>
+        </div>
+
+        <!-- Meta row -->
+        <div class="card-meta">
+            <template if:true={accelerator.cloud}>
+                <span class="meta-chip meta-chip--cloud">{accelerator.cloud}</span>
+            </template>
+            <template if:true={accelerator.complexity}>
+                <span class={complexityClass}>{accelerator.complexity}</span>
+            </template>
+            <template if:true={showHoursSaved}>
+                <span class="meta-chip meta-chip--hours">
+                    <lightning-icon icon-name="utility:clock" size="xx-small"></lightning-icon>
+                    ~{accelerator.estimatedHoursSaved}h saved
+                </span>
+            </template>
+            <template if:true={accelerator.useCount}>
+                <span class="meta-chip meta-chip--uses">Used {accelerator.useCount}x</span>
+            </template>
+        </div>
+
+        <!-- Tags -->
+        <template if:true={hasTags}>
+            <div class="tag-row">
+                <template for:each={tagList} for:item="tag">
+                    <span key={tag} class="tag-chip">{tag}</span>
+                </template>
+            </div>
+        </template>
+
+        <!-- Knowledge Article CTA -->
+        <template if:true={hasArticle}>
+            <a
+                href={accelerator.articleUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="article-cta"
+            >
+                <lightning-icon icon-name="utility:knowledge_base" size="xx-small" class="article-icon"></lightning-icon>
+                View Knowledge Article
+            </a>
+        </template>
+
+        <!-- Footer: open link + feedback -->
+        <div class="card-footer">
+            <div class="footer-left">
+                <template if:true={accelerator.assetOwner}>
+                    <span class="owner-label">Owner: {accelerator.assetOwner}</span>
+                </template>
+                <template if:true={accelerator.lastUpdated}>
+                    <span class="updated-label">Updated: {accelerator.lastUpdated}</span>
+                </template>
+            </div>
+            <div class="footer-right">
+                <!-- Feedback: thumbs up / down -->
+                <template if:false={accelerator.userFeedbackGiven}>
+                    <button
+                        class="feedback-btn feedback-btn--up"
+                        title="This was useful"
+                        data-useful="true"
+                        onclick={handleFeedback}
+                    >
+                        <lightning-icon icon-name="utility:like" size="xx-small"></lightning-icon>
+                    </button>
+                    <button
+                        class="feedback-btn feedback-btn--down"
+                        title="Not useful for this project"
+                        data-useful="false"
+                        onclick={handleFeedback}
+                    >
+                        <lightning-icon icon-name="utility:dislike" size="xx-small"></lightning-icon>
+                    </button>
+                </template>
+                <template if:true={accelerator.userFeedbackGiven}>
+                    <span class={feedbackGivenClass}>
+                        <lightning-icon icon-name={feedbackGivenIcon} size="xx-small"></lightning-icon>
+                        {feedbackGivenLabel}
+                    </span>
+                </template>
+
+                <!-- Open link -->
+                <template if:true={accelerator.sourceUrl}>
+                    <button class="open-btn" onclick={handleOpen}>
+                        Open
+                        <lightning-icon icon-name="utility:new_window" size="xx-small" class="open-icon"></lightning-icon>
+                    </button>
+                </template>
+            </div>
+        </div>
+
+    </div>
+</template>

@@ -1,0 +1,188 @@
+<template>
+    <div class="app-shell">
+        <!-- Welcome Screen -->
+        <template lwc:if={isWelcome}>
+            <section class="welcome-screen">
+                <div class="welcome-hero">
+                    <div class="hero-icon">&#9749;</div>
+                </div>
+                <div class="welcome-content">
+                    <h1 class="welcome-title">Fall in Love with Coffee in Blissful Delight!</h1>
+                    <p class="welcome-subtitle">Welcome to our cozy coffee corner, where every cup is a delightful for you.</p>
+                    <button class="btn-primary btn-full" onclick={handleGetStarted}>Get Started</button>
+                </div>
+            </section>
+        </template>
+
+        <!-- Home Screen -->
+        <template lwc:if={isHome}>
+            <section class="home-screen">
+                <header class="home-header">
+                    <div class="location-row">
+                        <span class="location-label">Location</span>
+                        <span class="location-value">Bilzen, Tanjungbalai</span>
+                    </div>
+                </header>
+
+                <div class="search-bar">
+                    <lightning-icon icon-name="utility:search" size="x-small" class="search-icon"></lightning-icon>
+                    <input type="text" class="search-input" placeholder="Search coffee" value={searchTerm} onchange={handleSearch} />
+                </div>
+
+                <div class="promo-banner">
+                    <span class="promo-badge">Promo</span>
+                    <h2 class="promo-text">Buy one get<br/>one FREE</h2>
+                </div>
+
+                <nav class="category-tabs" role="tablist">
+                    <template for:each={categories} for:item="cat">
+                        <button key={cat.id}
+                                role="tab"
+                                class={cat.className}
+                                data-id={cat.id}
+                                onclick={handleCategorySelect}
+                                aria-selected={cat.active}>{cat.label}</button>
+                    </template>
+                </nav>
+
+                <div class="product-grid">
+                    <template for:each={filteredProducts} for:item="product">
+                        <article key={product.id} class="product-card" data-id={product.id} onclick={handleProductClick}>
+                            <div class="product-img-wrap">
+                                <div class="product-img-placeholder">&#9749;</div>
+                            </div>
+                            <h3 class="product-name">{product.name}</h3>
+                            <p class="product-sub">{product.sub}</p>
+                            <div class="product-footer">
+                                <span class="product-price">{product.price}</span>
+                                <button class="btn-add" onclick={handleAddFromGrid} data-id={product.id}>+</button>
+                            </div>
+                        </article>
+                    </template>
+                </div>
+
+                <nav class="bottom-nav">
+                    <button class="nav-btn nav-active" aria-label="Home">
+                        <lightning-icon icon-name="utility:home" size="x-small"></lightning-icon>
+                    </button>
+                    <button class="nav-btn" aria-label="Favorites">
+                        <lightning-icon icon-name="utility:favorite" size="x-small"></lightning-icon>
+                    </button>
+                    <button class="nav-btn" aria-label="Cart" onclick={handleGoToOrder}>
+                        <lightning-icon icon-name="utility:cart" size="x-small"></lightning-icon>
+                    </button>
+                    <button class="nav-btn" aria-label="Profile">
+                        <lightning-icon icon-name="utility:user" size="x-small"></lightning-icon>
+                    </button>
+                </nav>
+            </section>
+        </template>
+
+        <!-- Detail Screen -->
+        <template lwc:if={isDetail}>
+            <section class="detail-screen">
+                <header class="detail-header">
+                    <button class="btn-icon" onclick={handleBackToHome} aria-label="Back">
+                        <lightning-icon icon-name="utility:chevronleft" size="x-small"></lightning-icon>
+                    </button>
+                    <span class="detail-title">Detail</span>
+                    <button class="btn-icon" aria-label="Favorite">
+                        <lightning-icon icon-name="utility:favorite" size="x-small"></lightning-icon>
+                    </button>
+                </header>
+
+                <div class="detail-img-wrap">
+                    <div class="detail-img-placeholder">&#9749;</div>
+                </div>
+
+                <div class="detail-body">
+                    <h2 class="detail-name">{selectedProduct.name}</h2>
+                    <p class="detail-sub">{selectedProduct.sub}</p>
+
+                    <div class="detail-rating">
+                        <span class="rating-star">&#9733;</span>
+                        <span class="rating-value">{selectedProduct.rating}</span>
+                        <span class="rating-count">({selectedProduct.reviews})</span>
+                    </div>
+
+                    <div class="detail-divider"></div>
+
+                    <h3 class="detail-section-title">Description</h3>
+                    <p class="detail-description">{selectedProduct.description}</p>
+
+                    <h3 class="detail-section-title">Size</h3>
+                    <div class="size-options">
+                        <template for:each={sizes} for:item="size">
+                            <button key={size.id}
+                                    class={size.className}
+                                    data-id={size.id}
+                                    onclick={handleSizeSelect}>{size.label}</button>
+                        </template>
+                    </div>
+
+                    <div class="detail-order-row">
+                        <div>
+                            <span class="detail-price-label">Price</span>
+                            <span class="detail-price-value">{selectedProduct.price}</span>
+                        </div>
+                        <button class="btn-primary" onclick={handleAddToOrder}>Order</button>
+                    </div>
+                </div>
+            </section>
+        </template>
+
+        <!-- Order Screen -->
+        <template lwc:if={isOrder}>
+            <section class="order-screen">
+                <header class="detail-header">
+                    <button class="btn-icon" onclick={handleBackToHome} aria-label="Back">
+                        <lightning-icon icon-name="utility:chevronleft" size="x-small"></lightning-icon>
+                    </button>
+                    <span class="detail-title">Order</span>
+                    <span></span>
+                </header>
+
+                <div class="order-body">
+                    <template for:each={orderItems} for:item="item">
+                        <div key={item.id} class="order-item">
+                            <div class="order-item-img">&#9749;</div>
+                            <div class="order-item-info">
+                                <span class="order-item-name">{item.name}</span>
+                                <span class="order-item-sub">{item.sub}</span>
+                            </div>
+                            <div class="order-qty">
+                                <button class="qty-btn" data-id={item.id} data-action="dec" onclick={handleQty}>−</button>
+                                <span class="qty-val">{item.qty}</span>
+                                <button class="qty-btn" data-id={item.id} data-action="inc" onclick={handleQty}>+</button>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template lwc:if={hasDiscount}>
+                        <div class="discount-row">
+                            <lightning-icon icon-name="utility:discount" size="x-small"></lightning-icon>
+                            <span>1 Discount is Applied</span>
+                        </div>
+                    </template>
+
+                    <div class="payment-summary">
+                        <h3 class="summary-title">Payment Summary</h3>
+                        <div class="summary-row">
+                            <span>Price</span><span>{orderSubtotal}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Delivery Fee</span>
+                            <span><s class="old-fee">$ 2.00</s> {deliveryFee}</span>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-row summary-total">
+                            <span>Total</span><span>{orderTotal}</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary btn-full" onclick={handlePlaceOrder}>Order</button>
+                </div>
+            </section>
+        </template>
+    </div>
+</template>

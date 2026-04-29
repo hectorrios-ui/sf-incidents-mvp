@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>63.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <customErrors>
+        <name>Duplcate_error</name>
+        <label>Duplcate error</label>
+        <locationX>50</locationX>
+        <locationY>539</locationY>
+        <customErrorMessages>
+            <errorMessage>Duplicate Sequence Number detected. 
+Sequence Number must be unique within the same Preference Category.
+Please enter a different value.</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <decisions>
+        <name>Matching_Section_found</name>
+        <label>Matching Section found</label>
+        <locationX>182</locationX>
+        <locationY>431</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Preference_Section_record_found</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Preference_Sections.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Duplcate_error</targetReference>
+            </connector>
+            <label>Preference Section record found</label>
+        </rules>
+    </decisions>
+    <description>US419423 - validation to prevent Preference Sections having duplicate sequence numbers within the same Preference Category</description>
+    <environments>Default</environments>
+    <interviewLabel>LOY - Preference Section Sequence Number Validation - After Save {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>LOY - Preference Section Sequence Number Validation - After Save - V1</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Preference_Sections</name>
+        <label>Get Preference Sections</label>
+        <locationX>182</locationX>
+        <locationY>323</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Matching_Section_found</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>PreferenceCategory__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.PreferenceCategory__c</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>SequenceNumber__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.SequenceNumber__c</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Id</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>PreferenceSection__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Preference_Sections</targetReference>
+        </connector>
+        <filterFormula> ISNEW() || ISCHANGED({!$Record.SequenceNumber__c}) || ISCHANGED({!$Record.PreferenceCategory__c})</filterFormula>
+        <object>PreferenceSection__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

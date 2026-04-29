@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Knowledge_Article_URL__c</fullName>
+    <label>Knowledge Article URL</label>
+    <type>Url</type>
+    <description>Direct link to the Salesforce Knowledge Article containing full documentation for this accelerator.</description>
+</CustomField>

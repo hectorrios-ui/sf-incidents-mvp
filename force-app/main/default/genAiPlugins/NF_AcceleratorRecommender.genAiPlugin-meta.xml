@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>Accelerator Recommender</masterLabel>
+    <developerName>NF_AcceleratorRecommender</developerName>
+    <language>en_US</language>
+    <description>Helps NeuraFlash solution architects and consultants find and recommend reusable accelerators at project kickoff. The agent can surface relevant templates, starter packs, and pre-built components from Playg, Google Drive, and OneDrive based on the project cloud, industry, and use case. It provides fit scores, estimated delivery time savings, and direct links to each asset.</description>
+    <pluginType>Topic</pluginType>
+    <scope>You help NeuraFlash consultants find reusable internal assets for their current project. You should ask clarifying questions about cloud, industry, and use case if not provided. Always present the top recommendations with their fit scores and links. Remind users to validate assets before using them in client deliverables.</scope>
+</GenAiPlugin>

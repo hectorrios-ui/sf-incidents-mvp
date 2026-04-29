@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <description>Assign the Hotel Record Type for Account</description>
+        <name>Assign_the_Hotel_Record_Type</name>
+        <label>Assign the Hotel Record Type</label>
+        <locationX>336</locationX>
+        <locationY>395</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.RecordTypeId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Hotel_Account_RecordType.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Is_ISOCountryCode_changed</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Populate lookup field of Brandx of Account with Brand Object</description>
+        <name>Populate_Brandx_of_Account_with_Brand_Object</name>
+        <label>Populate Brandx of Account with Brand Object</label>
+        <locationX>182</locationX>
+        <locationY>1319</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Brandx__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Brand_Record.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Is_Chain_Code_Changed</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Populate ChainCode of Account with Chain Object</description>
+        <name>Populate_ChainCode_of_Account_with_Chain_Object</name>
+        <label>Populate ChainCode of Account with Chain Object</label>
+        <locationX>182</locationX>
+        <locationY>1919</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.ChainCode__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Chain_Record.Id</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <name>Populate_Country_lookup</name>
+        <label>Populate Country lookup</label>
+        <locationX>204</locationX>
+        <locationY>719</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.LOY_Country__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>GetCountry.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Is_Brand_Code_Changed</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <description>Check If the Brand Code changed.</description>
+        <name>Is_Brand_Code_Changed</name>
+        <label>Is Brand Code Changed?</label>
+        <locationX>336</locationX>
+        <locationY>911</locationY>
+        <defaultConnector>
+            <targetReference>Is_Chain_Code_Changed</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Value_Exist_Of_Brand_Code</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Brand__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Brand__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Is_Brand_Code_Empty</targetReference>
+            </connector>
+            <label>Value Exist</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Checking If the Brand Code is Empty.</description>
+        <name>Is_Brand_Code_Empty</name>
+        <label>Is Brand Code Empty?</label>
+        <locationX>182</locationX>
+        <locationY>1019</locationY>
+        <defaultConnector>
+            <targetReference>Populate_Brandx_of_Account_with_Brand_Object</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Raise Custom Exception</defaultConnectorLabel>
+        <rules>
+            <name>Brand_Code_available</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Brand__c</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Brand_Record</targetReference>
+            </connector>
+            <label>Brand Code available</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Check If the Chain Code changed.</description>
+        <name>Is_Chain_Code_Changed</name>
+        <label>Is Chain Code Changed?</label>
+        <locationX>336</locationX>
+        <locationY>1511</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Value_Exist_Of_Chain_Code</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Chain_Code__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Chain_Code__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Is_Chain_Code_Empty</targetReference>
+            </connector>
+            <label>Value Exist</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Check If the Chain Code is Empty</description>
+        <name>Is_Chain_Code_Empty</name>
+        <label>Is Chain Code Empty?</label>
+        <locationX>182</locationX>
+        <locationY>1619</locationY>
+        <defaultConnector>
+            <targetReference>Populate_ChainCode_of_Account_with_Chain_Object</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Raise Custom Exception</defaultConnectorLabel>
+        <rules>
+            <name>Chain_Code_available</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Chain_Code__c</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Chain_Record</targetReference>
+            </connector>
+            <label>Chain Code available</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>US377179 - If a country code is provided then we must populate the related country lookup field based on the code.</description>
+        <name>Is_ISOCountryCode_changed</name>
+        <label>Is ISOCountryCode changed</label>
+        <locationX>336</locationX>
+        <locationY>503</locationY>
+        <defaultConnector>
+            <targetReference>Is_Brand_Code_Changed</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.ISOCountryCode__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.ISOCountryCode__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>GetCountry</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <description>US348665 - GOLS: Salesforce: Record-Triggered Flow to Populate Brand and Chain look-up on Hotel Account Records
+US377179 - Country lookup field should be populated based on ISOCountryCode value</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>IsNewRecord</name>
+        <dataType>Boolean</dataType>
+        <expression>IsNew()</expression>
+    </formulas>
+    <interviewLabel>LOY GOLS {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>LOY - GOLS Account Before Save</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Get the Brand record based on Brand Code from Payload</description>
+        <name>Get_Brand_Record</name>
+        <label>Get Brand Record</label>
+        <locationX>50</locationX>
+        <locationY>1127</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Populate_Brandx_of_Account_with_Brand_Object</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Brand_Code__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Brand__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Brand__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Get Chain Record based on Account Chain Code</description>
+        <name>Get_Chain_Record</name>
+        <label>Get Chain Record</label>
+        <locationX>50</locationX>
+        <locationY>1727</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Populate_ChainCode_of_Account_with_Chain_Object</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Chain_Code__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Chain__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Get Hotel Account RecordType and assign to the newly Created record</description>
+        <name>Get_Hotel_Account_RecordType</name>
+        <label>Get Hotel Account RecordType</label>
+        <locationX>336</locationX>
+        <locationY>287</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Assign_the_Hotel_Record_Type</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Hotel_Property</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>RecordType</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>GetCountry</name>
+        <label>Country</label>
+        <locationX>204</locationX>
+        <locationY>611</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Populate_Country_lookup</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Country_Code__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.ISOCountryCode__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Country__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>210</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Hotel_Account_RecordType</targetReference>
+        </connector>
+        <filterFormula>AND(
+    {!$Record.RecordType.DeveloperName} = &apos;Hotel_Property&apos;, 
+    OR(
+        IsNew(), 
+        IsChanged({!$Record.Chain_Code__c}), 
+        IsChanged({!$Record.Brand__c}),
+        IsChanged({!$Record.ISOCountryCode__c})
+    ) 
+)</filterFormula>
+        <object>Account</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

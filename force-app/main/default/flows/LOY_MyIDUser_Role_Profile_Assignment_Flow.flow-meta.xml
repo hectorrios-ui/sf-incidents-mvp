@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Is_PermissionSetGroup_Assigned</name>
+        <label>Is PermissionSetGroup Assigned?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Permission_Set_Group_Assignments</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Loop_Through_Assigned_PermissionSetGroups</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Is_Role_and_Profile_Mapping_Valid</name>
+        <label>Is Role and Profile Mapping Valid</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Loop_Permission_Set_Group_Assignments</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No (Default Outcome)</defaultConnectorLabel>
+        <rules>
+            <name>Yes_MappingValid</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>RoleCheck</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>ProfileCheck</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <name>CreatedByName</name>
+        <dataType>String</dataType>
+        <expression>{!$Record.CreatedBy.FirstName} + &apos; &apos; + {!$Record.CreatedBy.LastName}</expression>
+    </formulas>
+    <formulas>
+        <name>ProfileCheck</name>
+        <dataType>Boolean</dataType>
+        <expression>IF({!ProfileMapping} == {!$Record.Profile.Name}, true, false)</expression>
+    </formulas>
+    <formulas>
+        <name>ProfileMapping</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Loyalty_Operations_Persona&quot;, &quot;IHG Loyalty Operations&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Loyalty_Compliance_Persona&quot;, &quot;IHG Loyalty Operations&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Loyalty_Financial_Ops_Persona&quot;, &quot;IHG Loyalty Operations&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Loyalty_Ops_Leadership_Persona&quot;, &quot;IHG Loyalty Operations&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Loyalty_Reporting_Persona&quot;, &quot;IHG Loyalty Operations&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Contact_Center_Agent_Persona&quot;, &quot;IHG Contact Center Operations&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;RCC_Tier_2_Agent_Persona&quot;, &quot;IHG Contact Center Operations&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;RCC_Leadership_Persona&quot;, &quot;IHG Contact Center Operations&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Hotel_Front_Desk_Persona&quot;, &quot;IHG Hotel Operations&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Hotel_Manager_Persona&quot;, &quot;IHG Hotel Operations&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Field_Marketing_User_Persona&quot;, &quot;FM User&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Loyalty_Manual_Voucher_Redemption_Persona&quot;, &quot;Loyalty Cloud - Manual Redemption User&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;SFL_System_Administrator_Persona&quot;, &quot;System Administrator&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Copado_Only_Persona&quot;, &quot;Minimum Access - Salesforce&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Voucher_Business_Operations_Persona&quot;, &quot;IHG Loyalty Operations&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Loyalty_Read_Only_Persona&quot;, &quot;IHG Loyalty Operations&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;RCC_Training&quot;, &quot;IHG Contact Center Operations&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;RCC_Hotel_Agent_Persona&quot;, &quot;IHG Contact Center Operations&quot;,
+&quot;&quot;))))))))))))))))))</expression>
+    </formulas>
+    <formulas>
+        <name>RoleCheck</name>
+        <dataType>Boolean</dataType>
+        <expression>IF({!RoleMapping} == {!$Record.UserRole.Name}, true, false)</expression>
+    </formulas>
+    <formulas>
+        <name>RoleMapping</name>
+        <dataType>String</dataType>
+        <expression>IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Loyalty_Operations_Persona&quot;, &quot;Loyalty Business Operations&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Loyalty_Compliance_Persona&quot;, &quot;Loyalty Compliance&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Loyalty_Financial_Ops_Persona&quot;, &quot;Loyalty Financial Operations&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Loyalty_Ops_Leadership_Persona&quot;, &quot;Loyalty Operations Leadership&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Loyalty_Reporting_Persona&quot;, &quot;Loyalty Operational Reporting and Analysis&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Contact_Center_Agent_Persona&quot;, &quot;Contact Center Agent Tier 1&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;RCC_Tier_2_Agent_Persona&quot;, &quot;Contact Center Agent Tier 2&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;RCC_Leadership_Persona&quot;, &quot;Contact Center Leadership&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Hotel_Front_Desk_Persona&quot;, &quot;Hotel Front Desk&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Hotel_Manager_Persona&quot;, &quot;Hotel Management&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Field_Marketing_User_Persona&quot;, &quot;Field Marketing Manager&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Loyalty_Manual_Voucher_Redemption_Persona&quot;, &quot;Loyalty Manual Redemption&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;SFL_System_Administrator_Persona&quot;, &quot;CEO&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Copado_Only_Persona&quot;, &quot;Copado Only&quot;, 
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Voucher_Business_Operations_Persona&quot;, &quot;Voucher Business Operations&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;Loyalty_Read_Only_Persona&quot;, &quot;Loyalty Read Only&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;RCC_Training&quot;, &quot;RCC Training&quot;,
+IF({!GetAssignedPermissionSetGroupNames.DeveloperName} = &quot;RCC_Hotel_Agent_Persona&quot;, &quot;Contact Center Hotel Agent&quot;,
+&quot;&quot;))))))))))))))))))</expression>
+    </formulas>
+    <formulas>
+        <name>UserProfileFormula</name>
+        <dataType>String</dataType>
+        <expression>IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Loyalty_Operations_Persona&quot;, &quot;IHG Loyalty Operations&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Loyalty_Compliance_Persona&quot;, &quot;IHG Loyalty Operations&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Loyalty_Financial_Ops_Persona&quot;, &quot;IHG Loyalty Operations&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Loyalty_Ops_Leadership_Persona&quot;, &quot;IHG Loyalty Operations&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Loyalty_Reporting_Persona&quot;, &quot;IHG Loyalty Operations&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Contact_Center_Agent_Persona&quot;, &quot;IHG Contact Center Operations&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;RCC_Tier_2_Agent_Persona&quot;, &quot;IHG Contact Center Operations&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;RCC_Leadership_Persona&quot;, &quot;IHG Contact Center Operations&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Hotel_Front_Desk_Persona&quot;, &quot;IHG Hotel Operations&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Hotel_Manager_Persona&quot;, &quot;IHG Hotel Operations&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Field_Marketing_User_Persona&quot;, &quot;FM User&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Loyalty_Manual_Voucher_Redemption_Persona&quot;, &quot;Loyalty Cloud - Manual Redemption User&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;SFL_System_Administrator_Persona&quot;, &quot;System Administrator&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Copado_Only_Persona&quot;, &quot;Minimum Access - Salesforce&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName}= &quot;Voucher_Business_Operations_Persona&quot;, &quot;IHG Loyalty Operations&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName}= &quot;Loyalty_Read_Only_Persona&quot;, &quot;IHG Loyalty Operations&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName}= &quot;RCC_Training&quot;, &quot;IHG Contact Center Operations&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;RCC_Hotel_Agent_Persona&quot;, &quot;IHG Contact Center Operations&quot;,
+&quot;&quot;))))))))))))))))))</expression>
+    </formulas>
+    <formulas>
+        <name>UserRoleFormula</name>
+        <dataType>String</dataType>
+        <expression>IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Loyalty_Operations_Persona&quot;, &quot;Loyalty Business Operations&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Loyalty_Compliance_Persona&quot;, &quot;Loyalty Compliance&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Loyalty_Financial_Ops_Persona&quot;, &quot;Loyalty Financial Operations&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Loyalty_Ops_Leadership_Persona&quot;, &quot;Loyalty Operations Leadership&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Loyalty_Reporting_Persona&quot;, &quot;Loyalty Operational Reporting and Analysis&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Contact_Center_Agent_Persona&quot;, &quot;Contact Center Agent Tier 1&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;RCC_Tier_2_Agent_Persona&quot;, &quot;Contact Center Agent Tier 2&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;RCC_Leadership_Persona&quot;, &quot;Contact Center Leadership&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Hotel_Front_Desk_Persona&quot;, &quot;Hotel Front Desk&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Hotel_Manager_Persona&quot;, &quot;Hotel Management&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Field_Marketing_User_Persona&quot;, &quot;Field Marketing Manager&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Loyalty_Manual_Voucher_Redemption_Persona&quot;, &quot;Loyalty Manual Redemption&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;SFL_System_Administrator_Persona&quot;, &quot;CEO&quot;,
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Copado_Only_Persona&quot;, &quot;Copado Only&quot;, 
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Voucher_Business_Operations_Persona&quot;, &quot;Voucher Business Operations&quot;, 
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;Loyalty_Read_Only_Persona&quot;, &quot;Loyalty Read Only&quot;, 
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;RCC_Training&quot;, &quot;RCC Training&quot;, 
+IF({!Get_Permission_Set_Group_Records.DeveloperName} = &quot;RCC_Hotel_Agent_Persona&quot;, &quot;Contact Center Hotel Agent&quot;, 
+&quot;&quot;))))))))))))))))))</expression>
+    </formulas>
+    <interviewLabel>LOY User_Role_Profile_Assignment_Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>LOY MyIDUser_Role_Profile_Assignment_Flow</label>
+    <loops>
+        <name>Loop_Permission_Set_Group_Assignments</name>
+        <label>Loop Permission Set Group Assignments</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Permission_Set_Group_Assignments</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Get_Permission_Set_Group_Records</targetReference>
+        </nextValueConnector>
+    </loops>
+    <loops>
+        <name>Loop_Through_Assigned_PermissionSetGroups</name>
+        <label>Loop Through Assigned PermissionSetGroups</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <collectionReference>Get_Permission_Set_Group_Assignments</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>GetAssignedPermissionSetGroupNames</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Is_Role_and_Profile_Mapping_Valid</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Permission_Set_Group_Assignments</name>
+        <label>Get Permission Set Group Assignments</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Is_PermissionSetGroup_Assigned</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Handle_Custom_Exception_Flow</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>AssigneeId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>PermissionSetGroupId</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>PermissionSetAssignment</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Permission_Set_Group_Records</name>
+        <label>Get Permission Set Group Records</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Role</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Loop_Permission_Set_Group_Assignments.PermissionSetGroupId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>PermissionSetGroup</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Profile</name>
+        <label>Get Profile</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Update_User_Role_and_Profile</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>UserProfileFormula</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Profile</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Role</name>
+        <label>Get Role</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Profile</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>UserRoleFormula</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>UserRole</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>GetAssignedPermissionSetGroupNames</name>
+        <label>GetAssignedPermissionSetGroupNames</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Loop_Through_Assigned_PermissionSetGroups</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Loop_Through_Assigned_PermissionSetGroups.PermissionSetGroup.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>PermissionSetGroup</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordUpdates>
+        <name>Update_User_Role_and_Profile</name>
+        <label>Update User Role and Profile</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Loop_Permission_Set_Group_Assignments</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Handle_Custom_Exception_On_User_Update</targetReference>
+        </faultConnector>
+        <inputAssignments>
+            <field>ProfileId</field>
+            <value>
+                <elementReference>Get_Profile.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>UserRoleId</field>
+            <value>
+                <elementReference>Get_Role.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <filterFormula>OR(
+	AND(
+		NOT(ISBLANK({!$Record.FederationIdentifier})),
+		{!$Record.Profile.Name}=&apos;Minimum Access - Salesforce&apos;,
+		{!$Record.CreatedBy.FirstName} + &apos; &apos; + {!$Record.CreatedBy.LastName} =&apos;Sailpoint Integration&apos;,
+		ISBLANK({!$Record.UserRoleId})    
+	),
+
+	AND(
+		NOT(ISBLANK({!$Record.FederationIdentifier})),
+		{!$Record.Profile.Name}=&apos;Minimum Access - Salesforce&apos;,
+		{!$Record.CreatedBy.FirstName} + &apos; &apos; + {!$Record.CreatedBy.LastName} =&apos;Sailpoint Integration&apos;,
+		NOT(ISBLANK({!$Record.UserRoleId})),
+		NOT(ISCHANGED({!$Record.UserRoleId}))
+	)
+)</filterFormula>
+        <object>User</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <scheduledPaths>
+            <name>Wait_for_Permission_Set_Assignment</name>
+            <connector>
+                <targetReference>Get_Permission_Set_Group_Assignments</targetReference>
+            </connector>
+            <label>Wait for Permission Set Assignment</label>
+            <offsetNumber>1</offsetNumber>
+            <offsetUnit>Minutes</offsetUnit>
+            <recordField>LastModifiedDate</recordField>
+            <timeSource>RecordField</timeSource>
+        </scheduledPaths>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <subflows>
+        <name>Handle_Custom_Exception_Flow</name>
+        <label>Handle Custom Exception Flow</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <flowName>Utility_Publish_Exception_Event</flowName>
+        <inputAssignments>
+            <name>DebugNotes</name>
+            <value>
+                <stringValue>Failed to fetch the Permission set Assignments</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>ExceptionDetails</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>FlowName</name>
+            <value>
+                <stringValue>LOY_MyIDUser_Role_Profile_Assignment_Flow</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>Object</name>
+            <value>
+                <stringValue>User</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Handle_Custom_Exception_On_User_Update</name>
+        <label>Handle Custom Exception On User Update</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <flowName>Utility_Publish_Exception_Event</flowName>
+        <inputAssignments>
+            <name>DebugNotes</name>
+            <value>
+                <stringValue>Failed to update user record</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>ExceptionDetails</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>FlowName</name>
+            <value>
+                <stringValue>LOY_MyIDUser_Role_Profile_Assignment_Flow</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>Object</name>
+            <value>
+                <stringValue>user</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>RecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <variables>
+        <name>PermissionSetGroupName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Slack_User_Id__c</fullName>
+    <description>Slack workspace user ID (e.g. U01ABCDEF). Found via Slack profile -> three-dot menu -> Copy member ID.</description>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <label>Slack User Id</label>
+    <length>32</length>
+    <required>true</required>
+    <type>Text</type>
+</CustomField>

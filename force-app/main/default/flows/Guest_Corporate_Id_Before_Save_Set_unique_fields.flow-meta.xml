@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Assign_DefaultConstraintKey_when_IsDefault_is_FALSE</name>
+        <label>Assign DefaultConstraintKey when IsDefault is FALSE</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.DefaultConstraintKey__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>forT_ContactCorporateId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Assign_Unique_Id</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_DefaultConstraintKey_when_IsDefault_is_TRUE</name>
+        <label>Assign DefaultConstraintKey when IsDefault is TRUE</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.DefaultConstraintKey__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Contact__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Assign_Unique_Id</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_Unique_Id</name>
+        <label>Assign Unique Id</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.UniqueId__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>forT_ContactCorporateId</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <name>Is_Default</name>
+        <label>Is Default?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Assign_DefaultConstraintKey_when_IsDefault_is_FALSE</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default is FALSE</defaultConnectorLabel>
+        <rules>
+            <name>Default_is_TRUE</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.IsDefault__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_DefaultConstraintKey_when_IsDefault_is_TRUE</targetReference>
+            </connector>
+            <label>Default is TRUE</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <name>forT_ContactCorporateId</name>
+        <dataType>String</dataType>
+        <expression>{!$Record.Contact__c}&amp;&apos;:&apos;&amp;{!$Record.CorporateId__c}</expression>
+    </formulas>
+    <interviewLabel>Guest Corporate Id - Before Save - Set unique fields {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Guest Corporate Id - Before Save - Set unique fields</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Is_Default</targetReference>
+        </connector>
+        <filterFormula>ISNEW() || (ISCHANGED({!$Record.IsDefault__c}) || ISCHANGED({!$Record.CorporateId__c}) || ISCHANGED({!$Record.Contact__c}))</filterFormula>
+        <object>GuestCorporateID__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

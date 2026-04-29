@@ -1,0 +1,107 @@
+<template>
+    <lightning-card title="Design → LWC Generator" icon-name="utility:magicwand">
+        <div class="slds-p-around_medium">
+            <p class="slds-m-bottom_medium slds-text-body_regular">
+                Generate and deploy an LWC from a <strong>Figma URL</strong> or an <strong>uploaded zip of design screenshots</strong>.
+            </p>
+
+            <div class="slds-m-bottom_medium">
+                <lightning-button-group>
+                    <lightning-button
+                        label="Figma URL"
+                        variant={figmaVariant}
+                        onclick={handleModeFigma}
+                    ></lightning-button>
+                    <lightning-button
+                        label="Upload Images (ZIP)"
+                        variant={uploadVariant}
+                        onclick={handleModeUpload}
+                    ></lightning-button>
+                </lightning-button-group>
+            </div>
+
+            <template lwc:if={isFigmaMode}>
+                <lightning-input
+                    label="Figma URL"
+                    placeholder="https://www.figma.com/file/..., design/..., or proto/..."
+                    value={figmaUrl}
+                    onchange={handleUrlChange}
+                    class="slds-m-bottom_small"
+                ></lightning-input>
+            </template>
+
+            <template lwc:if={isUploadMode}>
+                <div class="slds-form-element slds-m-bottom_x-small">
+                    <label class="slds-form-element__label" for="zip-upload">Design screenshots (ZIP)</label>
+                    <div class="slds-form-element__control">
+                        <input type="file" id="zip-upload" accept=".zip" onchange={handleFileChange} class="file-input" />
+                    </div>
+                </div>
+                <template lwc:if={zipFileName}>
+                    <p class={zipFileRowClass}>Selected: {zipFileName} ({zipSizeLabel})</p>
+                </template>
+                <template lwc:if={zipTooLarge}>
+                    <p class="slds-text-body_small slds-text-color_error slds-m-bottom_small">ZIP is over 3 MB. Use fewer/smaller images or lower resolution so the zip stays under 3 MB.</p>
+                </template>
+                <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_small">
+                    Export frames as PNG/JPG, zip them, and upload. Name in order (01-welcome.png, 02-home.png). Max 6 images, each under 8000px. Keep zip under 3 MB.
+                </p>
+            </template>
+
+            <lightning-input
+                label="Component or frame name"
+                placeholder="e.g. CoffeeShop"
+                value={frameName}
+                onchange={handleFrameNameChange}
+                class="slds-m-bottom_small"
+            ></lightning-input>
+
+            <lightning-input
+                label="LWC name prefix"
+                placeholder="e.g. nF_"
+                value={prefix}
+                onchange={handlePrefixChange}
+                class="slds-m-bottom_medium"
+            ></lightning-input>
+
+            <div class="slds-m-bottom_small">
+                <lightning-button
+                    variant="brand"
+                    label={generateButtonLabel}
+                    onclick={handleGenerateDeploy}
+                    disabled={isGenerateDisabled}
+                    class="slds-m-right_x-small"
+                ></lightning-button>
+                <lightning-button
+                    variant="neutral"
+                    label="Copy prompt for Cursor"
+                    onclick={handleCopyPrompt}
+                    class="slds-m-right_x-small"
+                ></lightning-button>
+                <lightning-button
+                    variant="neutral"
+                    label={showPromptLabel}
+                    onclick={handleShowPrompt}
+                ></lightning-button>
+            </div>
+
+            <template lwc:if={isGenerating}>
+                <div class="slds-is-relative slds-m-top_medium" style="height: 80px;">
+                    <lightning-spinner alternative-text="Generating and deploying…" size="medium"></lightning-spinner>
+                </div>
+                <p class="slds-text-align_center slds-text-body_small slds-text-color_weak slds-m-top_small">{statusText}</p>
+            </template>
+
+            <template lwc:if={resultMessage}>
+                <div class={resultMessageClass} role="alert">{resultMessage}</div>
+            </template>
+
+            <template lwc:if={showPrompt}>
+                <div class="slds-m-top_medium prompt-box">
+                    <p class="slds-text-title_bold slds-m-bottom_x-small">Paste this into Cursor:</p>
+                    <pre class="prompt-pre">{promptText}</pre>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

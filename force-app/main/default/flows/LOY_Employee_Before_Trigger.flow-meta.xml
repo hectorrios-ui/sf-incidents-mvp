@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>63.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <description>Assign the DB Account record</description>
+        <name>Assign_Account_for_Employee</name>
+        <label>Assign Account for Employee</label>
+        <locationX>248</locationX>
+        <locationY>2303</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Hotel__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Account_Record.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_Contact_Record_From_LPM</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Assign the DB Contact record for Employee record.</description>
+        <name>Assign_Contact_for_Employee</name>
+        <label>Assign Loyalty Program Member for Employee</label>
+        <locationX>699</locationX>
+        <locationY>2711</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Loyalty_Program_Member__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Contact_Record_From_LPM.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Get_Employee_Record</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Assign the DB Country record</description>
+        <name>Assign_the_Country</name>
+        <label>Assign the Country</label>
+        <locationX>248</locationX>
+        <locationY>1703</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Primary_Work_Country__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Country_Record.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Has_Work_Location_OR_Worker_HR_Type_Changed</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Set Termination date to blank when rehired</description>
+        <name>Clear_Termination_Date</name>
+        <label>Clear Termination Date</label>
+        <locationX>490</locationX>
+        <locationY>503</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Termination_Date__c</assignToReference>
+            <operator>Assign</operator>
+        </assignmentItems>
+        <connector>
+            <targetReference>Is_Primary_Work_Country_Code_Changed</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>WorkerType and StatusAsOf needs to be pre-populated with the default values</description>
+        <name>Set_required_default_values</name>
+        <label>Set required default values</label>
+        <locationX>182</locationX>
+        <locationY>395</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.WorkerType</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Employee</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.StatusAsOf</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Is_Source_System_MyID</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Source_System</name>
+        <label>Set Source System</label>
+        <locationX>50</locationX>
+        <locationY>611</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Source_System__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>MyID</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Is_RC_Member_Id_Null</targetReference>
+        </connector>
+    </assignments>
+    <customErrors>
+        <description>Raise a custom Exception if the record is already present.</description>
+        <name>Raise_Error_If_Employee_Exist</name>
+        <label>Raise Error If Employee Exist</label>
+        <locationX>633</locationX>
+        <locationY>3143</locationY>
+        <customErrorMessages>
+            <errorMessage>The Membership Number : {!$Record.RC_member_ID__c} is already assigned to Immutable ID: {!Get_Employee_Record.EmployeeNumber}</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <customErrors>
+        <description>Raise a custom exception if not.</description>
+        <name>Raise_Error_If_no_LPM</name>
+        <label>Raise Error If no LPM</label>
+        <locationX>105</locationX>
+        <locationY>2711</locationY>
+        <customErrorMessages>
+            <errorMessage>The IHG One Rewards Club Number {!$Record.RC_member_ID__c} entered is not present. Please check if the entered One Rewards Club Number is correct.</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <customErrors>
+        <name>RC_Member_Id_Is_NULL</name>
+        <label>RC Member Id Is NULL</label>
+        <locationX>50</locationX>
+        <locationY>911</locationY>
+        <customErrorMessages>
+            <errorMessage>RC Member is missing</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
+    <decisions>
+        <description>Check if the Contact exist from LPM</description>
+        <name>Check_If_Contact_Exist</name>
+        <label>Check If Loyalty Program Member is exist</label>
+        <locationX>402</locationX>
+        <locationY>2603</locationY>
+        <defaultConnector>
+            <targetReference>Assign_Contact_for_Employee</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Contact Exist</defaultConnectorLabel>
+        <rules>
+            <name>LPM_is_not_Exist</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Contact_Record_From_LPM.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Raise_Error_If_no_LPM</targetReference>
+            </connector>
+            <label>LPM is not Exist</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Check_If_Employee_Exist</name>
+        <label>Check If Employee Exist</label>
+        <locationX>699</locationX>
+        <locationY>2927</locationY>
+        <defaultConnectorLabel>New Employee Record</defaultConnectorLabel>
+        <rules>
+            <name>Employee_Exist</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Employee_Record.EmployeeNumber</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Check_If_Employee_Number_Associate_to_RC_Member_Id</targetReference>
+            </connector>
+            <label>Employee Exist</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Check If Employee Number Associate to RC Member Id</description>
+        <name>Check_If_Employee_Number_Associate_to_RC_Member_Id</name>
+        <label>Check If Employee Number Associate to RC Member Id</label>
+        <locationX>501</locationX>
+        <locationY>3035</locationY>
+        <defaultConnector>
+            <targetReference>Raise_Error_If_Employee_Exist</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes_RcMemberId</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Employee_Record.EmployeeNumber</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.RC_member_ID__c</elementReference>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Get_Employee_Record.EmployeeStatus</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Terminated</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Primary_Work_Country_Code__c</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Primary_Work_Location__c</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Worker_HR_Org_Type__c</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.EmployeeStatus</leftValueReference>
+                <operator>IsChanged</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Check If Worker HR Org Type is Hotels?</description>
+        <name>Check_Worker_HR_Type_as_Hotels</name>
+        <label>Check Worker HR Type as Hotels?</label>
+        <locationX>248</locationX>
+        <locationY>2003</locationY>
+        <defaultConnector>
+            <targetReference>Assign_Account_for_Employee</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Worker_HR_Org_Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Hotels</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Primary_Work_Location__c</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Account_Record</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Getting the Account is required or not based on Primary work Location and Worker HR Org Type</description>
+        <name>Has_Work_Location_OR_Worker_HR_Type_Changed</name>
+        <label>Has Work Location OR Worker HR Type Changed?</label>
+        <locationX>402</locationX>
+        <locationY>1895</locationY>
+        <defaultConnector>
+            <targetReference>Get_Contact_Record_From_LPM</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Yes_Check_Worker_HR_Type</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Primary_Work_Location__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Primary_Work_Location__c</elementReference>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record__Prior.Worker_HR_Org_Type__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Worker_HR_Org_Type__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Check_Worker_HR_Type_as_Hotels</targetReference>
+            </connector>
+            <label>Yes, Check Worker HR Type</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Wipe out Termination Date of rehired employee if termination date is not blank (US382793)</description>
+        <name>Is_Employee_Rehired</name>
+        <label>Is Employee Rehired</label>
+        <locationX>622</locationX>
+        <locationY>395</locationY>
+        <defaultConnector>
+            <targetReference>Is_Primary_Work_Country_Code_Changed</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Employee_Rehired</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.EmployeeStatus</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Terminated</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.EmployeeStatus</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Active</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Termination_Date__c</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Clear_Termination_Date</targetReference>
+            </connector>
+            <label>Employee Rehired</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Checking if the incoming record as New or Updated.</description>
+        <name>Is_NEW_Record</name>
+        <label>Is NEW Record?</label>
+        <locationX>402</locationX>
+        <locationY>287</locationY>
+        <defaultConnector>
+            <targetReference>Is_Employee_Rehired</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Update Record</defaultConnectorLabel>
+        <rules>
+            <name>New_Record</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>IsNewRecord</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_required_default_values</targetReference>
+            </connector>
+            <label>New Record</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Is_Primary_Work_Country_Code_Blank</name>
+        <label>Is Primary Work Country Code Blank</label>
+        <locationX>248</locationX>
+        <locationY>1403</locationY>
+        <defaultConnector>
+            <targetReference>Assign_the_Country</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Not_Blank</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Primary_Work_Country_Code__c</leftValueReference>
+                <operator>IsBlank</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Country_Record</targetReference>
+            </connector>
+            <label>Not Blank</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Check If the Primary_Work_Country_Code is null.</description>
+        <name>Is_Primary_Work_Country_Code_Changed</name>
+        <label>Is Primary Work Country Code Changed?</label>
+        <locationX>402</locationX>
+        <locationY>1295</locationY>
+        <defaultConnector>
+            <targetReference>Has_Work_Location_OR_Worker_HR_Type_Changed</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Value_Exist</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Primary_Work_Country_Code__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Primary_Work_Country_Code__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Is_Primary_Work_Country_Code_Blank</targetReference>
+            </connector>
+            <label>Value Exist</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Is_RC_Member_Id_Null</name>
+        <label>Is RC_Member_Id Null?</label>
+        <locationX>182</locationX>
+        <locationY>803</locationY>
+        <defaultConnector>
+            <targetReference>Is_Primary_Work_Country_Code_Changed</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>RC Member has Value</defaultConnectorLabel>
+        <rules>
+            <name>RC_Member_Id_Exist</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.RC_member_ID__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>RC_Member_Id_Is_NULL</targetReference>
+            </connector>
+            <label>Raise Custom Error</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>US343108 If the created by user is MyID Integration, then the source system will be updated to MyID</description>
+        <name>Is_Source_System_MyID</name>
+        <label>Is Source System MyID?</label>
+        <locationX>182</locationX>
+        <locationY>503</locationY>
+        <defaultConnector>
+            <targetReference>Is_RC_Member_Id_Null</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Source_System_is_MyID</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$User.FirstName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>$Label.MyId_Integration_First_Name</elementReference>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$User.LastName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>$Label.MyId_Integration_Last_Name</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Source_System</targetReference>
+            </connector>
+            <label>Source System is MyID</label>
+        </rules>
+    </decisions>
+    <description>Record Triggered Autolaunch Flow on Employee Object to Set values before insert and before update
+ US382793</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>IsNewRecord</name>
+        <dataType>Boolean</dataType>
+        <expression>IsNew()</expression>
+    </formulas>
+    <interviewLabel>LOY - Employee Before Trigger {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>LOY - Employee Before Trigger</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Get the Account record which has a RecordType as Hotel Property</description>
+        <name>Get_Account_Record</name>
+        <label>Get Account Record</label>
+        <locationX>116</locationX>
+        <locationY>2111</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Assign_Account_for_Employee</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Hotel_Code__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Primary_Work_Location__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Account</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Get the Loyalty Program Member record from DB based on Membership Number.</description>
+        <name>Get_Contact_Record_From_LPM</name>
+        <label>Get Loyalty Program Member</label>
+        <locationX>402</locationX>
+        <locationY>2495</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Check_If_Contact_Exist</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>MembershipNumber</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.RC_member_ID__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>LoyaltyProgramMember</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Getting the Country record based on Primary Work Country code.</description>
+        <name>Get_Country_Record</name>
+        <label>Get Country Record</label>
+        <locationX>116</locationX>
+        <locationY>1511</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Assign_the_Country</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Country_Code_Long__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Primary_Work_Country_Code__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Country__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <description>Get the Employee record based on the RC Member ID from Payload</description>
+        <name>Get_Employee_Record</name>
+        <label>Get Employee Record</label>
+        <locationX>699</locationX>
+        <locationY>2819</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Check_If_Employee_Exist</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Loyalty_Program_Member__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_Contact_Record_From_LPM.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Employee</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>276</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Is_NEW_Record</targetReference>
+        </connector>
+        <filterFormula>OR( IsNew(), 
+IsChanged({!$Record.Worker_HR_Org_Type__c}), IsChanged({!$Record.EmployeeNumber}), IsChanged({!$Record.Primary_Work_Country_Code__c}), IsChanged({!$Record.Primary_Work_Location__c}), IsChanged({!$Record.RC_member_ID__c}), ISCHANGED({!$Record.EmployeeStatus})
+)</filterFormula>
+        <object>Employee</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

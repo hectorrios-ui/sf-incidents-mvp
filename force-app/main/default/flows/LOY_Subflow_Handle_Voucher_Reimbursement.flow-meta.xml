@@ -1,0 +1,629 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Flow_Message_Invalid_Breakage_TJ</name>
+        <label>Flow Message - Invalid Breakage TJ</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>varT_FlowMessage</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Unable to create valid Breakage Transaction Journal record.</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varT_DebugLevel</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>INFO</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Create_Error_Log</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Flow_Message_Failed_Breakage_Event</name>
+        <label>Set Flow Message - Failed Breakage Event</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>varT_FlowMessage</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Failed to publish Breakage Event</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Create_Error_Log</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Flow_Message_Liability_Event</name>
+        <label>Set Flow Message - Liability Event</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>varT_FlowMessage</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Failed to publish Liability Event.</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Create_Error_Log</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Message_Invalid_Voucher</name>
+        <label>Set Message - Invalid Voucher</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>varT_FlowMessage</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Voucher does not meet criteria for reimbursement.  </stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varT_DebugLevel</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>INFO</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Create_Error_Log</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Set_Retrieve_Message</name>
+        <label>Set Retrieve Message</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>varT_FlowMessage</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Error while retrieving the Redemption Detail Object</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Create_Error_Log</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <description>Determine if breakage is applicable and if so perform certain actions.</description>
+        <name>Breakage_Applicable</name>
+        <label>Breakage Applicable?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Breakage_Applies_Outcome</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>forB_BreakageApplies</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Breakage_Transaction_Journal_Entry</targetReference>
+            </connector>
+            <label>Breakage Applies</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Valid_Transaction_Journal</name>
+        <label>Valid Transaction Journal?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Set_Message_Invalid_Voucher</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Valid_TJ_Outcome</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>var_NewTransactionJournal.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Associate_TJ_with_Voucher</targetReference>
+            </connector>
+            <label>Valid TJ</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Valid_Transaction_Journal_0</name>
+        <label>Valid Transaction Journal?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Flow_Message_Invalid_Breakage_TJ</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Valid_TJ_Outcome_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>var_NewBreakageTJ.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Publish_Breakage_Event</targetReference>
+            </connector>
+            <label>Valid TJ</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Confirm that Voucher is Reibmursable before processing.</description>
+        <name>Voucher_Reimbursable</name>
+        <label>Voucher Reimbursable?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Reimbursable_Outcome</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>var_RedeemedVoucher.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Redeemed</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>var_RedeemedVoucher.VoucherDefinition.Reimbursement_Recipient__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Hotel</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>var_RedeemedVoucher.VoucherDefinition.Reimbursable__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Yes</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Redemption_Details_Record</targetReference>
+            </connector>
+            <label>Hotel Reimbursable</label>
+        </rules>
+    </decisions>
+    <description>DE87341 - SFLC - [Potential RQ Miss] Reimbursement Amount field is not populated on the Redemption Detail object
+US287238 - SFLC | Update all code using the Voucher Reimbursement Fields
+US282548 - SFLC | Update Breakage flow for Data Source, updated Fault path</description>
+    <environments>Default</environments>
+    <formulas>
+        <description>Determine if breakage scenario applies based on the following conditions: Status=Redeemed, RedemptionChannel On-Premise Portfolio, Redemption value and Breakage value greater than 0</description>
+        <name>forB_BreakageApplies</name>
+        <dataType>Boolean</dataType>
+        <expression>AND (
+ISPICKVAL({!var_RedeemedVoucher.Status}, &quot;Redeemed&quot;),
+ISPICKVAL({!var_RedeemedVoucher.VoucherDefinition.Redemption_Channel__c}, &quot;On-Premise Folio&quot;),
+ {!Get_Redemption_Details_Record.Reimbursement_Amount__c} &gt; 0,
+{!Get_Redemption_Details_Record.Breakage_Amount__c} &gt; 0
+)</expression>
+    </formulas>
+    <formulas>
+        <name>forC_ReimbursementValue</name>
+        <dataType>Currency</dataType>
+        <expression>CASE (
+{!var_RedeemedVoucher.VoucherDefinition.Reimbursement_Model__c},
+&quot;Flat Rate&quot;,  IF ({!var_RedeemedVoucher.VoucherDefinition.Reimbursement_Value__c} &gt; 0, {!var_RedeemedVoucher.VoucherDefinition.Reimbursement_Value__c}, 0),
+&quot;PercentageVoucherValue&quot;,  IF ({!var_RedeemedVoucher.VoucherDefinition.Reimbursement_Percentage__c} &gt; 0, {!var_RedeemedVoucher.FaceValue} * ({!var_RedeemedVoucher.VoucherDefinition.Reimbursement_Percentage__c}/100), 0),
+&quot;PercentRedeemedAmount&quot;, IF ({!var_RedeemedVoucher.VoucherDefinition.Reimbursement_Percentage__c} &gt; 0, {!Get_Redemption_Details_Record.Voucher_Redeem_Amount__c} * ({!var_RedeemedVoucher.VoucherDefinition.Reimbursement_Percentage__c}/100), 0),  
+-99
+)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>forN_ReimbursementAmount</name>
+        <dataType>Number</dataType>
+        <expression>CASE (
+{!var_RedeemedVoucher.VoucherDefinition.Reimbursement_Model__c},
+&quot;Flat Rate&quot;,  IF ({!var_RedeemedVoucher.VoucherDefinition.Reimbursement_Value__c}!=null, {!var_RedeemedVoucher.VoucherDefinition.Reimbursement_Value__c}, 0),
+&quot;PercentageVoucherValue&quot;,  IF ({!var_RedeemedVoucher.VoucherDefinition.Reimbursement_Percentage__c}!=null, {!var_RedeemedVoucher.FaceValue} * ({!var_RedeemedVoucher.VoucherDefinition.Reimbursement_Percentage__c}/100), 0),
+&quot;PercentRedeemedAmount&quot;, IF ({!var_RedeemedVoucher.VoucherDefinition.Reimbursement_Percentage__c} &gt; 0, {!Get_Redemption_Details_Record.Voucher_Redeem_Amount__c} * ({!var_RedeemedVoucher.VoucherDefinition.Reimbursement_Percentage__c}/100), 0),  
+0
+)</expression>
+        <scale>2</scale>
+    </formulas>
+    <formulas>
+        <name>forT_ReimbursementCurrency</name>
+        <dataType>String</dataType>
+        <expression>CASE (
+{!var_RedeemedVoucher.VoucherDefinition.Reimbursement_Model__c},
+&quot;Flat Rate&quot;,  TEXT({!var_RedeemedVoucher.VoucherDefinition.CurrencyIsoCode}),
+&quot;PercentageVoucherValue&quot;,  TEXT({!var_RedeemedVoucher.CurrencyIsoCode}),
+&quot;PercentRedeemedAmount&quot;,  {!var_RedeemedVoucher.Hotel_Folio_Currency__c},
+{!$Label.LOY_Default_Currency_ISO_Code}
+)</expression>
+    </formulas>
+    <formulas>
+        <description>Displaying Reimbursement Value without comma for Mule payload respose</description>
+        <name>forText_ReimbursementValueWithoutComma</name>
+        <dataType>String</dataType>
+        <expression>SUBSTITUTE( TEXT( {!forC_ReimbursementValue}), &quot;,&quot; , &quot;&quot;  )</expression>
+    </formulas>
+    <interviewLabel>LOY - Handle Voucher {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>LOY - Subflow - Handle Voucher Reimbursement</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <name>Publish_Breakage_Event</name>
+        <label>Publish Breakage Event</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Associate_Breakage_TJ_with_Voucher</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Flow_Message_Failed_Breakage_Event</targetReference>
+        </faultConnector>
+        <inputAssignments>
+            <field>CurrencyCode__c</field>
+            <value>
+                <elementReference>var_NewBreakageTJ.CurrencyIsoCode</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Transaction_Journal_Subtype__c</field>
+            <value>
+                <elementReference>var_NewBreakageTJ.JournalSubType.Name</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Transaction_Journal_Type__c</field>
+            <value>
+                <elementReference>var_NewBreakageTJ.JournalType.Name</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>amount__c</field>
+            <value>
+                <elementReference>var_NewBreakageTJ.TransactionAmount</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>businessDate__c</field>
+            <value>
+                <elementReference>var_NewBreakageTJ.JournalDate</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>hotelCode__c</field>
+            <value>
+                <elementReference>var_RedeemedVoucher.Redemption_Hotel__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>value__c</field>
+            <value>
+                <elementReference>var_NewBreakageTJ.VoucherCode</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Breakage_Event__e</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
+        <name>Publish_Event</name>
+        <label>Publish Event</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Breakage_Applicable</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Flow_Message_Liability_Event</targetReference>
+        </faultConnector>
+        <inputAssignments>
+            <field>Action__c</field>
+            <value>
+                <elementReference>var_NewTransactionJournal.JournalSubTypeId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Award_Id__c</field>
+            <value>
+                <elementReference>var_RedeemedVoucher.VoucherDefinition.IHG_LOY_Award_ID__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Confirmation_Number__c</field>
+            <value>
+                <elementReference>var_RedeemedVoucher.Reservation_Number__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Hotel__c</field>
+            <value>
+                <elementReference>var_RedeemedVoucher.Redemption_Hotel__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>RC_Number__c</field>
+            <value>
+                <elementReference>var_RedeemedVoucher.MemberNumber__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Reimbursement_Currency_Code__c</field>
+            <value>
+                <elementReference>Get_Redemption_Details_Record.CurrencyIsoCode</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Reimbursement_Value__c</field>
+            <value>
+                <elementReference>forText_ReimbursementValueWithoutComma</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Transaction_DateTime__c</field>
+            <value>
+                <elementReference>var_NewTransactionJournal.JournalDate</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Transaction_Id__c</field>
+            <value>
+                <elementReference>$Flow.InterviewGuid</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Voucher_Code__c</field>
+            <value>
+                <elementReference>var_RedeemedVoucher.Name</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Reimbursement_Event__e</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordLookups>
+        <name>Get_Redemption_Details_Record</name>
+        <label>Get Redemption Details Record</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Create_Reimbursement_Transaction_Journal</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Set_Retrieve_Message</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Voucher_ID__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>var_RedeemedVoucher.Id</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Redemption_Detail__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Voucher_Reimbursable</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <subflows>
+        <name>Associate_Breakage_TJ_with_Voucher</name>
+        <label>Associate Breakage TJ with Voucher</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <flowName>LOY_Associate_TJ_with_Voucher</flowName>
+        <inputAssignments>
+            <name>varTJ</name>
+            <value>
+                <elementReference>var_NewBreakageTJ</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varVoucher</name>
+            <value>
+                <elementReference>var_RedeemedVoucher</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Associate_TJ_with_Voucher</name>
+        <label>Associate TJ with Voucher</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Publish_Event</targetReference>
+        </connector>
+        <flowName>LOY_Associate_TJ_with_Voucher</flowName>
+        <inputAssignments>
+            <name>varTJ</name>
+            <value>
+                <elementReference>var_NewTransactionJournal</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varVoucher</name>
+            <value>
+                <elementReference>var_RedeemedVoucher</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Create_Breakage_Transaction_Journal_Entry</name>
+        <label>Create Breakage Transaction Journal Entry</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Valid_Transaction_Journal_0</targetReference>
+        </connector>
+        <flowName>Create_Liability_Transaction_Journal</flowName>
+        <inputAssignments>
+            <name>var_Voucher</name>
+            <value>
+                <elementReference>var_RedeemedVoucher</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varT_TransactionJournalContext</name>
+            <value>
+                <stringValue>Breakage</stringValue>
+            </value>
+        </inputAssignments>
+        <outputAssignments>
+            <assignToReference>var_NewBreakageTJ</assignToReference>
+            <name>var_NewTransactionJournal</name>
+        </outputAssignments>
+    </subflows>
+    <subflows>
+        <name>Create_Error_Log</name>
+        <label>Create Error Log</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <flowName>Utility_Publish_Exception_Event</flowName>
+        <inputAssignments>
+            <name>DebugNotes</name>
+            <value>
+                <elementReference>varT_FlowMessage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>ExceptionDetails</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>FlowName</name>
+            <value>
+                <stringValue>LOY_Subflow_Handle_Voucher_Reimbursement</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>LoggingLevel</name>
+            <value>
+                <elementReference>varT_DebugLevel</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Create_Reimbursement_Transaction_Journal</name>
+        <label>Create Reimbursement Transaction Journal</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Valid_Transaction_Journal</targetReference>
+        </connector>
+        <flowName>Create_Liability_Transaction_Journal</flowName>
+        <inputAssignments>
+            <name>var_Voucher</name>
+            <value>
+                <elementReference>var_RedeemedVoucher</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varC_ReimbursementAmount</name>
+            <value>
+                <elementReference>forC_ReimbursementValue</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varT_CurrencyISOCode</name>
+            <value>
+                <elementReference>var_RedeemedVoucher.CurrencyIsoCode</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varT_TransactionJournalContext</name>
+            <value>
+                <stringValue>Reimbursement</stringValue>
+            </value>
+        </inputAssignments>
+        <outputAssignments>
+            <assignToReference>var_NewTransactionJournal</assignToReference>
+            <name>var_NewTransactionJournal</name>
+        </outputAssignments>
+    </subflows>
+    <variables>
+        <name>var_NewBreakageTJ</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>TransactionJournal</objectType>
+    </variables>
+    <variables>
+        <name>var_NewTransactionJournal</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>TransactionJournal</objectType>
+    </variables>
+    <variables>
+        <name>var_RedeemedVoucher</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Voucher</objectType>
+    </variables>
+    <variables>
+        <name>varT_DebugLevel</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <stringValue>ERROR</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <name>varT_FlowMessage</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

@@ -1,0 +1,67 @@
+<template>
+    <template if:true={isOpen}>
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            aria-labelledby="modal-heading"
+            class="slds-modal slds-fade-in-open"
+        >
+            <div class="slds-modal__container">
+
+                <!-- Header -->
+                <header class="slds-modal__header">
+                    <button
+                        class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close"
+                        onclick={handleClose}
+                    >
+                        <lightning-icon
+                            icon-name="utility:close"
+                            size="small"
+                            alternative-text="Close"
+                        ></lightning-icon>
+                    </button>
+                    <h2 id="modal-heading" class="slds-modal__title slds-hyphenate">
+                        {title}
+                    </h2>
+                    <template if:true={subtitle}>
+                        <p class="slds-m-top_x-small slds-text-body_small">{subtitle}</p>
+                    </template>
+                </header>
+
+                <!-- Body -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content">
+                    <slot></slot>
+                </div>
+
+                <!-- Footer -->
+                <footer class="slds-modal__footer">
+                    <button
+                        class="slds-button slds-button_neutral"
+                        onclick={handleClose}
+                    >
+                        {cancelLabel}
+                    </button>
+                    <template if:true={showConfirm}>
+                        <button
+                            class="slds-button slds-button_brand"
+                            onclick={handleConfirm}
+                            disabled={isLoading}
+                        >
+                            <template if:true={isLoading}>
+                                <lightning-spinner
+                                    size="x-small"
+                                    alternative-text="Loading"
+                                    class="slds-m-right_x-small"
+                                ></lightning-spinner>
+                            </template>
+                            {confirmLabel}
+                        </button>
+                    </template>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+</template>

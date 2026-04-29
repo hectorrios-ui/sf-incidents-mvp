@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Save_Log_Action</name>
+        <label>Save Log Action</label>
+        <locationX>308</locationX>
+        <locationY>492</locationY>
+        <actionName>Logger</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <nameSegment>Logger</nameSegment>
+        <offset>0</offset>
+    </actionCalls>
+    <apiVersion>63.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <description>US378647 - CTB | Issue Tier Upgrade Voucher as Benefit after 90 days
+US400995 || CTB | Add Nebula logging on record creation, deletion and updates - Employee</description>
+    <environments>Default</environments>
+    <interviewLabel>LOY - CTB {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>LOY - CTB Issue Voucher for General Managers After Save</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Voucher_Definition_for_GM_Tier_Upgrade</name>
+        <label>Get Voucher Definition for GM Tier Upgrade</label>
+        <locationX>308</locationX>
+        <locationY>276</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Issue_Tier_Upgrade_Vouchers</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>GM Tier Upgrade, Platinum Lifetime</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>VoucherDefinition</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+        <filterLogic>or</filterLogic>
+        <filters>
+            <field>Employee_Sub_Group__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Company Owned or CMH General Managers</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Employee_Sub_Group__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Franchise General Managers</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Employee_Sub_Group__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Partner General Managers</stringValue>
+            </value>
+        </filters>
+        <object>Employee</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <scheduledPaths>
+            <name>Issue_Tier_Upgrade_Voucher</name>
+            <connector>
+                <targetReference>Get_Voucher_Definition_for_GM_Tier_Upgrade</targetReference>
+            </connector>
+            <label>Issue Tier Upgrade Voucher</label>
+            <maxBatchSize>1</maxBatchSize>
+            <offsetNumber>5</offsetNumber>
+            <offsetUnit>Minutes</offsetUnit>
+            <timeSource>RecordTriggerEvent</timeSource>
+        </scheduledPaths>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Draft</status>
+    <subflows>
+        <name>Issue_Tier_Upgrade_Vouchers</name>
+        <label>Issue Tier Upgrade Voucher</label>
+        <locationX>308</locationX>
+        <locationY>384</locationY>
+        <connector>
+            <targetReference>Save_Log_Action</targetReference>
+        </connector>
+        <flowName>LOY_Award_Voucher_Flow</flowName>
+        <inputAssignments>
+            <name>EmployeeRecord</name>
+            <value>
+                <elementReference>$Record</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>MemberNumber</name>
+            <value>
+                <elementReference>$Record.Loyalty_Program_Member__r.MembershipNumber</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>VoucherDefID</name>
+            <value>
+                <elementReference>Get_Voucher_Definition_for_GM_Tier_Upgrade.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </subflows>
+    <triggerOrder>10</triggerOrder>
+</Flow>

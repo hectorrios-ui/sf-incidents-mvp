@@ -1,0 +1,154 @@
+<template>
+    <div class="recommender-wrapper">
+
+        <!-- Panel Header -->
+        <div class="panel-header">
+            <div class="header-left">
+                <lightning-icon icon-name="utility:connected_apps" size="small" class="header-icon"></lightning-icon>
+                <div>
+                    <h2 class="panel-title">Accelerator Recommender</h2>
+                    <p class="panel-subtitle">Find reusable NeuraFlash assets for this project</p>
+                </div>
+            </div>
+            <lightning-button
+                label="Get Recommendations"
+                icon-name="utility:search"
+                variant="brand"
+                onclick={handleGetRecommendations}
+                disabled={isLoading}
+            ></lightning-button>
+        </div>
+
+        <!-- Read-only context pills pulled from the Opportunity -->
+        <template if:true={hasContext}>
+            <div class="context-bar">
+                <lightning-icon icon-name="utility:filterList" size="xx-small" class="context-bar-icon"></lightning-icon>
+                <span class="context-bar-label">Matching for:</span>
+                <template for:each={contextPills} for:item="pill">
+                    <span key={pill.key} class="context-pill">
+                        <lightning-icon icon-name={pill.icon} size="xx-small" class="pill-icon"></lightning-icon>
+                        {pill.label}
+                    </span>
+                </template>
+                <span class="context-bar-hint">· Edit on the Opportunity to change</span>
+            </div>
+        </template>
+
+        <!-- No context warning -->
+        <template if:true={noOppContext}>
+            <div class="context-warning">
+                <lightning-icon icon-name="utility:warning" size="xx-small" class="warning-icon"></lightning-icon>
+                <span>No cloud or industry set on this Opportunity. Add <strong>NF Cloud</strong> and <strong>Industry</strong> fields to the page layout and populate them for auto-matched results.</span>
+            </div>
+        </template>
+
+        <!-- Search override -->
+        <div class="search-row">
+            <lightning-input
+                label=""
+                placeholder="Search all accelerators by keyword..."
+                value={searchTerm}
+                onchange={handleSearchChange}
+                onkeyup={handleSearchKeyUp}
+                variant="label-hidden"
+                class="search-input"
+            ></lightning-input>
+            <lightning-button
+                label="Search"
+                icon-name="utility:search"
+                variant="neutral"
+                onclick={handleSearch}
+                disabled={isSearching}
+            ></lightning-button>
+        </div>
+
+        <!-- Loading -->
+        <template if:true={isLoading}>
+            <div class="loading-state">
+                <lightning-spinner alternative-text="Finding best matches..." size="medium"></lightning-spinner>
+                <p class="loading-label">Analyzing project context and ranking assets…</p>
+            </div>
+        </template>
+
+        <!-- Empty state -->
+        <template if:true={showEmptyState}>
+            <div class="empty-state">
+                <lightning-icon icon-name="utility:connected_apps" size="large" class="empty-icon"></lightning-icon>
+                <h3 class="empty-heading">Ready to recommend</h3>
+                <p class="empty-body">
+                    Context is pulled automatically from the Opportunity's <strong>NF Cloud</strong>
+                    and <strong>Industry</strong> fields. Populate those fields and recommendations
+                    will load instantly — or use the search bar below for a keyword lookup.
+                </p>
+            </div>
+        </template>
+
+        <!-- No results -->
+        <template if:true={showNoResults}>
+            <div class="empty-state">
+                <lightning-icon icon-name="utility:search" size="large" class="empty-icon"></lightning-icon>
+                <h3 class="empty-heading">No matches found</h3>
+                <p class="empty-body">Try broadening your keywords or changing the cloud / industry filter.</p>
+            </div>
+        </template>
+
+        <!-- Results -->
+        <template if:true={showResults}>
+
+            <!-- AI Narrative banner -->
+            <div class="narrative-banner">
+                <lightning-icon icon-name="utility:einstein" size="x-small" class="narrative-icon"></lightning-icon>
+                <span class="narrative-text">{narrative}</span>
+                <span class="result-count">{resultCount} result(s)</span>
+            </div>
+
+            <!-- Sort controls -->
+            <div class="sort-row">
+                <span class="sort-label">Sort by:</span>
+                <lightning-button-group>
+                    <lightning-button
+                        label="Best Match"
+                        variant={sortFitVariant}
+                        data-sort="fit"
+                        onclick={handleSort}
+                    ></lightning-button>
+                    <lightning-button
+                        label="Most Used"
+                        variant={sortUsedVariant}
+                        data-sort="used"
+                        onclick={handleSort}
+                    ></lightning-button>
+                    <lightning-button
+                        label="Newest"
+                        variant={sortNewestVariant}
+                        data-sort="newest"
+                        onclick={handleSort}
+                    ></lightning-button>
+                </lightning-button-group>
+            </div>
+
+            <!-- Result cards -->
+            <div class="results-grid">
+                <template for:each={displayedResults} for:item="acc">
+                    <c-n-f_-a-r_-accelerator-card
+                        key={acc.id}
+                        accelerator={acc}
+                        project-record-id={recordId}
+                        onfeedback={handleFeedback}
+                        onassetopen={handleAssetOpen}
+                    ></c-n-f_-a-r_-accelerator-card>
+                </template>
+            </div>
+
+            <!-- Total hours saved footer -->
+            <template if:true={totalHoursSaved}>
+                <div class="hours-footer">
+                    <lightning-icon icon-name="utility:clock" size="x-small" class="hours-icon"></lightning-icon>
+                    <strong>Estimated delivery savings: ~{totalHoursSaved} hours</strong> across all recommended assets
+                </div>
+            </template>
+
+        </template>
+
+    </div>
+</template>
