@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QuickAction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Send Email</label>
+    <optionsCreateFeedItem>true</optionsCreateFeedItem>
+    <quickActionLayout>
+        <layoutSectionStyle>TwoColumnsLeftToRight</layoutSectionStyle>
+        <quickActionLayoutColumns>
+            <quickActionLayoutItems>
+                <field>To</field>
+            </quickActionLayoutItems>
+            <quickActionLayoutItems>
+                <field>Subject</field>
+            </quickActionLayoutItems>
+            <quickActionLayoutItems>
+                <field>HtmlBody</field>
+            </quickActionLayoutItems>
+        </quickActionLayoutColumns>
+        <quickActionLayoutColumns>
+            <quickActionLayoutItems>
+                <emptySpace>true</emptySpace>
+            </quickActionLayoutItems>
+        </quickActionLayoutColumns>
+    </quickActionLayout>
+    <standardLabel>SendEmail</standardLabel>
+    <successMessage>Email Sent</successMessage>
+    <targetObject>EmailMessage</targetObject>
+    <targetParentField>ParentId</targetParentField>
+    <type>SendEmail</type>
+</QuickAction>
