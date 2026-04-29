@@ -92,34 +92,39 @@ public with sharing class FeedbackSlackService {
     private static String buildPayload(Feedback__c f, FeedbackLlmAdvisor.SuggestionOutcome suggestion) {
         String nameLink = '<' + recordUrl(f.Id) + '|' + safe(f.Name) + '>';
         String title = ':memo: *UAT Feedback* ' + safe(f.Issue_Name__c) + ' (' + nameLink + ')';
+        String descriptionText = stripHtml(f.Issue_Description__c);
         String body =
             '*Status:* ' + safe(f.Status__c) + '\n' +
             '*Type:* ' + safe(f.Type__c) + '\n' +
             '*Persona:* ' + safe(f.Persona__c) + '\n' +
             '*Assigned To:* ' + renderAssignee(f) + '\n' +
             (String.isNotBlank(f.Link_To_Record__c) ? '*Reproducible on record:* ' + f.Link_To_Record__c + '\n' : '') +
-            '\n*Issue Description:*\n' + truncate(stripHtml(f.Issue_Description__c), 1800);
-        String suggestionText = '*Proposed fix (internal AI):* '
-            + (suggestion != null && String.isNotBlank(suggestion.proposedFix) ? truncate(suggestion.proposedFix, 1500) : 'n/a');
-        String confidenceText = '*AI confidence:* '
-            + (suggestion != null && suggestion.confidence != null ? String.valueOf((suggestion.confidence * 100).setScale(0)) + '%' : 'n/a');
+            '\n*Issue Description:*\n' + (String.isNotBlank(descriptionText) ? truncate(descriptionText, 1800) : 'n/a');
+
+        List<Object> blocks = new List<Object>{
+            new Map<String, Object>{
+                'type' => 'section',
+                'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => title }
+            },
+            new Map<String, Object>{
+                'type' => 'section',
+                'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => body }
+            }
+        };
+
+        if (suggestion != null && String.isNotBlank(suggestion.proposedFix)) {
+            String suggestionText = '*Proposed fix (internal AI):* ' + truncate(suggestion.proposedFix, 1500);
+            String confidenceText = '*AI confidence:* '
+                + (suggestion.confidence != null ? String.valueOf((suggestion.confidence * 100).setScale(0)) + '%' : 'n/a');
+            blocks.add(new Map<String, Object>{
+                'type' => 'section',
+                'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => suggestionText + '\n' + confidenceText }
+            });
+        }
 
         Map<String, Object> payload = new Map<String, Object>{
             'text' => 'UAT Feedback ' + safe(f.Name),
-            'blocks' => new List<Object>{
-                new Map<String, Object>{
-                    'type' => 'section',
-                    'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => title }
-                },
-                new Map<String, Object>{
-                    'type' => 'section',
-                    'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => body }
-                },
-                new Map<String, Object>{
-                    'type' => 'section',
-                    'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => suggestionText + '\n' + confidenceText }
-                }
-            }
+            'blocks' => blocks
         };
         return JSON.serialize(payload);
     }
