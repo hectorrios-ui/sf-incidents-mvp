@@ -1,4 +1,5 @@
 import { LightningElement, track } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const PRODUCTS = [
     { id: '1', name: 'Caffe Mocha', sub: 'Deep Foam', price: '$ 4.53', priceNum: 4.53, category: 'all', rating: '4.8', reviews: '230', description: 'A caffe mocha is essentially a chocolate-flavored variant of a caffe latte, combining espresso with hot milk and chocolate.' },
@@ -115,6 +116,29 @@ export default class NfCoffeeShop extends LightningElement {
     }
 
     handlePlaceOrder() {
+        if (!this.orderItems || this.orderItems.length === 0) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: 'Your order is empty. Please add items before placing an order.',
+                    variant: 'error'
+                })
+            );
+            return;
+        }
+
+        const totalAmount = this.orderItems.reduce((t, i) => t + i.priceNum * i.qty, 0) + 1;
+        const itemCount = this.orderItems.reduce((t, i) => t + i.qty, 0);
+        
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: 'Order Placed Successfully!',
+                message: `Your order of ${itemCount} item(s) totaling ${totalAmount.toFixed(2)} has been placed. Thank you for your purchase!`,
+                variant: 'success',
+                mode: 'sticky'
+            })
+        );
+
         this.orderItems = [];
         this.currentView = 'home';
     }
