@@ -1,0 +1,12 @@
+:host {
+    display: block;
+}
+
+.slds-theme_error {
+    background-color: #fef1ee;
+    border-color: #ea001e;
+}
+
+.slds-text-color_success {
+    color: #2e844a;
+}
