@@ -1,0 +1,161 @@
+<template>
+    <lightning-card title="Media Device Access" icon-name="utility:phone_portrait">
+        <div slot="actions">
+            <span class={statusBadgeClass}>{overallStatusLabel}</span>
+        </div>
+
+        <div class="slds-var-p-around_medium">
+            <!-- Checking state -->
+            <template lwc:if={isChecking}>
+                <div class="slds-align_absolute-center slds-var-p-around_medium">
+                    <lightning-spinner alternative-text="Checking permissions" size="small"></lightning-spinner>
+                    <span class="slds-var-m-left_small">Checking device permissions…</span>
+                </div>
+            </template>
+
+            <!-- Permission status rows -->
+            <template lwc:if={isChecking}>
+            </template>
+            <template lwc:else>
+                <!-- Microphone -->
+                <div class="slds-grid slds-grid_vertical-align-center slds-var-m-bottom_small">
+                    <lightning-icon icon-name={micIconName} variant={micIconVariant} size="x-small"
+                        class="slds-var-m-right_small"></lightning-icon>
+                    <div class="slds-col">
+                        <p class="slds-text-body_regular">
+                            <strong>Microphone:</strong> {micStatusLabel}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Speaker -->
+                <div class="slds-grid slds-grid_vertical-align-center slds-var-m-bottom_small">
+                    <lightning-icon icon-name={speakerIconName} variant={speakerIconVariant} size="x-small"
+                        class="slds-var-m-right_small"></lightning-icon>
+                    <div class="slds-col">
+                        <p class="slds-text-body_regular">
+                            <strong>Speaker:</strong> {speakerStatusLabel}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- All good message -->
+                <template lwc:if={allGranted}>
+                    <div class="slds-box slds-theme_shade slds-var-m-top_small slds-var-m-bottom_small">
+                        <p class="slds-text-body_regular slds-text-color_success">
+                            Your media devices are ready. The phone softphone should work correctly.
+                        </p>
+                    </div>
+                </template>
+
+                <!-- Prompt / request access -->
+                <template lwc:if={isMicPrompt}>
+                    <div class="slds-box slds-box_x-small slds-theme_shade slds-var-m-top_small slds-var-m-bottom_small">
+                        <p class="slds-text-body_regular slds-var-m-bottom_small">
+                            Microphone access has not been granted yet. Click below to allow access so the phone can use your headset.
+                        </p>
+                        <lightning-button variant="brand" label="Allow Microphone Access"
+                            icon-name="utility:unmuted" onclick={handleRequestAccess}>
+                        </lightning-button>
+                    </div>
+                </template>
+
+                <!-- Denied state -->
+                <template lwc:if={isMicDenied}>
+                    <div class="slds-box slds-box_x-small slds-theme_error slds-var-m-top_small slds-var-m-bottom_small">
+                        <p class="slds-text-body_regular slds-var-m-bottom_small">
+                            Microphone access is blocked. To fix this:
+                        </p>
+                        <ol class="slds-list_ordered slds-text-body_small slds-var-m-bottom_small">
+                            <li>Click the <strong>lock icon</strong> (or site settings icon) in your browser's address bar</li>
+                            <li>Find <strong>Microphone</strong> and change it to <strong>"Allow"</strong></li>
+                            <li><strong>Reload the page</strong> (Ctrl+Shift+R / Cmd+Shift+R)</li>
+                        </ol>
+                        <lightning-button variant="brand" label="Try Again After Allowing"
+                            icon-name="utility:refresh" onclick={handleRequestAccess}>
+                        </lightning-button>
+                    </div>
+                </template>
+
+                <!-- Error state -->
+                <template lwc:if={hasError}>
+                    <div class="slds-box slds-box_x-small slds-theme_warning slds-var-m-top_small slds-var-m-bottom_small">
+                        <p class="slds-text-body_regular">{errorDetail}</p>
+                    </div>
+                </template>
+
+                <!-- Detected devices -->
+                <template lwc:if={allGranted}>
+                    <template lwc:if={hasMicDevices}>
+                        <div class="slds-var-m-top_medium">
+                            <p class="slds-text-title_caps slds-var-m-bottom_xx-small">Detected Microphones</p>
+                            <ul class="slds-list_dotted slds-text-body_small">
+                                <template for:each={micDevices} for:item="mic">
+                                    <li key={mic.id}>{mic.label}</li>
+                                </template>
+                            </ul>
+                        </div>
+                    </template>
+                    <template lwc:if={hasSpeakerDevices}>
+                        <div class="slds-var-m-top_small">
+                            <p class="slds-text-title_caps slds-var-m-bottom_xx-small">Detected Speakers</p>
+                            <ul class="slds-list_dotted slds-text-body_small">
+                                <template for:each={speakerDevices} for:item="spk">
+                                    <li key={spk.id}>{spk.label}</li>
+                                </template>
+                            </ul>
+                        </div>
+                    </template>
+                </template>
+
+                <!-- Troubleshooting toggle -->
+                <div class="slds-var-m-top_medium">
+                    <lightning-button variant="neutral" label="Troubleshooting Tips"
+                        icon-name="utility:help" onclick={handleToggleTroubleshoot}>
+                    </lightning-button>
+                </div>
+
+                <template lwc:if={showTroubleshoot}>
+                    <div class="slds-box slds-theme_shade slds-var-m-top_small">
+                        <p class="slds-text-title_bold slds-var-m-bottom_small">Common Fixes</p>
+                        <ol class="slds-list_ordered slds-text-body_small">
+                            <li class="slds-var-m-bottom_xx-small">
+                                <strong>Check browser permissions:</strong> Click the lock icon in the address bar and confirm
+                                Microphone is set to "Allow" for this Salesforce domain.
+                            </li>
+                            <li class="slds-var-m-bottom_xx-small">
+                                <strong>Check OS-level permissions:</strong> On macOS, go to System Settings → Privacy &amp; Security → Microphone
+                                and ensure your browser is checked. On Windows, go to Settings → Privacy → Microphone.
+                            </li>
+                            <li class="slds-var-m-bottom_xx-small">
+                                <strong>Use a supported browser:</strong> Chrome or Edge are recommended for Salesforce Service Console with Voice.
+                            </li>
+                            <li class="slds-var-m-bottom_xx-small">
+                                <strong>Close competing apps:</strong> Other apps (Zoom, Teams, etc.) may hold exclusive access to the microphone.
+                            </li>
+                            <li class="slds-var-m-bottom_xx-small">
+                                <strong>Hard refresh:</strong> Press Ctrl+Shift+R (Windows) or Cmd+Shift+R (Mac) to fully reload the console.
+                            </li>
+                            <li class="slds-var-m-bottom_xx-small">
+                                <strong>Clear site data:</strong> In Chrome, go to chrome://settings/content/microphone and remove any "Block" entry for your Salesforce domain.
+                            </li>
+                            <li class="slds-var-m-bottom_xx-small">
+                                <strong>Ensure HTTPS:</strong> Media device access requires a secure (HTTPS) connection. Salesforce always uses HTTPS, but verify no proxy is downgrading.
+                            </li>
+                        </ol>
+                    </div>
+                </template>
+
+                <!-- Recheck + timestamp -->
+                <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-var-m-top_medium">
+                    <lightning-button variant="neutral" label="Re-check"
+                        icon-name="utility:refresh" onclick={handleRecheck}>
+                    </lightning-button>
+                    <template lwc:if={lastChecked}>
+                        <span class="slds-text-body_small slds-text-color_weak">Last checked: {lastChecked}</span>
+                    </template>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
