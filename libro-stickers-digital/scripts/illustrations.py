@@ -612,60 +612,138 @@ def build_mariposa():
 # ===========================================================================
 # 16. MARIQUITA — Pon los puntos negros
 # ===========================================================================
+def ladybug(cx, cy, R, spots, spot_r=None, legs=True, plus=True):
+    """Dibuja una mariquita centrada en (cx, cy) con 'radio' R.
+    'spots' son offsets (dx, dy) en px desde el centro (zonas de sticker)."""
+    s = R / 250.0
+    RX, RY = R, R * 1.04
+    spot_r = spot_r if spot_r is not None else 0.168 * R
+    hy = cy - RY + 70 * s
+    out = ""
+    # patitas (3 por lado, dobladas), detrás del cuerpo
+    if legs:
+        for sx in (-1, 1):
+            for yy in (-0.6, -0.04, 0.5):
+                ey = cy + yy * R
+                e0x = cx + sx * RX * 0.5
+                ex = cx + sx * RX * 0.86
+                j1x, j1y = ex + sx * 46 * s, ey - 6 * s
+                ftx, fty = j1x + sx * 30 * s, ey + 46 * s
+                out += (f'<path d="M{e0x:.1f},{ey:.1f} L{ex:.1f},{ey:.1f} '
+                        f'L{j1x:.1f},{j1y:.1f} L{ftx:.1f},{fty:.1f}" fill="none" '
+                        f'stroke="{INK}" stroke-width="{13*s:.1f}" '
+                        f'stroke-linecap="round" stroke-linejoin="round"/>')
+    # antenas con bolita
+    out += (f'<path d="M{cx-58*s:.1f},{hy:.1f} C{cx-92*s:.1f},{hy-80*s:.1f} '
+            f'{cx-120*s:.1f},{hy-110*s:.1f} {cx-128*s:.1f},{hy-128*s:.1f}" '
+            f'fill="none" stroke="{INK}" stroke-width="{9*s:.1f}" stroke-linecap="round"/>'
+            f'<path d="M{cx+58*s:.1f},{hy:.1f} C{cx+92*s:.1f},{hy-80*s:.1f} '
+            f'{cx+120*s:.1f},{hy-110*s:.1f} {cx+128*s:.1f},{hy-128*s:.1f}" '
+            f'fill="none" stroke="{INK}" stroke-width="{9*s:.1f}" stroke-linecap="round"/>'
+            f'<circle cx="{cx-128*s:.1f}" cy="{hy-128*s:.1f}" r="{15*s:.1f}" fill="{INK}"/>'
+            f'<circle cx="{cx+128*s:.1f}" cy="{hy-128*s:.1f}" r="{15*s:.1f}" fill="{INK}"/>')
+    # cuerpo rojo
+    out += f'<ellipse cx="{cx}" cy="{cy}" rx="{RX}" ry="{RY}" fill="{RED}"/>'
+    # cabeza (domo)
+    out += (f'<path d="M{cx-150*s:.1f},{hy:.1f} a{150*s:.1f},{128*s:.1f} 0 0 1 {300*s:.1f},0 '
+            f'C{cx+150*s:.1f},{hy+30*s:.1f} {cx-150*s:.1f},{hy+30*s:.1f} {cx-150*s:.1f},{hy:.1f} Z" '
+            f'fill="{INK}"/>')
+    # ojitos
+    out += (f'<circle cx="{cx-58*s:.1f}" cy="{hy-26*s:.1f}" r="{20*s:.1f}" fill="#fff"/>'
+            f'<circle cx="{cx+58*s:.1f}" cy="{hy-26*s:.1f}" r="{20*s:.1f}" fill="#fff"/>'
+            f'<circle cx="{cx-58*s:.1f}" cy="{hy-22*s:.1f}" r="{9*s:.1f}" fill="{INK}"/>'
+            f'<circle cx="{cx+58*s:.1f}" cy="{hy-22*s:.1f}" r="{9*s:.1f}" fill="{INK}"/>'
+            f'<circle cx="{cx-62*s:.1f}" cy="{hy-30*s:.1f}" r="{3.2*s:.1f}" fill="#fff"/>'
+            f'<circle cx="{cx+54*s:.1f}" cy="{hy-30*s:.1f}" r="{3.2*s:.1f}" fill="#fff"/>')
+    # línea central
+    out += (f'<path d="M{cx},{hy+24*s:.1f} L{cx},{cy+RY-26*s:.1f}" stroke="{RED_D}" '
+            f'stroke-width="{11*s:.1f}" stroke-linecap="round"/>')
+    # manchas (slots)
+    for (dx, dy) in spots:
+        out += slot(cx + dx, cy + dy, spot_r, INK, show_plus=plus)
+    return out
+
+
 def build_mariquita():
-    cx, cy = 410, 440
-    RX, RY = 250, 262
-    body = ground(cx, cy + RY + 18, 235, 28)
-
-    # --- patitas (detrás del cuerpo): 3 por lado, dobladas ---
-    legs = ""
-    for sx in (-1, 1):
-        for yy in (-150, -10, 130):
-            ex = cx + sx * RX * 0.86
-            ey = cy + yy
-            j1x, j1y = ex + sx * 46, ey - 6
-            ftx, fty = j1x + sx * 30, ey + 46
-            legs += (f'<path d="M{cx + sx * RX * 0.5},{ey} L{ex},{ey} '
-                     f'L{j1x},{j1y} L{ftx},{fty}" fill="none" stroke="{INK}" '
-                     f'stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>')
-    body += legs
-
-    # --- antenas con bolita ---
-    body += (f'<path d="M{cx-58},{cy-RY+70} C{cx-92},{cy-RY-10} {cx-120},{cy-RY-40} {cx-128},{cy-RY-58}" '
-             f'fill="none" stroke="{INK}" stroke-width="9" stroke-linecap="round"/>'
-             f'<path d="M{cx+58},{cy-RY+70} C{cx+92},{cy-RY-10} {cx+120},{cy-RY-40} {cx+128},{cy-RY-58}" '
-             f'fill="none" stroke="{INK}" stroke-width="9" stroke-linecap="round"/>'
-             f'<circle cx="{cx-128}" cy="{cy-RY-58}" r="15" fill="{INK}"/>'
-             f'<circle cx="{cx+128}" cy="{cy-RY-58}" r="15" fill="{INK}"/>')
-
-    # --- cuerpo rojo (óvalo) ---
-    body += f'<ellipse cx="{cx}" cy="{cy}" rx="{RX}" ry="{RY}" fill="{RED}"/>'
-    body += f'<ellipse cx="{cx}" cy="{cy}" rx="{RX}" ry="{RY}" fill="{RED_D}" opacity="0.10"/>'
-
-    # --- cabeza negra (domo superior) ---
-    hy = cy - RY + 70
-    body += (f'<path d="M{cx-150},{hy} '
-             f'a150,128 0 0 1 300,0 '
-             f'C{cx+150},{hy+30} {cx-150},{hy+30} {cx-150},{hy} Z" fill="{INK}"/>')
-    # ojitos + cachetes + sonrisa
-    body += (f'<circle cx="{cx-58}" cy="{hy-26}" r="20" fill="#fff"/>'
-             f'<circle cx="{cx+58}" cy="{hy-26}" r="20" fill="#fff"/>'
-             f'<circle cx="{cx-54}" cy="{hy-22}" r="9" fill="{INK}"/>'
-             f'<circle cx="{cx+62}" cy="{hy-22}" r="9" fill="{INK}"/>'
-             f'<circle cx="{cx-58}" cy="{hy-30}" r="3.2" fill="#fff"/>'
-             f'<circle cx="{cx+58}" cy="{hy-30}" r="3.2" fill="#fff"/>')
-
-    # --- línea central de las alas ---
-    body += (f'<path d="M{cx},{hy+24} L{cx},{cy+RY-26}" stroke="{RED_D}" '
-             f'stroke-width="11" stroke-linecap="round"/>')
-
-    # --- puntos negros (slots) simétricos, 3 por ala ---
+    cx, cy, R = 410, 440, 250
+    body = ground(cx, cy + R * 1.04 + 18, 235, 28)
     spots = [(-118, -54), (-150, 70), (-86, 176),
              (118, -54), (150, 70), (86, 176)]
-    for (dx, dy) in spots:
-        body += slot(cx + dx, cy + dy, 42, INK)
-
+    body += ladybug(cx, cy, R, spots, spot_r=42)
     save("19_mariquita.svg", doc(820, 800, body))
+
+
+def _spot_layout(n, R):
+    """Distribución (dx, dy) en px para n manchas (estilo equilibrado)."""
+    frac = {
+        1: [(0, 0.12)],
+        2: [(-0.34, 0.0), (0.34, 0.0)],
+        3: [(-0.36, -0.12), (0.36, -0.12), (0, 0.32)],
+        4: [(-0.34, -0.14), (0.34, -0.14), (-0.34, 0.4), (0.34, 0.4)],
+        5: [(-0.36, -0.18), (0.36, -0.18), (0, 0.12), (-0.36, 0.46), (0.36, 0.46)],
+        6: [(-0.36, -0.22), (0.36, -0.22), (-0.4, 0.16), (0.4, 0.16),
+            (-0.32, 0.54), (0.32, 0.54)],
+    }[n]
+    return [(dx * R, dy * R) for dx, dy in frac]
+
+
+def build_mariquitas_conteo():
+    """Seis mariquitas para practicar conteo: 1, 2, 3, 4, 5 y 6 manchas."""
+    R = 96
+    cols = [200, 510, 820]
+    rows = [235, 565]
+    body = ""
+    n = 0
+    for cy in rows:
+        for cx in cols:
+            n += 1
+            body += ladybug(cx, cy, R, _spot_layout(n, R),
+                            spot_r=0.18 * R, plus=False)
+            # número debajo
+            by = cy + R * 1.04 + 64
+            col = [RED, BLUE, YELLOW, GREEN][(n - 1) % 4]
+            body += (f'<circle cx="{cx}" cy="{by}" r="30" fill="{col}"/>'
+                     f'<text x="{cx}" y="{by+13}" text-anchor="middle" '
+                     f'font-size="38" font-weight="700" fill="#fff" '
+                     f'font-family="Fredoka, sans-serif">{n}</text>')
+    save("21_mariquitas_conteo.svg", doc(1020, 840, body))
+
+
+# ===========================================================================
+# 18. HELADO — Decóralo con chispas de colores
+# ===========================================================================
+def build_helado():
+    cx = 350
+    body = ground(cx, 952, 140, 24)
+    # cono (barquillo) con rejilla recortada al triángulo
+    cone_path = f'M{cx-118},560 L{cx+118},560 L{cx},902 Z'
+    body += f'<defs><clipPath id="cono"><path d="{cone_path}"/></clipPath></defs>'
+    body += (f'<path d="{cone_path}" fill="#E0A969" stroke="#C2884A" '
+             f'stroke-width="8" stroke-linejoin="round"/>')
+    body += '<g clip-path="url(#cono)" stroke="#C2884A" stroke-width="4" opacity="0.45">'
+    for off in range(-320, 321, 44):
+        body += f'<path d="M{cx+off},540 L{cx+off+210},950"/>'
+        body += f'<path d="M{cx+off},950 L{cx+off+210},540"/>'
+    body += '</g>'
+    # bola inferior (rosa) y superior (menta)
+    body += (f'<circle cx="{cx}" cy="468" r="152" fill="#FFC4CF" stroke="#F58aa0" stroke-width="8"/>')
+    body += (f'<circle cx="{cx}" cy="320" r="126" fill="#BFEBD6" stroke="#4FBF93" stroke-width="8"/>')
+    # cereza arriba
+    body += (f'<path d="M{cx},196 C{cx+8},172 {cx+30},166 {cx+40},168" '
+             f'fill="none" stroke="{LEAF}" stroke-width="8" stroke-linecap="round"/>'
+             f'<circle cx="{cx}" cy="206" r="30" fill="{RED}" stroke="{RED_D}" stroke-width="6"/>'
+             f'<circle cx="{cx-10}" cy="198" r="7" fill="#fff" opacity="0.5"/>')
+    # chispas (slots) sobre las bolas
+    upper = [(-52, -28), (8, -52), (58, -18), (-22, 12), (44, 38),
+             (-58, 28), (22, 56), (-2, -8)]
+    lower = [(-86, -42), (-24, -58), (52, -52), (98, -12), (-104, 22),
+             (-44, 16), (26, 4), (84, 36), (-72, 74), (4, 74), (66, 82),
+             (-14, -16), (118, 18)]
+    for (dx, dy) in upper:
+        body += slot(cx + dx, 320 + dy, 17, SLOT_GREY, show_plus=False)
+    for (dx, dy) in lower:
+        body += slot(cx + dx, 468 + dy, 17, SLOT_GREY, show_plus=False)
+    save("20_helado.svg", doc(700, 980, body))
 
 
 # ===========================================================================
@@ -740,6 +818,8 @@ if __name__ == "__main__":
     build_semaforo()
     build_mariposa()
     build_mariquita()
+    build_mariquitas_conteo()
+    build_helado()
     build_jars()
     build_avatar()
     build_confetti("confetti_band.svg", 1200, 240)

@@ -321,7 +321,18 @@ activities = [
      "negros sobre su espalda roja repartiéndolos a ambos lados y, al terminar, "
      "cuéntalos uno por uno.",
      "19_mariquita.png"),
-    ("16", "Muchos y pocos", YELLOW,
+    ("16", "A contar mariquitas", RED,
+     "Aquí tienes seis mariquitas y cada una lleva su número. Pega tantas manchas "
+     "negras como indique cada una: 1 mancha a la primera, 2 a la segunda, 3 a la "
+     "tercera… y así hasta llegar a 6. Cuenta en voz alta mientras las colocas "
+     "para practicar los números y la correspondencia.",
+     "21_mariquitas_conteo.png"),
+    ("17", "Helado de chispas", GREEN,
+     "¡Qué rico helado! Decóralo con chispas de colores: pega un sticker en cada "
+     "puntito de las bolas. Combina los colores como más te gusten y trabaja la "
+     "motricidad fina colocando cada chispita en su lugar.",
+     "20_helado.png"),
+    ("18", "Muchos y pocos", YELLOW,
      "Mira los frascos de ejemplo: uno tiene pocos stickers y el otro tiene "
      "muchos. Ahora llena tú los frascos vacíos: uno con pocos y otro con muchos. "
      "Así aprendemos las cantidades y comparamos dónde hay más y dónde hay menos.",

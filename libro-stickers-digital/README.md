@@ -28,10 +28,10 @@ legibles. Pensada para crecer hacia un **libro interactivo y digital**.
 
 ## 📖 Contenido
 
-Portada · ¡Hola! (presentación de Andrea) · ¿Qué trabajamos? + **16 actividades**:
+Portada · ¡Hola! (presentación de Andrea) · ¿Qué trabajamos? + **18 actividades**:
 Carritos, Corazones, Sol, Nube y lluvia, Árbol de manzanas, Oruguitas,
 Arañitas, Cerezas, Huevos, Sandía, Flores, Arcoíris, Semáforo, Mariposa,
-Mariquita y Muchos/Pocos.
+Mariquita, A contar mariquitas (conteo), Helado de chispas y Muchos/Pocos.
 
 ## 🔁 Regenerar todo
 
