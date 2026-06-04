@@ -20,5 +20,6 @@ Esta carpeta contiene una primera optimización de las 3 páginas escaneadas.
 Para regenerar los archivos:
 
 ```bash
+python3 -m pip install -r book_redesign/requirements.txt
 python3 book_redesign/scripts/generate_book_redesign.py
 ```
