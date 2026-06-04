@@ -543,74 +543,129 @@ def build_semaforo():
 # ===========================================================================
 # 15. MARIPOSA — Decora las alas (simetría)
 # ===========================================================================
-def wing(cx, cy, rx, ry, color, slots_xy):
-    g = (f'<ellipse cx="{cx}" cy="{cy}" rx="{rx}" ry="{ry}" fill="{SLOT_FILL}" '
-         f'stroke="{color}" stroke-width="9"/>')
-    for (sx, sy, sr) in slots_xy:
-        g += slot(sx, sy, sr, color)
-    return g
-
-
 def build_mariposa():
-    cx = 430
-    body = ground(cx, 800, 250, 26)
-    # antenas
-    body += (f'<path d="M{cx-12},170 C{cx-40},90 {cx-70},70 {cx-92},66" '
-             f'fill="none" stroke="{INK}" stroke-width="7" stroke-linecap="round"/>'
-             f'<path d="M{cx+12},170 C{cx+40},90 {cx+70},70 {cx+92},66" '
-             f'fill="none" stroke="{INK}" stroke-width="7" stroke-linecap="round"/>'
-             f'<circle cx="{cx-92}" cy="62" r="11" fill="{INK}"/>'
-             f'<circle cx="{cx+92}" cy="62" r="11" fill="{INK}"/>')
-    # alas superiores
-    body += wing(cx-150, 300, 140, 130, BLUE_D,
-                 [(cx-185, 270, 30), (cx-120, 250, 26), (cx-150, 350, 30)])
-    body += wing(cx+150, 300, 140, 130, BLUE_D,
-                 [(cx+185, 270, 30), (cx+120, 250, 26), (cx+150, 350, 30)])
-    # alas inferiores
-    body += wing(cx-120, 520, 110, 120, RED_D,
-                 [(cx-140, 500, 28), (cx-95, 560, 26)])
-    body += wing(cx+120, 520, 110, 120, RED_D,
-                 [(cx+140, 500, 28), (cx+95, 560, 26)])
-    # cuerpo
-    body += (f'<rect x="{cx-20}" y="190" width="40" height="430" rx="20" fill="{INK}"/>'
-             f'<circle cx="{cx}" cy="180" r="26" fill="{INK}"/>'
-             f'<circle cx="{cx-9}" cy="176" r="4.5" fill="#fff"/>'
-             f'<circle cx="{cx+9}" cy="176" r="4.5" fill="#fff"/>'
-             f'<path d="M{cx-10},190 q10,12 20,0" fill="none" stroke="#fff" '
+    """Mariposa simétrica con alas de silueta real (lado derecho espejado)."""
+    cx = 450
+    fore_fill, fore_line = "#EAF1FF", BLUE_D
+    hind_fill, hind_line = "#FFE9EC", RED_D
+
+    # --- lado derecho (se reflejará para el izquierdo) ---
+    fore = (
+        f'M{cx+10},250 '
+        f'C{cx+95},168 {cx+255},150 {cx+305},232 '
+        f'C{cx+342},290 {cx+305},350 {cx+212},360 '
+        f'C{cx+120},370 {cx+42},348 {cx+16},320 '
+        f'C{cx+2},300 {cx},276 {cx+10},250 Z'
+    )
+    hind = (
+        f'M{cx+14},356 '
+        f'C{cx+118},360 {cx+250},392 {cx+268},470 '
+        f'C{cx+280},528 {cx+236},582 {cx+162},570 '
+        f'C{cx+96},560 {cx+46},508 {cx+24},446 '
+        f'C{cx+12},412 {cx+8},384 {cx+14},356 Z'
+    )
+    right = (
+        f'<path d="{hind}" fill="{hind_fill}" stroke="{hind_line}" stroke-width="9" stroke-linejoin="round"/>'
+        f'<path d="{fore}" fill="{fore_fill}" stroke="{fore_line}" stroke-width="9" stroke-linejoin="round"/>'
+        # detalle decorativo del borde
+        f'<path d="M{cx+250},170 C{cx+300},195 {cx+322},240 {cx+318},285" '
+        f'fill="none" stroke="{fore_line}" stroke-width="5" opacity="0.35" stroke-linecap="round"/>'
+        # slots (zonas de sticker)
+        + slot(cx + 165, 232, 34, fore_line)
+        + slot(cx + 245, 270, 27, fore_line)
+        + slot(cx + 150, 318, 29, fore_line)
+        + slot(cx + 140, 442, 30, hind_line)
+        + slot(cx + 196, 502, 25, hind_line)
+    )
+
+    body = ground(cx, 760, 250, 26)
+    body += right
+    body += f'<g transform="translate({2*cx},0) scale(-1,1)">{right}</g>'
+
+    # --- cuerpo central (simétrico) ---
+    body += (
+        # abdomen segmentado
+        f'<path d="M{cx-24},278 Q{cx-30},470 {cx},632 Q{cx+30},470 {cx+24},278 Z" fill="{INK}"/>'
+    )
+    for yy in (330, 380, 430, 480, 530, 575):
+        wv = 22 - (yy - 330) * 0.018
+        body += (f'<path d="M{cx-wv:.0f},{yy} Q{cx},{yy+9} {cx+wv:.0f},{yy}" '
+                 f'fill="none" stroke="#5A5A6E" stroke-width="3.5" stroke-linecap="round"/>')
+    # tórax y cabeza
+    body += f'<ellipse cx="{cx}" cy="262" rx="30" ry="40" fill="{INK}"/>'
+    body += f'<circle cx="{cx}" cy="200" r="30" fill="{INK}"/>'
+    # carita
+    body += (f'<circle cx="{cx-11}" cy="196" r="5" fill="#fff"/>'
+             f'<circle cx="{cx+11}" cy="196" r="5" fill="#fff"/>'
+             f'<path d="M{cx-11},208 q11,11 22,0" fill="none" stroke="#fff" '
              f'stroke-width="3.5" stroke-linecap="round"/>')
-    save("18_mariposa.svg", doc(860, 840, body))
+    # antenas con bolita
+    body += (f'<path d="M{cx-13},176 C{cx-42},120 {cx-74},100 {cx-92},96" '
+             f'fill="none" stroke="{INK}" stroke-width="7" stroke-linecap="round"/>'
+             f'<path d="M{cx+13},176 C{cx+42},120 {cx+74},100 {cx+92},96" '
+             f'fill="none" stroke="{INK}" stroke-width="7" stroke-linecap="round"/>'
+             f'<circle cx="{cx-92}" cy="92" r="12" fill="{INK}"/>'
+             f'<circle cx="{cx+92}" cy="92" r="12" fill="{INK}"/>')
+    save("18_mariposa.svg", doc(900, 800, body))
 
 
 # ===========================================================================
 # 16. MARIQUITA — Pon los puntos negros
 # ===========================================================================
 def build_mariquita():
-    cx, cy, R = 400, 360, 250
-    body = ground(cx, cy + R + 30, 230, 26)
-    # patitas
+    cx, cy = 410, 440
+    RX, RY = 250, 262
+    body = ground(cx, cy + RY + 18, 235, 28)
+
+    # --- patitas (detrás del cuerpo): 3 por lado, dobladas ---
+    legs = ""
     for sx in (-1, 1):
-        for k, yy in enumerate((-110, 0, 110)):
-            x1 = cx + sx * R * 0.62
-            y1 = cy + yy * 0.6
-            body += (f'<path d="M{x1},{y1} q{sx*60},{-10+k*8} {sx*92},{18}" '
-                     f'fill="none" stroke="{INK}" stroke-width="9" stroke-linecap="round"/>')
-    # cuerpo rojo
-    body += f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="{RED}"/>'
-    # cabeza
-    body += (f'<path d="M{cx-120},{cy-R+40} a120,120 0 0 1 240,0 Z" fill="{INK}"/>')
-    body += (f'<circle cx="{cx-52}" cy="{cy-R+30}" r="14" fill="#fff"/>'
-             f'<circle cx="{cx+52}" cy="{cy-R+30}" r="14" fill="#fff"/>'
-             f'<circle cx="{cx-52}" cy="{cy-R+30}" r="6" fill="{INK}"/>'
-             f'<circle cx="{cx+52}" cy="{cy-R+30}" r="6" fill="{INK}"/>')
-    # línea central
-    body += (f'<path d="M{cx},{cy-R+58} L{cx},{cy+R-30}" stroke="{RED_D}" '
-             f'stroke-width="10" stroke-linecap="round"/>')
-    # puntos negros (slots) simétricos
-    spots = [(-110, -70), (110, -70), (-130, 40), (130, 40),
-             (-80, 150), (80, 150)]
+        for yy in (-150, -10, 130):
+            ex = cx + sx * RX * 0.86
+            ey = cy + yy
+            j1x, j1y = ex + sx * 46, ey - 6
+            ftx, fty = j1x + sx * 30, ey + 46
+            legs += (f'<path d="M{cx + sx * RX * 0.5},{ey} L{ex},{ey} '
+                     f'L{j1x},{j1y} L{ftx},{fty}" fill="none" stroke="{INK}" '
+                     f'stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>')
+    body += legs
+
+    # --- antenas con bolita ---
+    body += (f'<path d="M{cx-58},{cy-RY+70} C{cx-92},{cy-RY-10} {cx-120},{cy-RY-40} {cx-128},{cy-RY-58}" '
+             f'fill="none" stroke="{INK}" stroke-width="9" stroke-linecap="round"/>'
+             f'<path d="M{cx+58},{cy-RY+70} C{cx+92},{cy-RY-10} {cx+120},{cy-RY-40} {cx+128},{cy-RY-58}" '
+             f'fill="none" stroke="{INK}" stroke-width="9" stroke-linecap="round"/>'
+             f'<circle cx="{cx-128}" cy="{cy-RY-58}" r="15" fill="{INK}"/>'
+             f'<circle cx="{cx+128}" cy="{cy-RY-58}" r="15" fill="{INK}"/>')
+
+    # --- cuerpo rojo (óvalo) ---
+    body += f'<ellipse cx="{cx}" cy="{cy}" rx="{RX}" ry="{RY}" fill="{RED}"/>'
+    body += f'<ellipse cx="{cx}" cy="{cy}" rx="{RX}" ry="{RY}" fill="{RED_D}" opacity="0.10"/>'
+
+    # --- cabeza negra (domo superior) ---
+    hy = cy - RY + 70
+    body += (f'<path d="M{cx-150},{hy} '
+             f'a150,128 0 0 1 300,0 '
+             f'C{cx+150},{hy+30} {cx-150},{hy+30} {cx-150},{hy} Z" fill="{INK}"/>')
+    # ojitos + cachetes + sonrisa
+    body += (f'<circle cx="{cx-58}" cy="{hy-26}" r="20" fill="#fff"/>'
+             f'<circle cx="{cx+58}" cy="{hy-26}" r="20" fill="#fff"/>'
+             f'<circle cx="{cx-54}" cy="{hy-22}" r="9" fill="{INK}"/>'
+             f'<circle cx="{cx+62}" cy="{hy-22}" r="9" fill="{INK}"/>'
+             f'<circle cx="{cx-58}" cy="{hy-30}" r="3.2" fill="#fff"/>'
+             f'<circle cx="{cx+58}" cy="{hy-30}" r="3.2" fill="#fff"/>')
+
+    # --- línea central de las alas ---
+    body += (f'<path d="M{cx},{hy+24} L{cx},{cy+RY-26}" stroke="{RED_D}" '
+             f'stroke-width="11" stroke-linecap="round"/>')
+
+    # --- puntos negros (slots) simétricos, 3 por ala ---
+    spots = [(-118, -54), (-150, 70), (-86, 176),
+             (118, -54), (150, 70), (86, 176)]
     for (dx, dy) in spots:
-        body += slot(cx + dx, cy + dy, 40, INK)
-    save("19_mariquita.svg", doc(800, 720, body))
+        body += slot(cx + dx, cy + dy, 42, INK)
+
+    save("19_mariquita.svg", doc(820, 800, body))
 
 
 # ===========================================================================
