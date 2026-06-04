@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 600" width="560" height="600" font-family="Fredoka, sans-serif">
+
+
+      <g>
+        <ellipse cx="260" cy="540" rx="200" ry="26" fill="#E6E1D6" opacity="0.55"/>
+        <!-- Mamá -->
+        <g>
+          <rect x="120" y="300" width="180" height="230" rx="70" fill="#2E8BFF"/>
+          <path d="M150,310 q60,-40 120,0 l0,30 q-60,-30 -120,0 Z" fill="#fff" opacity="0.18"/>
+          <circle cx="210" cy="225" r="86" fill="#F4C9A8"/>
+          <path d="M126,210 q10,-110 84,-110 q74,0 84,110 q-20,-40 -84,-40 q-64,0 -84,40 Z" fill="#5A3B2E"/>
+          <path d="M124,210 q-14,70 6,120 q-22,-70 -6,-150 Z" fill="#5A3B2E"/>
+          <path d="M296,210 q14,70 -6,120 q22,-70 6,-150 Z" fill="#5A3B2E"/>
+          <circle cx="184" cy="225" r="9" fill="#3A3A4A"/>
+          <circle cx="236" cy="225" r="9" fill="#3A3A4A"/>
+          <path d="M188,262 q22,20 44,0" fill="none" stroke="#3A3A4A" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="168" cy="248" r="11" fill="#FF5168" opacity="0.22"/>
+          <circle cx="252" cy="248" r="11" fill="#FF5168" opacity="0.22"/>
+        </g>
+        <!-- Peque -->
+        <g>
+          <rect x="300" y="360" width="150" height="180" rx="56" fill="#FFC83D"/>
+          <circle cx="375" cy="312" r="66" fill="#F8D2B4"/>
+          <path d="M312,300 q6,-86 63,-86 q57,0 63,86 q-18,-34 -63,-34 q-45,0 -63,34 Z" fill="#3A2A22"/>
+          <path d="M438,300 q34,-6 40,26 q-24,-16 -40,-10 Z" fill="#3A2A22"/>
+          <circle cx="356" cy="312" r="7.5" fill="#3A3A4A"/>
+          <circle cx="396" cy="312" r="7.5" fill="#3A3A4A"/>
+          <path d="M358,340 q17,16 34,0" fill="none" stroke="#3A3A4A" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="344" cy="330" r="9" fill="#FF5168" opacity="0.25"/>
+          <circle cx="408" cy="330" r="9" fill="#FF5168" opacity="0.25"/>
+          <!-- lacito -->
+          <path d="M375,250 l-26,-16 l0,32 Z" fill="#FF5168"/>
+          <path d="M375,250 l26,-16 l0,32 Z" fill="#FF5168"/>
+          <circle cx="375" cy="250" r="8" fill="#E23B50"/>
+        </g>
+      </g>
+</svg>

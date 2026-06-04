@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 700" width="940" height="700" font-family="Fredoka, sans-serif">
+
+<g transform="translate(30,20) scale(1.05)">
+    <g>
+      <ellipse cx="190" cy="232" rx="150" ry="33.0" fill="#E6E1D6" opacity="0.55"/>
+      <!-- cabina -->
+      <rect x="86" y="44" width="208" height="96" rx="34" fill="#2E8BFF"/>
+      <!-- cuerpo -->
+      <rect x="18" y="104" width="344" height="92" rx="44" fill="#2E8BFF"/>
+      <rect x="18" y="150" width="344" height="46" rx="20" fill="#1F6FE0" opacity="0.18"/>
+      <!-- ventanas -->
+      <rect x="104" y="58" width="78" height="64" rx="20" fill="#EAF4FF"/>
+      <rect x="198" y="58" width="78" height="64" rx="20" fill="#EAF4FF"/>
+      <!-- faro -->
+      <ellipse cx="350" cy="128" rx="13" ry="16" fill="#FFC83D" stroke="#F0B021" stroke-width="3"/>
+      <!-- ruedas (zonas de sticker) -->
+      <circle cx="112" cy="196" r="38" fill="#F6F8FC" stroke="#1F6FE0" stroke-width="4.9" stroke-dasharray="20.9 17.1" stroke-linecap="round"/><path d="M96.04,196 H127.96 M112,180.04 V211.96" stroke="#1F6FE0" stroke-width="3.8" stroke-linecap="round" opacity="0.55"/>
+      <circle cx="290" cy="196" r="38" fill="#F6F8FC" stroke="#1F6FE0" stroke-width="4.9" stroke-dasharray="20.9 17.1" stroke-linecap="round"/><path d="M274.04,196 H305.96 M290,180.04 V211.96" stroke="#1F6FE0" stroke-width="3.8" stroke-linecap="round" opacity="0.55"/>
+    </g></g><g transform="translate(490,60) scale(1.05)">
+    <g>
+      <ellipse cx="190" cy="232" rx="150" ry="33.0" fill="#E6E1D6" opacity="0.55"/>
+      <!-- cabina -->
+      <rect x="86" y="44" width="208" height="96" rx="34" fill="#FF5168"/>
+      <!-- cuerpo -->
+      <rect x="18" y="104" width="344" height="92" rx="44" fill="#FF5168"/>
+      <rect x="18" y="150" width="344" height="46" rx="20" fill="#E23B50" opacity="0.18"/>
+      <!-- ventanas -->
+      <rect x="104" y="58" width="78" height="64" rx="20" fill="#EAF4FF"/>
+      <rect x="198" y="58" width="78" height="64" rx="20" fill="#EAF4FF"/>
+      <!-- faro -->
+      <ellipse cx="350" cy="128" rx="13" ry="16" fill="#FFC83D" stroke="#F0B021" stroke-width="3"/>
+      <!-- ruedas (zonas de sticker) -->
+      <circle cx="112" cy="196" r="38" fill="#F6F8FC" stroke="#E23B50" stroke-width="4.9" stroke-dasharray="20.9 17.1" stroke-linecap="round"/><path d="M96.04,196 H127.96 M112,180.04 V211.96" stroke="#E23B50" stroke-width="3.8" stroke-linecap="round" opacity="0.55"/>
+      <circle cx="290" cy="196" r="38" fill="#F6F8FC" stroke="#E23B50" stroke-width="4.9" stroke-dasharray="20.9 17.1" stroke-linecap="round"/><path d="M274.04,196 H305.96 M290,180.04 V211.96" stroke="#E23B50" stroke-width="3.8" stroke-linecap="round" opacity="0.55"/>
+    </g></g><g transform="translate(30,360) scale(1.05)">
+    <g>
+      <ellipse cx="190" cy="232" rx="150" ry="33.0" fill="#E6E1D6" opacity="0.55"/>
+      <!-- cabina -->
+      <rect x="86" y="44" width="208" height="96" rx="34" fill="#FFC83D"/>
+      <!-- cuerpo -->
+      <rect x="18" y="104" width="344" height="92" rx="44" fill="#FFC83D"/>
+      <rect x="18" y="150" width="344" height="46" rx="20" fill="#F0B021" opacity="0.18"/>
+      <!-- ventanas -->
+      <rect x="104" y="58" width="78" height="64" rx="20" fill="#EAF4FF"/>
+      <rect x="198" y="58" width="78" height="64" rx="20" fill="#EAF4FF"/>
+      <!-- faro -->
+      <ellipse cx="350" cy="128" rx="13" ry="16" fill="#FFC83D" stroke="#F0B021" stroke-width="3"/>
+      <!-- ruedas (zonas de sticker) -->
+      <circle cx="112" cy="196" r="38" fill="#F6F8FC" stroke="#F0B021" stroke-width="4.9" stroke-dasharray="20.9 17.1" stroke-linecap="round"/><path d="M96.04,196 H127.96 M112,180.04 V211.96" stroke="#F0B021" stroke-width="3.8" stroke-linecap="round" opacity="0.55"/>
+      <circle cx="290" cy="196" r="38" fill="#F6F8FC" stroke="#F0B021" stroke-width="4.9" stroke-dasharray="20.9 17.1" stroke-linecap="round"/><path d="M274.04,196 H305.96 M290,180.04 V211.96" stroke="#F0B021" stroke-width="3.8" stroke-linecap="round" opacity="0.55"/>
+    </g></g><g transform="translate(490,400) scale(1.05)">
+    <g>
+      <ellipse cx="190" cy="232" rx="150" ry="33.0" fill="#E6E1D6" opacity="0.55"/>
+      <!-- cabina -->
+      <rect x="86" y="44" width="208" height="96" rx="34" fill="#34C76E"/>
+      <!-- cuerpo -->
+      <rect x="18" y="104" width="344" height="92" rx="44" fill="#34C76E"/>
+      <rect x="18" y="150" width="344" height="46" rx="20" fill="#22A455" opacity="0.18"/>
+      <!-- ventanas -->
+      <rect x="104" y="58" width="78" height="64" rx="20" fill="#EAF4FF"/>
+      <rect x="198" y="58" width="78" height="64" rx="20" fill="#EAF4FF"/>
+      <!-- faro -->
+      <ellipse cx="350" cy="128" rx="13" ry="16" fill="#FFC83D" stroke="#F0B021" stroke-width="3"/>
+      <!-- ruedas (zonas de sticker) -->
+      <circle cx="112" cy="196" r="38" fill="#F6F8FC" stroke="#22A455" stroke-width="4.9" stroke-dasharray="20.9 17.1" stroke-linecap="round"/><path d="M96.04,196 H127.96 M112,180.04 V211.96" stroke="#22A455" stroke-width="3.8" stroke-linecap="round" opacity="0.55"/>
+      <circle cx="290" cy="196" r="38" fill="#F6F8FC" stroke="#22A455" stroke-width="4.9" stroke-dasharray="20.9 17.1" stroke-linecap="round"/><path d="M274.04,196 H305.96 M290,180.04 V211.96" stroke="#22A455" stroke-width="3.8" stroke-linecap="round" opacity="0.55"/>
+    </g></g>
+</svg>
