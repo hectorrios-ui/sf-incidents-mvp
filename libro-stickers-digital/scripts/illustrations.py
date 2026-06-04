@@ -177,42 +177,47 @@ def build_sun():
 # ===========================================================================
 # 4. NUBE Y LLUVIA — Pega la lluvia (azul)
 # ===========================================================================
-def cloud(cx, cy, s, color, fill=WHITE, face=False):
-    p = (
-        f'M{cx-2.0*s},{cy+0.55*s} '
-        f'a{0.75*s},{0.75*s} 0 0 1 {0.15*s},{-1.05*s} '
-        f'a{0.95*s},{0.95*s} 0 0 1 {1.55*s},{-0.55*s} '
-        f'a{0.85*s},{0.85*s} 0 0 1 {1.65*s},{0.15*s} '
-        f'a{0.7*s},{0.7*s} 0 0 1 {0.55*s},{1.35*s} '
-        f'a{0.6*s},{0.6*s} 0 0 1 {-0.55*s},{0.55*s} '
-        f'L{cx-1.85*s},{cy+0.55*s} Z'
-    )
-    g = f'<path d="{p}" fill="{fill}" stroke="{color}" stroke-width="13" stroke-linejoin="round"/>'
+# Silueta de nube normalizada (caja de diseño 0..124 x 6..80) -> bbox limpio
+_CLOUD_PATH = (
+    "M24,78 C10,78 2,66 8,54 C0,44 6,28 22,30 C26,14 48,8 60,20 "
+    "C70,6 98,8 102,26 C118,26 122,46 110,56 C118,66 110,78 96,78 Z"
+)
+_CLOUD_W, _CLOUD_H = 124.0, 74.0   # ancho de diseño y alto (de y=6 a y=80)
+
+
+def cloud(x, y, w, color, fill=WHITE, stroke=12, face=False):
+    """Dibuja una nube COMPLETA dentro de la caja (x, y, w, w*0.6).
+    (x, y) = esquina superior-izquierda de la caja."""
+    sc = w / _CLOUD_W
+    tx, ty = x, y - 6 * sc
+    sw = stroke / sc
+    g = (f'<g transform="translate({tx:.2f},{ty:.2f}) scale({sc:.4f})">'
+         f'<path d="{_CLOUD_PATH}" fill="{fill}" stroke="{color}" '
+         f'stroke-width="{sw:.1f}" stroke-linejoin="round"/>')
     if face:
         g += (
-            f'<circle cx="{cx-0.35*s}" cy="{cy-0.15*s}" r="11" fill="{INK}"/>'
-            f'<circle cx="{cx+0.45*s}" cy="{cy-0.15*s}" r="11" fill="{INK}"/>'
-            f'<path d="M{cx-0.4*s},{cy+0.2*s} Q{cx+0.05*s},{cy+0.6*s} {cx+0.5*s},{cy+0.2*s}" '
-            f'fill="none" stroke="{INK}" stroke-width="8" stroke-linecap="round"/>'
-            f'<circle cx="{cx-0.55*s}" cy="{cy+0.18*s}" r="13" fill="{RED}" opacity="0.25"/>'
-            f'<circle cx="{cx+0.65*s}" cy="{cy+0.18*s}" r="13" fill="{RED}" opacity="0.25"/>'
+            f'<circle cx="48" cy="40" r="5.5" fill="{INK}"/>'
+            f'<circle cx="74" cy="40" r="5.5" fill="{INK}"/>'
+            f'<path d="M46,52 Q61,66 76,52" fill="none" stroke="{INK}" '
+            f'stroke-width="4.5" stroke-linecap="round"/>'
+            f'<circle cx="40" cy="50" r="6.5" fill="{RED}" opacity="0.22"/>'
+            f'<circle cx="82" cy="50" r="6.5" fill="{RED}" opacity="0.22"/>'
         )
-    return g
+    return g + "</g>"
 
 
 def build_cloud():
-    body = cloud(420, 210, 150, BLUE, WHITE, face=True)
-    cols = [180, 360, 540, 660]
-    rows = [430, 560, 690]
-    # gotas en zig-zag
+    # nube completa centrada arriba (caja 620 ancho -> alto ~372)
+    body = cloud(110, 40, 620, BLUE, WHITE, stroke=14, face=True)
+    # gotas en zig-zag debajo
     layout = [
-        (200, 430), (380, 470), (560, 430),
-        (290, 580), (470, 580), (650, 540),
-        (200, 690), (380, 700), (560, 690),
+        (210, 470), (390, 510), (570, 470),
+        (300, 620), (480, 620), (660, 580),
+        (210, 730), (390, 740), (570, 730),
     ]
     for (x, y) in layout:
         body += slot(x, y, 30, BLUE_D)
-    save("07_nube_lluvia.svg", doc(840, 780, body))
+    save("07_nube_lluvia.svg", doc(840, 800, body))
 
 
 # ===========================================================================
@@ -440,30 +445,29 @@ def build_flowers():
 # 12. ARCOÍRIS — Pega los círculos de colores
 # ===========================================================================
 def build_rainbow():
+    """Arcoíris horizontal (panorámico) con nubes completas en las bases."""
     import math
-    cx, cy = 460, 440
-    arcs = [
-        (RED, 340), (YELLOW, 286), (GREEN, 232), (BLUE, 178),
-    ]
+    cx, base_y = 590, 470
+    arcs = [(RED, 430), (YELLOW, 365), (GREEN, 300), (BLUE, 235)]
+    stroke_map = {RED: RED_D, YELLOW: YELLOW_D, GREEN: GREEN_D, BLUE: BLUE_D}
+    band = 60
     body = ""
-    band = 54
-    # nubes en las bases (al fondo)
-    body += cloud(150, 500, 100, "#C9D6E8", WHITE)
-    body += cloud(770, 500, 100, "#C9D6E8", WHITE)
-    # bandas suaves de fondo
+    # bandas suaves de color
     for color, r in arcs:
-        body += (f'<path d="M{cx-r},{cy} A{r},{r} 0 0 1 {cx+r},{cy}" '
+        body += (f'<path d="M{cx-r},{base_y} A{r},{r} 0 0 1 {cx+r},{base_y}" '
                  f'fill="none" stroke="{color}" stroke-width="{band}" opacity="0.16"/>')
-    # slots sobre cada arco
+    # slots sobre cada arco (zona superior, despejada de las nubes)
+    n = 7
     for color, r in arcs:
-        d_stroke = {RED: RED_D, YELLOW: YELLOW_D, GREEN: GREEN_D, BLUE: BLUE_D}[color]
-        n = 5
         for i in range(n):
-            ang = math.radians(180 - (i + 0.5) * 180 / n)
+            ang = math.radians(30 + i * (120 / (n - 1)))
             x = cx + math.cos(ang) * r
-            y = cy - math.sin(ang) * r
-            body += slot(x, y, 24, d_stroke)
-    save("15_arcoiris.svg", doc(920, 600, body))
+            y = base_y - math.sin(ang) * r
+            body += slot(x, y, 24, stroke_map[color])
+    # nubes completas encima de las bases
+    body += cloud(10, 392, 300, "#B9C7DE", WHITE, stroke=11)
+    body += cloud(870, 392, 300, "#B9C7DE", WHITE, stroke=11)
+    save("15_arcoiris.svg", doc(1180, 590, body))
 
 
 # ===========================================================================
@@ -511,6 +515,102 @@ def build_jars():
     body += jar(660, 165, 175, 250, "Muchos", dots=muchos_dots, sw=5)
     body += jar(660, 580, 270, 460, "Muchos")
     save("16_frascos.svg", doc(900, 840, body))
+
+
+# ===========================================================================
+# 14. SEMÁFORO — Pon los stickers: rojo, amarillo y verde
+# ===========================================================================
+def build_semaforo():
+    cx = 380
+    body = ground(cx, 800, 150, 26)
+    # poste
+    body += f'<rect x="{cx-16}" y="600" width="32" height="200" rx="12" fill="{INK}" opacity="0.85"/>'
+    # caja del semáforo
+    body += (f'<rect x="{cx-130}" y="70" width="260" height="540" rx="60" '
+             f'fill="{INK}"/>')
+    body += (f'<rect x="{cx-104}" y="96" width="208" height="488" rx="46" '
+             f'fill="#4A4A5E"/>')
+    # tres luces (slots) con visera
+    lights = [(210, RED, RED_D), (340, YELLOW, YELLOW_D), (470, GREEN, GREEN_D)]
+    for (cy, col, cold) in lights:
+        # visera
+        body += (f'<path d="M{cx-66},{cy-72} q66,-30 132,0 l0,16 q-66,-26 -132,0 Z" '
+                 f'fill="{INK}"/>')
+        body += slot(cx, cy, 58, cold)
+    save("17_semaforo.svg", doc(760, 840, body))
+
+
+# ===========================================================================
+# 15. MARIPOSA — Decora las alas (simetría)
+# ===========================================================================
+def wing(cx, cy, rx, ry, color, slots_xy):
+    g = (f'<ellipse cx="{cx}" cy="{cy}" rx="{rx}" ry="{ry}" fill="{SLOT_FILL}" '
+         f'stroke="{color}" stroke-width="9"/>')
+    for (sx, sy, sr) in slots_xy:
+        g += slot(sx, sy, sr, color)
+    return g
+
+
+def build_mariposa():
+    cx = 430
+    body = ground(cx, 800, 250, 26)
+    # antenas
+    body += (f'<path d="M{cx-12},170 C{cx-40},90 {cx-70},70 {cx-92},66" '
+             f'fill="none" stroke="{INK}" stroke-width="7" stroke-linecap="round"/>'
+             f'<path d="M{cx+12},170 C{cx+40},90 {cx+70},70 {cx+92},66" '
+             f'fill="none" stroke="{INK}" stroke-width="7" stroke-linecap="round"/>'
+             f'<circle cx="{cx-92}" cy="62" r="11" fill="{INK}"/>'
+             f'<circle cx="{cx+92}" cy="62" r="11" fill="{INK}"/>')
+    # alas superiores
+    body += wing(cx-150, 300, 140, 130, BLUE_D,
+                 [(cx-185, 270, 30), (cx-120, 250, 26), (cx-150, 350, 30)])
+    body += wing(cx+150, 300, 140, 130, BLUE_D,
+                 [(cx+185, 270, 30), (cx+120, 250, 26), (cx+150, 350, 30)])
+    # alas inferiores
+    body += wing(cx-120, 520, 110, 120, RED_D,
+                 [(cx-140, 500, 28), (cx-95, 560, 26)])
+    body += wing(cx+120, 520, 110, 120, RED_D,
+                 [(cx+140, 500, 28), (cx+95, 560, 26)])
+    # cuerpo
+    body += (f'<rect x="{cx-20}" y="190" width="40" height="430" rx="20" fill="{INK}"/>'
+             f'<circle cx="{cx}" cy="180" r="26" fill="{INK}"/>'
+             f'<circle cx="{cx-9}" cy="176" r="4.5" fill="#fff"/>'
+             f'<circle cx="{cx+9}" cy="176" r="4.5" fill="#fff"/>'
+             f'<path d="M{cx-10},190 q10,12 20,0" fill="none" stroke="#fff" '
+             f'stroke-width="3.5" stroke-linecap="round"/>')
+    save("18_mariposa.svg", doc(860, 840, body))
+
+
+# ===========================================================================
+# 16. MARIQUITA — Pon los puntos negros
+# ===========================================================================
+def build_mariquita():
+    cx, cy, R = 400, 360, 250
+    body = ground(cx, cy + R + 30, 230, 26)
+    # patitas
+    for sx in (-1, 1):
+        for k, yy in enumerate((-110, 0, 110)):
+            x1 = cx + sx * R * 0.62
+            y1 = cy + yy * 0.6
+            body += (f'<path d="M{x1},{y1} q{sx*60},{-10+k*8} {sx*92},{18}" '
+                     f'fill="none" stroke="{INK}" stroke-width="9" stroke-linecap="round"/>')
+    # cuerpo rojo
+    body += f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="{RED}"/>'
+    # cabeza
+    body += (f'<path d="M{cx-120},{cy-R+40} a120,120 0 0 1 240,0 Z" fill="{INK}"/>')
+    body += (f'<circle cx="{cx-52}" cy="{cy-R+30}" r="14" fill="#fff"/>'
+             f'<circle cx="{cx+52}" cy="{cy-R+30}" r="14" fill="#fff"/>'
+             f'<circle cx="{cx-52}" cy="{cy-R+30}" r="6" fill="{INK}"/>'
+             f'<circle cx="{cx+52}" cy="{cy-R+30}" r="6" fill="{INK}"/>')
+    # línea central
+    body += (f'<path d="M{cx},{cy-R+58} L{cx},{cy+R-30}" stroke="{RED_D}" '
+             f'stroke-width="10" stroke-linecap="round"/>')
+    # puntos negros (slots) simétricos
+    spots = [(-110, -70), (110, -70), (-130, 40), (130, 40),
+             (-80, 150), (80, 150)]
+    for (dx, dy) in spots:
+        body += slot(cx + dx, cy + dy, 40, INK)
+    save("19_mariquita.svg", doc(800, 720, body))
 
 
 # ===========================================================================
@@ -582,6 +682,9 @@ if __name__ == "__main__":
     build_watermelon()
     build_flowers()
     build_rainbow()
+    build_semaforo()
+    build_mariposa()
+    build_mariquita()
     build_jars()
     build_avatar()
     build_confetti("confetti_band.svg", 1200, 240)

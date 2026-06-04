@@ -248,43 +248,83 @@ page_break(doc)
 # ========================= ACTIVIDADES =========================
 activities = [
     ("01", "Carritos de colores", BLUE,
-     "Pon las llantas a cada carrito usando los stickers del mismo color del coche.",
+     "¡Estos carritos quieren rodar, pero perdieron sus llantas! Observa bien de "
+     "qué color es cada coche y pégale sus ruedas usando los stickers del mismo "
+     "color. Así practicamos la asociación de colores y la motricidad fina de los deditos.",
      "04_carros.png"),
     ("02", "Corazones de colores", RED,
-     "Asociación de colores: pega los stickers según el color de cada corazón.",
+     "Cada corazón tiene su propio color. Pega los stickers dentro de cada uno "
+     "usando el mismo color de su contorno: amarillo con amarillo, azul con azul "
+     "y rojo con rojo. Es un juego ideal para reconocer y asociar los colores.",
      "05_corazones.png"),
     ("03", "El sol coqueto", YELLOW,
-     "Pega los rayos del sol usando stickers de color amarillo.",
+     "Nuestro sol con gafas quiere brillar muy fuerte. Pega sus rayos alrededor "
+     "con stickers de color amarillo y complétalos uno a uno hasta que ilumine "
+     "todo el cielo. ¡No olvides contarlos mientras los pegas!",
      "06_sol.png"),
     ("04", "La nube y la lluvia", BLUE,
-     "Pega la lluvia debajo de la nube y practica el color azul con tus stickers.",
+     "¡Va a llover! Pega las gotitas debajo de la nubecita feliz usando stickers "
+     "azules y practica este color. Mientras las colocas, cuenta cuántas gotas "
+     "caen para trabajar también los números.",
      "07_nube_lluvia.png"),
     ("05", "El árbol de manzanas", GREEN,
-     "Pon las manzanas rojas en el árbol pegando un sticker en cada círculo.",
+     "El árbol ya está listo para dar sus frutos. Pon una manzana roja en cada "
+     "círculo usando tus stickers y llénalo de color. Trabajamos la coordinación "
+     "ojo-mano y la conciencia del espacio.",
      "08_arbol_manzanas.png"),
     ("06", "Oruguitas glotonas", GREEN,
-     "Completa el cuerpo de cada oruga con stickers del mismo color que su cabecita.",
+     "Cada oruga necesita completar su cuerpo. Fíjate muy bien en el color de su "
+     "cabecita y continúa pegando stickers del mismo color hasta el final. "
+     "¡Crearás patrones de colores divertidos!",
      "09_oruguitas.png"),
     ("07", "Las arañitas", INK,
-     "Pon un sticker negro en el cuerpo de cada arañita.",
+     "Estas simpáticas arañitas perdieron su cuerpo. Pon un sticker negro en el "
+     "centro de cada una para completarlas y, al terminar, cuéntalas todas para "
+     "saber cuántas arañitas hay.",
      "10_aranas.png"),
     ("08", "Cerezas dulces", RED,
-     "Usa stickers rojos para formar las cerezas.",
+     "Forma cada par de cerezas pegando stickers rojos en su lugar. Practicamos "
+     "el color rojo y el movimiento de pinza de los dedos, tan importante para "
+     "aprender a escribir más adelante.",
      "11_cerezas.png"),
     ("09", "Huevos ricos", YELLOW,
-     "Pega la yema de cada huevo con un sticker amarillo.",
+     "A cada huevo le falta su yema. Pega un sticker amarillo justo en el centro "
+     "de cada uno para terminarlos. ¡Quedarán listos y deliciosos para el desayuno!",
      "12_huevos.png"),
     ("10", "Sandía fresca", GREEN,
-     "Pega las semillas de la sandía con stickers negros.",
+     "Esta sandía está jugosa y fresquita, pero le faltan las semillas. Pégalas "
+     "con stickers negros y decórala. Al final, cuenta cuántas semillas pusiste "
+     "en total.",
      "13_sandia.png"),
     ("11", "Flores del jardín", GREEN,
-     "Decora los pétalos de las flores con stickers de colores.",
+     "Decora los pétalos de cada flor con stickers de colores. Puedes seguir un "
+     "patrón (un color sí y otro no) o crear tu propia combinación. ¡Deja volar "
+     "tu imaginación y llena el jardín de color!",
      "14_flores.png"),
     ("12", "El arcoíris", BLUE,
-     "Pega stickers de colores sobre cada arco del arcoíris siguiendo sus colores.",
+     "Completa el arcoíris pegando stickers de colores sobre cada uno de sus "
+     "arcos. Respeta el color de cada franja —rojo, amarillo, verde y azul— y "
+     "haz que brille después de la lluvia.",
      "15_arcoiris.png"),
-    ("13", "Muchos y pocos", RED,
-     "Llena un frasco con pocos stickers y el otro con muchos. ¡Aprende las cantidades!",
+    ("13", "El semáforo", RED,
+     "Aprende los colores del semáforo y para qué sirven: pega el sticker rojo "
+     "arriba, el amarillo en el medio y el verde abajo. Recuerda que el rojo "
+     "significa parar, el amarillo esperar y el verde avanzar.",
+     "17_semaforo.png"),
+    ("14", "La mariposa", BLUE,
+     "Decora las alas de la mariposa con stickers de colores. El reto es lograr "
+     "que el lado izquierdo y el derecho queden iguales para descubrir la "
+     "simetría. ¡Elige tus colores favoritos y hazla volar!",
+     "18_mariposa.png"),
+    ("15", "La mariquita", RED,
+     "Esta mariquita necesita sus puntitos para lucir hermosa. Pega stickers "
+     "negros sobre su espalda roja repartiéndolos a ambos lados y, al terminar, "
+     "cuéntalos uno por uno.",
+     "19_mariquita.png"),
+    ("16", "Muchos y pocos", YELLOW,
+     "Mira los frascos de ejemplo: uno tiene pocos stickers y el otro tiene "
+     "muchos. Ahora llena tú los frascos vacíos: uno con pocos y otro con muchos. "
+     "Así aprendemos las cantidades y comparamos dónde hay más y dónde hay menos.",
      "16_frascos.png"),
 ]
 

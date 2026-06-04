@@ -26,11 +26,12 @@ legibles. Pensada para crecer hacia un **libro interactivo y digital**.
   - Subtítulos: **Fredoka**
   - Texto: **Nunito**
 
-## 📖 Contenido (16 páginas, igual que el original)
+## 📖 Contenido
 
-Portada · ¡Hola! (presentación de Andrea) · ¿Qué trabajamos? + 13 actividades:
+Portada · ¡Hola! (presentación de Andrea) · ¿Qué trabajamos? + **16 actividades**:
 Carritos, Corazones, Sol, Nube y lluvia, Árbol de manzanas, Oruguitas,
-Arañitas, Cerezas, Huevos, Sandía, Flores, Arcoíris y Muchos/Pocos.
+Arañitas, Cerezas, Huevos, Sandía, Flores, Arcoíris, Semáforo, Mariposa,
+Mariquita y Muchos/Pocos.
 
 ## 🔁 Regenerar todo
 
