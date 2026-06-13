@@ -3,321 +3,376 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Talleres de Estimulación Temprana – A5</title>
+  <title>Mi Dulce Emma – Estimulación Temprana</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Nunito', sans-serif;
-      background: #f0ece8;
+      background: #ede8e3;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      padding: 16px;
+      padding: 20px;
     }
 
-    /* ── A5: 148mm × 210mm ── */
+    /* ── A5 portrait: 148mm × 210mm = 559 × 794 px a 96 dpi ── */
     .flyer {
       width: 559px;
-      min-height: 794px;
-      background: #fff;
-      border-radius: 16px;
+      height: 794px;
       overflow: hidden;
-      box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 14px 44px rgba(0,0,0,0.18);
       display: flex;
       flex-direction: column;
     }
 
-    /* ── HEADER ── */
+    /* ═══════════════════════════════
+       HEADER  –  118px
+    ═══════════════════════════════ */
     .header {
-      background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 55%, #ffb3c6 100%);
-      padding: 22px 26px 18px;
-      text-align: center;
+      flex: 0 0 118px;
+      background: linear-gradient(135deg, #f9607a 0%, #fb91ab 55%, #fbbccc 100%);
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      gap: 16px;
       position: relative;
       overflow: hidden;
     }
 
-    .header::before {
-      content: '';
-      position: absolute;
-      top: -40px; right: -40px;
-      width: 130px; height: 130px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 50%;
-    }
     .header::after {
       content: '';
       position: absolute;
-      bottom: -30px; left: -30px;
-      width: 100px; height: 100px;
-      background: rgba(255,255,255,0.12);
+      top: -35px; right: -35px;
+      width: 110px; height: 110px;
+      background: rgba(255,255,255,0.14);
       border-radius: 50%;
     }
 
-    .header-emojis {
-      font-size: 22px;
-      letter-spacing: 6px;
-      margin-bottom: 6px;
+    /* Logo badge */
+    .logo-badge {
+      flex: 0 0 76px;
+      height: 76px;
+      background: #fff;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(200,60,90,0.25);
+      z-index: 1;
     }
 
-    .header h1 {
-      font-size: 22px;
+    .logo-badge .logo-icon { font-size: 26px; line-height: 1; }
+
+    .logo-badge .logo-text {
+      font-family: 'Dancing Script', cursive;
+      font-size: 11.5px;
+      color: #e04070;
+      line-height: 1.1;
+      text-align: center;
+      margin-top: 2px;
+    }
+
+    .header-text { z-index: 1; }
+
+    .header-text h1 {
+      font-size: 19px;
       font-weight: 900;
       color: #fff;
-      text-shadow: 0 2px 6px rgba(160,40,80,0.3);
       line-height: 1.2;
-      margin-bottom: 4px;
+      text-shadow: 0 1px 5px rgba(160,30,60,0.3);
     }
 
-    .header h1 span { color: #ffe0eb; }
+    .header-text h1 span {
+      font-family: 'Dancing Script', cursive;
+      font-size: 24px;
+      display: block;
+      color: #fff;
+    }
 
-    .header .tagline {
+    .header-text .tagline {
       font-size: 9.5px;
       font-weight: 700;
-      color: rgba(255,255,255,0.92);
-      letter-spacing: 1.4px;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
+      color: rgba(255,255,255,0.88);
+      margin-top: 4px;
     }
 
-    /* ── WAVE ── */
-    .wave { display: block; width: 100%; margin-top: -1px; }
-
-    /* ── INTRO ── */
-    .intro {
-      background: #fff8fa;
-      padding: 10px 22px;
-      text-align: center;
-      border-bottom: 1.5px dashed #ffc8dd;
-    }
-    .intro p {
-      font-size: 11.5px;
-      color: #555;
-      line-height: 1.6;
-    }
-    .intro strong { color: #d94a7a; }
-
-    /* ── SECTION TITLE ── */
-    .section-title {
-      text-align: center;
-      font-size: 13px;
-      font-weight: 900;
-      padding: 10px 0 6px;
-      background: linear-gradient(90deg, #ff8fab, #c94b7b);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 0.4px;
+    /* ═══════════════════════════════
+       DIVIDER STRIP  –  34px
+    ═══════════════════════════════ */
+    .intro-strip {
+      flex: 0 0 34px;
+      background: #fff5f7;
+      border-bottom: 1.5px dashed #f9b8cb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 24px;
     }
 
-    /* ── AGE GRID ── */
-    .age-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      padding: 0 18px 6px;
-    }
-
-    .age-card {
-      border-radius: 12px;
-      padding: 12px 12px 10px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.07);
-    }
-
-    .age-card::after {
-      content: attr(data-emoji);
-      position: absolute;
-      bottom: 2px; right: 6px;
-      font-size: 26px;
-      opacity: 0.15;
-    }
-
-    .age-card.c1 { background: linear-gradient(135deg, #fff0f5, #ffe3ed); border-left: 4px solid #ff8fab; }
-    .age-card.c2 { background: linear-gradient(135deg, #f0f6ff, #ddeeff); border-left: 4px solid #70b8ff; }
-    .age-card.c3 { background: linear-gradient(135deg, #f2fff0, #d9f7d6); border-left: 4px solid #68d361; }
-    .age-card.c4 { background: linear-gradient(135deg, #fffbf0, #ffefd5); border-left: 4px solid #ffb347; }
-
-    .age-badge {
-      display: inline-block;
-      font-size: 9px;
-      font-weight: 800;
-      padding: 2px 9px;
-      border-radius: 20px;
-      margin-bottom: 5px;
-      letter-spacing: 0.3px;
-    }
-    .c1 .age-badge { background: #ff8fab; color: #fff; }
-    .c2 .age-badge { background: #70b8ff; color: #fff; }
-    .c3 .age-badge { background: #68d361; color: #fff; }
-    .c4 .age-badge { background: #ffb347; color: #fff; }
-
-    .age-card h3 {
-      font-size: 11px;
-      font-weight: 800;
-      color: #333;
-      margin-bottom: 5px;
-    }
-
-    .age-card ul { list-style: none; }
-
-    .age-card ul li {
+    .intro-strip p {
       font-size: 10.5px;
-      color: #555;
-      padding: 1.5px 0 1.5px 14px;
-      position: relative;
+      color: #666;
+      text-align: center;
       line-height: 1.4;
     }
 
-    .age-card ul li::before {
+    .intro-strip strong { color: #d9456e; }
+
+    /* ═══════════════════════════════
+       SECTION LABEL  –  22px
+    ═══════════════════════════════ */
+    .sec-label {
+      flex: 0 0 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11.5px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      background: linear-gradient(90deg, #f9607a, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* ═══════════════════════════════
+       AGE GRID  –  188px
+    ═══════════════════════════════ */
+    .age-grid {
+      flex: 0 0 188px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 8px;
+      padding: 0 16px;
+    }
+
+    .ac {
+      border-radius: 10px;
+      padding: 9px 10px 7px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+
+    .ac::after {
+      content: attr(data-e);
+      position: absolute;
+      right: 5px; bottom: 1px;
+      font-size: 22px;
+      opacity: 0.13;
+      line-height: 1;
+    }
+
+    .ac.a1 { background: linear-gradient(135deg,#fff0f4,#ffdde8); border-left: 3px solid #f9607a; }
+    .ac.a2 { background: linear-gradient(135deg,#f0f4ff,#dde6ff); border-left: 3px solid #6088f9; }
+    .ac.a3 { background: linear-gradient(135deg,#f0fff2,#d8f7dc); border-left: 3px solid #50c060; }
+    .ac.a4 { background: linear-gradient(135deg,#fffbf0,#ffecd5); border-left: 3px solid #f9a030; }
+
+    .ac-badge {
+      display: inline-block;
+      font-size: 8.5px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-bottom: 4px;
+      letter-spacing: 0.2px;
+    }
+    .a1 .ac-badge { background:#f9607a; color:#fff; }
+    .a2 .ac-badge { background:#6088f9; color:#fff; }
+    .a3 .ac-badge { background:#50c060; color:#fff; }
+    .a4 .ac-badge { background:#f9a030; color:#fff; }
+
+    .ac h3 {
+      font-size: 10px;
+      font-weight: 800;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .ac ul { list-style: none; }
+
+    .ac ul li {
+      font-size: 9.5px;
+      color: #555;
+      padding-left: 12px;
+      position: relative;
+      line-height: 1.45;
+    }
+
+    .ac ul li::before {
       content: '✓';
       position: absolute;
       left: 0;
-      font-weight: 800;
-      font-size: 9.5px;
+      font-weight: 900;
+      font-size: 8.5px;
     }
-    .c1 li::before { color: #e05c85; }
-    .c2 li::before { color: #3a9aef; }
-    .c3 li::before { color: #45b840; }
-    .c4 li::before { color: #e8900a; }
 
-    /* ── MODALITIES ── */
+    .a1 li::before { color: #e03060; }
+    .a2 li::before { color: #3060e0; }
+    .a3 li::before { color: #30a040; }
+    .a4 li::before { color: #d07010; }
+
+    /* ═══════════════════════════════
+       MODALITIES  –  110px
+    ═══════════════════════════════ */
     .modalities {
+      flex: 0 0 110px;
       display: flex;
-      gap: 10px;
-      padding: 0 18px;
-      margin-top: 8px;
+      gap: 8px;
+      padding: 0 16px;
     }
 
-    .modality-card {
+    .mc {
       flex: 1;
-      border-radius: 12px;
-      padding: 12px 12px 10px;
+      border-radius: 10px;
+      padding: 10px 11px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
     }
 
-    .modality-card.personal {
-      background: linear-gradient(135deg, #fce4ec, #f8bbd9);
+    .mc.pers {
+      background: linear-gradient(135deg,#fce4ec,#fbbfd5);
       border: 1.5px solid #f48fb1;
     }
-    .modality-card.grupal {
-      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-      border: 1.5px solid #81c784;
+    .mc.grup {
+      background: linear-gradient(135deg,#e8f5e9,#c5e8c8);
+      border: 1.5px solid #80c784;
     }
 
-    .modality-icon { font-size: 24px; margin-bottom: 5px; }
+    .mc-icon { font-size: 20px; margin-bottom: 4px; }
 
-    .modality-card h3 {
-      font-size: 12px;
+    .mc h3 {
+      font-size: 11px;
       font-weight: 900;
-      margin-bottom: 5px;
-    }
-    .modality-card.personal h3 { color: #c2185b; }
-    .modality-card.grupal h3   { color: #2e7d32; }
-
-    .modality-card p {
-      font-size: 10.5px;
-      color: #555;
-      line-height: 1.5;
+      margin-bottom: 4px;
     }
 
-    .modality-badge {
-      display: inline-block;
-      margin-top: 8px;
+    .mc.pers h3 { color: #c0185a; }
+    .mc.grup h3 { color: #2e7d32; }
+
+    .mc p {
       font-size: 9.5px;
+      color: #555;
+      line-height: 1.4;
+    }
+
+    .mc-tag {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 8.5px;
       font-weight: 800;
-      padding: 3px 10px;
+      padding: 3px 9px;
       border-radius: 20px;
     }
-    .personal .modality-badge { background: #e91e63; color: #fff; }
-    .grupal  .modality-badge  { background: #43a047; color: #fff; }
+    .pers .mc-tag { background:#e91e63; color:#fff; }
+    .grup .mc-tag { background:#43a047; color:#fff; }
 
-    /* ── HIGHLIGHTS ── */
+    /* ═══════════════════════════════
+       HIGHLIGHTS  –  46px
+    ═══════════════════════════════ */
     .highlights {
-      margin: 8px 18px 0;
-      background: linear-gradient(135deg, #fff0f5, #fce4ec);
-      border-radius: 12px;
-      padding: 10px 14px;
+      flex: 0 0 46px;
+      margin: 0 16px;
+      background: linear-gradient(135deg,#fff0f4,#fce4ec);
+      border-radius: 10px;
+      border: 1px solid #ffc1d5;
       display: flex;
-      justify-content: space-around;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 6px;
-      border: 1px solid #ffc1d8;
+      justify-content: space-around;
+      padding: 0 8px;
     }
 
-    .highlight-item { text-align: center; }
-    .highlight-item .hi-icon { font-size: 17px; }
-    .highlight-item p {
-      font-size: 9px;
+    .hi {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .hi .ico { font-size: 14px; }
+
+    .hi p {
+      font-size: 8px;
       font-weight: 700;
       color: #c94b7b;
-      margin-top: 2px;
-      line-height: 1.3;
+      text-align: center;
+      line-height: 1.2;
     }
 
-    /* ── FOOTER ── */
+    /* ═══════════════════════════════
+       FOOTER  –  78px
+    ═══════════════════════════════ */
     .footer {
-      margin: 10px 18px 16px;
-      background: linear-gradient(135deg, #ff8fab, #e05c85);
-      border-radius: 14px;
-      padding: 14px 18px;
+      flex: 0 0 78px;
+      margin: 8px 16px 12px;
+      background: linear-gradient(135deg, #f9607a, #d9456e);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px 8px;
       text-align: center;
       color: #fff;
+      gap: 7px;
     }
 
     .footer .cta {
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 900;
-      margin-bottom: 10px;
       text-shadow: 0 1px 3px rgba(0,0,0,0.2);
     }
 
     .contact-row {
       display: flex;
-      justify-content: center;
-      gap: 8px;
+      gap: 7px;
       flex-wrap: wrap;
+      justify-content: center;
     }
 
-    .contact-item {
+    .ci {
       display: flex;
       align-items: center;
-      gap: 5px;
-      font-size: 10.5px;
+      gap: 4px;
+      font-size: 9.5px;
       font-weight: 700;
       background: rgba(255,255,255,0.22);
-      padding: 5px 11px;
+      padding: 4px 10px;
       border-radius: 20px;
     }
-    .contact-item .icon { font-size: 12px; }
+
+    .ci .ico { font-size: 11px; }
 
     .footer-note {
-      margin-top: 9px;
-      font-size: 9.5px;
-      color: rgba(255,255,255,0.85);
+      font-size: 8.5px;
+      color: rgba(255,255,255,0.82);
       font-style: italic;
     }
 
-    /* ── PRINT: fuerza tamaño A5 ── */
+    /* ═══════════════════════════════
+       PRINT  –  tamaño A5 real
+    ═══════════════════════════════ */
     @media print {
       @page { size: A5 portrait; margin: 0; }
-      body { background: #fff; padding: 0; margin: 0; }
+      body  { background: #fff; padding: 0; margin: 0; }
       .flyer {
         width: 148mm;
-        min-height: 210mm;
+        height: 210mm;
         box-shadow: none;
         border-radius: 0;
       }
-    }
-
-    @media (max-width: 580px) {
-      .flyer { width: 100%; }
-      .age-grid { grid-template-columns: 1fr; }
-      .modalities { flex-direction: column; }
     }
   </style>
 </head>
@@ -326,41 +381,45 @@
 
     <!-- HEADER -->
     <div class="header">
-      <div class="header-emojis">🌟 👶 🎨 🌈</div>
-      <h1>Talleres de <span>Estimulación Temprana</span></h1>
-      <p class="tagline">Potenciando el desarrollo de tu bebé desde el primer día</p>
+      <div class="logo-badge">
+        <span class="logo-icon">🌸</span>
+        <span class="logo-text">Mi Dulce<br>Emma</span>
+      </div>
+      <div class="header-text">
+        <h1>
+          Talleres de
+          <span>Estimulación<br>Temprana</span>
+        </h1>
+        <p class="tagline">✨ Potenciando el desarrollo de tu bebé</p>
+      </div>
     </div>
 
-    <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 559 28" preserveAspectRatio="none">
-      <path d="M0,14 C140,28 419,0 559,14 L559,0 L0,0 Z" fill="#ffb3c6"/>
-    </svg>
-
-    <!-- INTRO -->
-    <div class="intro">
+    <!-- INTRO STRIP -->
+    <div class="intro-strip">
       <p>
-        Los primeros <strong>3 años de vida</strong> son clave para el desarrollo del cerebro.
-        Estimulá, jugá y conectá con tu bebé de forma <strong>lúdica y afectuosa</strong>. 💕
+        Los primeros <strong>3 años</strong> son clave para el cerebro. Estimulá, jugá y conectá
+        con tu bebé de forma <strong>lúdica y afectuosa</strong>. 💕
       </p>
     </div>
 
-    <!-- AGE CARDS -->
-    <p class="section-title">🍼 Grupos por Edad</p>
+    <!-- GRUPOS POR EDAD -->
+    <p class="sec-label">🍼 &nbsp;GRUPOS POR EDAD</p>
 
     <div class="age-grid">
 
-      <div class="age-card c1" data-emoji="🌸">
-        <div class="age-badge">6 – 12 meses</div>
+      <div class="ac a1" data-e="🌸">
+        <div class="ac-badge">6 – 12 meses</div>
         <h3>Explorando el mundo</h3>
         <ul>
           <li>Estimulación sensorial y táctil</li>
           <li>Control postural</li>
-          <li>Vínculo afectivo mamá–bebé</li>
+          <li>Vínculo mamá–bebé</li>
           <li>Texturas y sonidos</li>
         </ul>
       </div>
 
-      <div class="age-card c2" data-emoji="🚀">
-        <div class="age-badge">12 – 18 meses</div>
+      <div class="ac a2" data-e="🚀">
+        <div class="ac-badge">12 – 18 meses</div>
         <h3>Movimiento y descubrimiento</h3>
         <ul>
           <li>Estimulación de la marcha</li>
@@ -370,8 +429,8 @@
         </ul>
       </div>
 
-      <div class="age-card c3" data-emoji="🌿">
-        <div class="age-badge">18 – 24 meses</div>
+      <div class="ac a3" data-e="🌿">
+        <div class="ac-badge">18 – 24 meses</div>
         <h3>Lenguaje y creatividad</h3>
         <ul>
           <li>Expansión del vocabulario</li>
@@ -381,8 +440,8 @@
         </ul>
       </div>
 
-      <div class="age-card c4" data-emoji="🌟">
-        <div class="age-badge">24 – 36 meses</div>
+      <div class="ac a4" data-e="🌟">
+        <div class="ac-badge">24 – 36 meses</div>
         <h3>Autonomía e inteligencia</h3>
         <ul>
           <li>Pensamiento lógico</li>
@@ -394,66 +453,42 @@
 
     </div>
 
-    <!-- MODALITIES -->
-    <p class="section-title">💡 Modalidades de Atención</p>
+    <!-- MODALIDADES -->
+    <p class="sec-label">💡 &nbsp;MODALIDADES DE ATENCIÓN</p>
 
     <div class="modalities">
-      <div class="modality-card personal">
-        <div class="modality-icon">👩‍👧</div>
+      <div class="mc pers">
+        <div class="mc-icon">👩‍👧</div>
         <h3>Sesión Personalizada</h3>
-        <p>Atención exclusiva adaptada al ritmo e intereses de tu bebé. Seguimiento individualizado.</p>
-        <span class="modality-badge">📅 Horario a convenir</span>
+        <p>Atención exclusiva adaptada al ritmo e intereses de tu bebé.</p>
+        <span class="mc-tag">📅 Horario a convenir</span>
       </div>
-      <div class="modality-card grupal">
-        <div class="modality-icon">👩‍👧‍👦</div>
+      <div class="mc grup">
+        <div class="mc-icon">👩‍👧‍👦</div>
         <h3>Taller Grupal</h3>
-        <p>Aprendé junto a otras mamás. El taller se confirma al completar el cupo. ¡Socializan juntos!</p>
-        <span class="modality-badge">👥 Cupo limitado</span>
+        <p>Se confirma al completar el cupo. ¡Mamás y bebés se conocen!</p>
+        <span class="mc-tag">👥 Cupo limitado</span>
       </div>
     </div>
 
     <!-- HIGHLIGHTS -->
     <div class="highlights">
-      <div class="highlight-item">
-        <div class="hi-icon">🎓</div>
-        <p>Profesional<br>capacitada</p>
-      </div>
-      <div class="highlight-item">
-        <div class="hi-icon">🧸</div>
-        <p>Materiales<br>incluidos</p>
-      </div>
-      <div class="highlight-item">
-        <div class="hi-icon">💛</div>
-        <p>Ambiente<br>seguro</p>
-      </div>
-      <div class="highlight-item">
-        <div class="hi-icon">📋</div>
-        <p>Seguimiento<br>personalizado</p>
-      </div>
-      <div class="highlight-item">
-        <div class="hi-icon">🤱</div>
-        <p>Mamás<br>bienvenidas</p>
-      </div>
+      <div class="hi"><span class="ico">🎓</span><p>Profesional<br>capacitada</p></div>
+      <div class="hi"><span class="ico">🧸</span><p>Materiales<br>incluidos</p></div>
+      <div class="hi"><span class="ico">💛</span><p>Ambiente<br>seguro</p></div>
+      <div class="hi"><span class="ico">📋</span><p>Seguimiento<br>personalizado</p></div>
+      <div class="hi"><span class="ico">🤱</span><p>Mamás<br>bienvenidas</p></div>
     </div>
 
     <!-- FOOTER -->
     <div class="footer">
       <p class="cta">¡Reservá tu lugar hoy! ✨</p>
       <div class="contact-row">
-        <div class="contact-item">
-          <span class="icon">📱</span>
-          <span>+54 9 XXX XXX XXXX</span>
-        </div>
-        <div class="contact-item">
-          <span class="icon">📸</span>
-          <span>@estimulacion_temprana</span>
-        </div>
-        <div class="contact-item">
-          <span class="icon">📍</span>
-          <span>Ciudad / Zona</span>
-        </div>
+        <div class="ci"><span class="ico">📱</span><span>+54 9 XXX XXX XXXX</span></div>
+        <div class="ci"><span class="ico">📸</span><span>@_mi_dulce_emma</span></div>
+        <div class="ci"><span class="ico">📍</span><span>Ciudad / Zona</span></div>
       </div>
-      <p class="footer-note">Consultá por cupos grupales · Sesiones personalizadas con turno previo</p>
+      <p class="footer-note">Consultá por cupos grupales · Sesiones con turno previo</p>
     </div>
 
   </div>
