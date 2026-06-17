@@ -750,17 +750,20 @@ def _house(cx, cy):
     return g
 
 
+def _camino_row(road, color, dark):
+    g = f'<path d="M20,{road} H700" stroke="#D9D2C4" stroke-width="16" stroke-linecap="round"/>'
+    g += draw_car(120, road, color, dark, slots=False, sc=0.55)
+    for i in range(5):
+        g += slot(280 + i * 92, road, SLOT_GREY)
+    g += _house(775, road - 38)
+    return g
+
+
 def build_camino():
-    road = 250
-    body = f'<path d="M20,{road} H705" stroke="#D9D2C4" stroke-width="16" stroke-linecap="round"/>'
-    # dos autos (azul detrás, rojo delante) sobre la vía
-    body += draw_car(95, road, BLUE, BLUE_D, slots=False, sc=0.52)
-    body += draw_car(245, road, RED, RED_D, slots=False, sc=0.52)
-    # zonas de sticker a lo largo de la vía (horizontal)
-    for i in range(4):
-        body += slot(370 + i * 92, road, SLOT_GREY)
-    body += _house(772, road - 38)
-    save("25_camino.svg", doc(880, 420, body))
+    # dos escenas (carro + camino + casa) para aprovechar el espacio
+    body = _camino_row(225, RED, RED_D)
+    body += _camino_row(560, BLUE, BLUE_D)
+    save("25_camino.svg", doc(880, 770, body))
 
 
 # ===========================================================================

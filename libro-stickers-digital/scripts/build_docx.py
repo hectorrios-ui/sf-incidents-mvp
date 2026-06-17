@@ -382,9 +382,9 @@ activities = [
      "mientras la cola se llena de color.",
      "24_cometa.png"),
     ("22", "Del carro a la casa", GREEN,
-     "Los carritos quieren llegar a su casa. Pega un sticker en cada círculo del "
-     "camino, de izquierda a derecha, para completar la ruta. Practicamos el "
-     "trazo horizontal y la direccionalidad.",
+     "Cada carrito quiere llegar a su casa. Pega un sticker en cada círculo del "
+     "camino, de izquierda a derecha, para completar las dos rutas. Practicamos "
+     "el trazo horizontal y la direccionalidad.",
      "25_camino.png"),
     ("23", "Collar de colores", PURPLE,
      "¡Arma un collar precioso! Observa el patrón que ya empezó (rojo, azul, "
