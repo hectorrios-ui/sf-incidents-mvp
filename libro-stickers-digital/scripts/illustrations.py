@@ -672,13 +672,28 @@ def build_manos():
 # ===========================================================================
 # 20. ABEJA HACIA LA FLOR — trazo vertical
 # ===========================================================================
-def _deco_flower(cx, cy, petal):
+def _pretty_flower(cx, cy):
+    petal, petal_d = "#FF8FB3", "#F06C98"
     g = ""
-    for i in range(6):
-        a = math.radians(i * 60)
-        g += (f'<ellipse cx="{cx+math.cos(a)*52:.0f}" cy="{cy+math.sin(a)*52:.0f}" '
-              f'rx="34" ry="34" fill="{petal}"/>')
-    g += f'<circle cx="{cx}" cy="{cy}" r="40" fill="{YELLOW}" stroke="{YELLOW_D}" stroke-width="5"/>'
+    # tallo con hoja (conecta con el camino de stickers de arriba)
+    g += f'<path d="M{cx},{cy-128} L{cx},{cy-40}" stroke="{LEAF}" stroke-width="13" stroke-linecap="round"/>'
+    g += (f'<path d="M{cx},{cy-96} C{cx-50},{cy-116} {cx-66},{cy-86} {cx-44},{cy-70} '
+          f'C{cx-18},{cy-76} {cx-4},{cy-88} {cx},{cy-96} Z" fill="{LEAF}"/>')
+    # pétalos
+    for i in range(8):
+        a = math.radians(i * 45)
+        px, py = cx + math.cos(a) * 56, cy + math.sin(a) * 56
+        g += (f'<g transform="rotate({i*45+90:.0f} {px:.1f} {py:.1f})">'
+              f'<ellipse cx="{px:.1f}" cy="{py:.1f}" rx="27" ry="44" fill="{petal}"/></g>')
+    g += f'<circle cx="{cx}" cy="{cy}" r="52" fill="{petal_d}" opacity="0.22"/>'
+    # centro con carita
+    g += f'<circle cx="{cx}" cy="{cy}" r="44" fill="{YELLOW}" stroke="{YELLOW_D}" stroke-width="5"/>'
+    g += (f'<circle cx="{cx-15}" cy="{cy-6}" r="6" fill="{INK}"/>'
+          f'<circle cx="{cx+15}" cy="{cy-6}" r="6" fill="{INK}"/>'
+          f'<path d="M{cx-15},{cy+12} Q{cx},{cy+26} {cx+15},{cy+12}" fill="none" '
+          f'stroke="{INK}" stroke-width="4" stroke-linecap="round"/>'
+          f'<circle cx="{cx-26}" cy="{cy+8}" r="7" fill="{RED}" opacity="0.22"/>'
+          f'<circle cx="{cx+26}" cy="{cy+8}" r="7" fill="{RED}" opacity="0.22"/>')
     return g
 
 
@@ -723,10 +738,10 @@ def _bee(cx, cy):
 def build_abeja():
     cx = 230
     body = _bee(cx, 135)
-    body += _deco_flower(cx, 900, PURPLE)
     for i in range(6):
         body += slot(cx, 250 + i * 96, YELLOW_D)
-    save("23_abeja.svg", doc(440, 970, body))
+    body += _pretty_flower(cx, 890)
+    save("23_abeja.svg", doc(460, 1000, body))
 
 
 # ===========================================================================
