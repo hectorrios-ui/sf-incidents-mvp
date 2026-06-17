@@ -867,20 +867,12 @@ def _filled_heart(cx, cy, s, color):
 
 
 def _cupcake(cx, fy, n, wrap, wrap_d, frost):
-    """Cupcake centrado en la crema (fy). Número dentro de un corazón en el cuerpo."""
+    """Cupcake centrado en la crema (fy). Número en un corazón en el cuerpo;
+    las cerezas (slots) van VISIBLES sobre la crema."""
     base = fy + 200
+    fl = "#FFFFFF"
     g = f'{ground(cx, base+10, 110)}'
-    # cerezas (slots) en pirámide SOBRE la crema
-    pos = {1: [(0, fy-80)],
-           2: [(-54, fy-66), (54, fy-66)],
-           3: [(0, fy-104), (-58, fy-56), (58, fy-56)]}[n]
-    for (dx, dy) in pos:
-        g += slot(cx + dx, dy, RED_D)
-    # crema
-    g += (f'<circle cx="{cx-48}" cy="{fy+16}" r="60" fill="{frost}"/>'
-          f'<circle cx="{cx+48}" cy="{fy+16}" r="60" fill="{frost}"/>'
-          f'<circle cx="{cx}" cy="{fy-18}" r="66" fill="{frost}"/>')
-    # papel (wrapper)
+    # papel (wrapper) al fondo
     g += (f'<path d="M{cx-90},{fy+44} L{cx+90},{fy+44} L{cx+66},{base} '
           f'Q{cx},{base+26} {cx-66},{base} Z" fill="{wrap}"/>')
     for off in (-58, -22, 14, 50):
@@ -889,6 +881,18 @@ def _cupcake(cx, fy, n, wrap, wrap_d, frost):
     g += _filled_heart(cx, fy+112, 40, RED)
     g += (f'<text x="{cx}" y="{fy+126}" text-anchor="middle" font-size="44" '
           f'font-weight="700" fill="#fff" font-family="Fredoka, sans-serif">{n}</text>')
+    # crema bien cremosa (remolino de varios bultos)
+    swirl = [(-52, 24, 56), (52, 24, 56), (-28, -10, 52), (28, -10, 52),
+             (0, 22, 58), (0, -44, 48)]
+    for dx, dy, r in swirl:
+        g += f'<circle cx="{cx+dx}" cy="{fy+dy}" r="{r}" fill="{frost}"/>'
+    g += f'<circle cx="{cx-20}" cy="{fy-30}" r="20" fill="{fl}" opacity="0.35"/>'
+    # cerezas (slots) ENCIMA de la crema, visibles
+    pos = {1: [(0, fy-66)],
+           2: [(-50, fy-58), (50, fy-58)],
+           3: [(0, fy-92), (-56, fy-46), (56, fy-46)]}[n]
+    for (dx, dy) in pos:
+        g += slot(cx + dx, dy, RED_D)
     return g
 
 
