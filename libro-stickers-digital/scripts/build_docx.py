@@ -351,11 +351,6 @@ activities = [
      "que el lado izquierdo y el derecho queden iguales para descubrir la "
      "simetría. ¡Elige tus colores favoritos y hazla volar!",
      "18_mariposa.png"),
-    ("15", "La mariquita", RED,
-     "Esta mariquita necesita sus puntitos para lucir hermosa. Pega stickers "
-     "negros sobre su espalda roja repartiéndolos a ambos lados y, al terminar, "
-     "cuéntalos uno por uno.",
-     "19_mariquita.png"),
     ("16", "A contar mariquitas", RED,
      "Cada mariquita lleva su número. Pega tantas manchas negras como indique "
      "cada una: 1 mancha a la primera, 2 a la segunda, 3 a la tercera y 4 a la "
@@ -372,11 +367,6 @@ activities = [
      "muchos. Ahora llena tú los frascos vacíos: uno con pocos y otro con muchos. "
      "Así aprendemos las cantidades y comparamos dónde hay más y dónde hay menos.",
      "16_frascos.png"),
-    ("19", "Manos contadoras", BLUE,
-     "¡A contar con los deditos! Pega un sticker en la yema de cada dedo y "
-     "cuéntalos uno a uno: 1, 2, 3… hasta llegar a 10. Ideal para practicar el "
-     "conteo uno a uno y la coordinación de las manitos.",
-     "22_manos.png"),
     ("20", "La abeja y la flor", YELLOW,
      "Ayuda a la abejita a bajar hasta la flor. Pega un sticker en cada círculo "
      "siguiendo la línea de arriba hacia abajo, sin salirte. Así practicamos el "
@@ -419,7 +409,7 @@ for idx, (n, title, accent, instr, img) in enumerate(activities):
     p = para(doc, WD_ALIGN_PARAGRAPH.LEFT, after=2, before=0, keep=True)
     if idx > 0:
         p.paragraph_format.page_break_before = True
-    badge = p.add_run(f"  {n}  ")
+    badge = p.add_run(f"  {idx + 1:02d}  ")
     set_run(badge, F_HEAD, 14, "FFFFFF", True)
     rpr = badge._element.get_or_add_rPr()
     sh = OxmlElement('w:shd'); sh.set(qn('w:val'), 'clear')
