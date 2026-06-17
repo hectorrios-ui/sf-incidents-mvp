@@ -87,10 +87,11 @@ def save(name, svg):
 def draw_car(cx, by, color, dark, slots=True, sc=1.0):
     """Carrito plano y moderno. (cx, by) = centro sobre el suelo (eje de ruedas).
     slots=True -> ruedas como zonas de sticker (16 mm); False -> ruedas pintadas."""
+    # Carro mirando a la DERECHA (parabrisas y faro al frente-derecha)
     body = (
-        "M-158,-58 Q-158,-80 -132,-82 L-104,-82 "
-        "Q-84,-140 -30,-144 L66,-144 "
-        "Q114,-142 130,-86 L140,-82 Q160,-80 158,-58 "
+        "M-158,-58 Q-158,-80 -134,-82 L-96,-82 "
+        "Q-78,-138 -20,-142 L60,-142 "
+        "Q104,-140 122,-92 L138,-82 Q160,-80 158,-58 "
         "L158,-20 Q158,-6 142,-6 L-142,-6 Q-158,-6 -158,-20 Z"
     )
     inner = (
@@ -98,9 +99,9 @@ def draw_car(cx, by, color, dark, slots=True, sc=1.0):
         f'<path d="{body}" fill="{color}"/>'
         f'<path d="M-150,-30 L150,-30 Q156,-30 156,-22 L156,-18 Q156,-6 142,-6 '
         f'L-142,-6 Q-156,-6 -156,-18 L-156,-22 Q-156,-30 -150,-30 Z" fill="{dark}" opacity="0.16"/>'
-        f'<rect x="-92" y="-130" width="56" height="44" rx="14" fill="{SKY}" stroke="{dark}" stroke-width="3" opacity="0.95"/>'
-        f'<rect x="-24" y="-130" width="60" height="44" rx="14" fill="{SKY}" stroke="{dark}" stroke-width="3" opacity="0.95"/>'
-        f'<ellipse cx="150" cy="-44" rx="11" ry="14" fill="{YELLOW}" stroke="{YELLOW_D}" stroke-width="3"/>'
+        f'<rect x="-78" y="-128" width="46" height="42" rx="13" fill="{SKY}" stroke="{dark}" stroke-width="3" opacity="0.95"/>'
+        f'<rect x="-20" y="-128" width="72" height="42" rx="13" fill="{SKY}" stroke="{dark}" stroke-width="3" opacity="0.95"/>'
+        f'<ellipse cx="151" cy="-44" rx="11" ry="14" fill="{YELLOW}" stroke="{YELLOW_D}" stroke-width="3"/>'
         f'<ellipse cx="-152" cy="-44" rx="9" ry="12" fill="{RED}" stroke="{RED_D}" stroke-width="2" opacity="0.8"/>'
     )
     for wx in (-84, 88):
@@ -917,12 +918,15 @@ def build_tren():
     body = f'<path d="M40,{rail_y} H850" stroke="{BROWN_D}" stroke-width="8" stroke-linecap="round"/>'
     for tx in range(60, 840, 46):
         body += f'<path d="M{tx},{rail_y} v14" stroke="{BROWN_D}" stroke-width="5" opacity="0.4"/>'
-    # locomotora
-    lx = 110
-    body += f'<rect x="{lx-58}" y="470" width="120" height="120" rx="16" fill="{INK}"/>'
-    body += f'<rect x="{lx-58}" y="430" width="54" height="60" rx="10" fill="{INK}"/>'
-    body += f'<rect x="{lx+6}" y="410" width="26" height="60" rx="8" fill="{INK}"/>'
-    body += f'<circle cx="{lx+30}" cy="540" r="22" fill="{YELLOW}"/>'
+    # locomotora mirando al FRENTE (izquierda): chimenea y faro a la izquierda,
+    # cabina hacia los vagones (derecha)
+    lx = 120
+    body += f'<rect x="{lx-62}" y="470" width="124" height="120" rx="16" fill="{INK}"/>'
+    body += f'<rect x="{lx+6}" y="428" width="56" height="64" rx="10" fill="{INK}"/>'      # cabina (derecha)
+    body += f'<rect x="{lx+18}" y="442" width="32" height="30" rx="7" fill="{SKY}"/>'       # ventana de la cabina
+    body += f'<rect x="{lx-44}" y="406" width="28" height="66" rx="8" fill="{INK}"/>'       # chimenea (frente)
+    body += f'<ellipse cx="{lx-30}" cy="406" rx="20" ry="8" fill="{INK}"/>'                 # boca de la chimenea
+    body += f'<circle cx="{lx-44}" cy="548" r="20" fill="{YELLOW}" stroke="{YELLOW_D}" stroke-width="3"/>'  # faro (frente)
     body += _wheels(lx, 600)
     # vagones 1-5
     cols = [(BLUE, BLUE_D), (RED, RED_D), (YELLOW, YELLOW_D), (GREEN, GREEN_D), (PURPLE, PURPLE_D)]
