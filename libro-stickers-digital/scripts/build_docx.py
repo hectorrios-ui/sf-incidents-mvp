@@ -393,14 +393,14 @@ activities = [
      "trazo horizontal y la direccionalidad.",
      "25_camino.png"),
     ("23", "Collar de colores", PURPLE,
-     "¡Arma un collar precioso! Observa el patrón de colores que ya empezó "
-     "(rojo, azul, amarillo…) y continúalo pegando los stickers en el mismo "
-     "orden. Trabajamos los patrones y la secuencia lógica.",
+     "¡Arma un collar precioso! Observa el patrón que ya empezó (rojo, azul, "
+     "rojo, azul…) y continúalo pegando los stickers en el mismo orden hasta el "
+     "final. Trabajamos los patrones y la secuencia lógica.",
      "26_collar.png"),
-    ("24", "Tabla de conteo", BLUE,
-     "Mira el número de cada columna y pega esa cantidad de stickers debajo: "
-     "1 en la columna del 1, 2 en la del 2… hasta el 5. Cuenta en voz alta para "
-     "reforzar el conteo uno a uno y la noción de cantidad.",
+    ("24", "Cuento con mis manos", BLUE,
+     "Mira cuántos dedos levanta cada mano y qué número es. Luego pega esa misma "
+     "cantidad de stickers en la tablet de cada columna y cuenta en voz alta: "
+     "1, 2, 3, 4 y 5. Así relacionamos el número con la cantidad.",
      "27_tabla.png"),
     ("25", "Cupcakes ricos", RED,
      "¡Cupcakes deliciosos! Cada uno tiene un número dentro de un corazón. Pega "

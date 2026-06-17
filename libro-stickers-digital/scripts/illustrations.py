@@ -252,7 +252,7 @@ def caterpillar(x, y, color, dark):
         <circle cx="26" cy="10" r="8" fill="{RED}" opacity="0.22"/>
       </g>'''
     for i in range(5):
-        g += slot(x + 170 + i * 96, y, dark)
+        g += slot(x + 96 + i * 92, y, dark)
     return g
 
 
@@ -261,8 +261,8 @@ def build_caterpillars():
             (RED, RED_D), (BLUE, BLUE_D)]
     body = ""
     for i, (c, d) in enumerate(rows):
-        body += caterpillar(70, 125 + i * 152, c, d)
-    save("09_oruguitas.svg", doc(620, 860, body))
+        body += caterpillar(70, 130 + i * 150, c, d)
+    save("09_oruguitas.svg", doc(620, 850, body))
 
 
 # ===========================================================================
@@ -702,32 +702,30 @@ def build_abeja():
 # 21. COMETA CON COLA — moños en línea vertical
 # ===========================================================================
 def build_cometa():
-    cx, ty = 250, 90
-    d = 130
+    cx, ty = 250, 165
+    d = 125
     body = ""
-    quad = [(cx, ty - d, cx + d, ty, RED), (cx + d, ty, cx, ty + d, BLUE),
-            (cx, ty + d, cx - d, ty, YELLOW), (cx - d, ty, cx, ty - d, GREEN)]
     body += (f'<path d="M{cx},{ty-d} L{cx+d},{ty} L{cx},{ty+d} L{cx-d},{ty} Z" '
              f'fill="{SKY}" stroke="{INK}" stroke-width="6"/>')
+    # cuadrantes de color
+    body += f'<path d="M{cx},{ty-d} L{cx+d},{ty} L{cx},{ty} Z" fill="{RED}" opacity="0.75"/>'
+    body += f'<path d="M{cx+d},{ty} L{cx},{ty+d} L{cx},{ty} Z" fill="{BLUE}" opacity="0.75"/>'
+    body += f'<path d="M{cx},{ty+d} L{cx-d},{ty} L{cx},{ty} Z" fill="{YELLOW}" opacity="0.75"/>'
+    body += f'<path d="M{cx-d},{ty} L{cx},{ty-d} L{cx},{ty} Z" fill="{GREEN}" opacity="0.75"/>'
     body += (f'<path d="M{cx},{ty-d} L{cx},{ty+d} M{cx-d},{ty} L{cx+d},{ty}" '
-             f'stroke="{INK}" stroke-width="5" opacity="0.5"/>')
-    body += f'<path d="M{cx-d*0.5},{ty-d*0.5} L{cx+d*0.5},{ty+d*0.5} M{cx+d*0.5},{ty-d*0.5} L{cx-d*0.5},{ty+d*0.5}" stroke="{INK}" stroke-width="0"/>'
-    # colorea cuadrantes
-    body += f'<path d="M{cx},{ty-d} L{cx+d},{ty} L{cx},{ty} Z" fill="{RED}" opacity="0.7"/>'
-    body += f'<path d="M{cx+d},{ty} L{cx},{ty+d} L{cx},{ty} Z" fill="{BLUE}" opacity="0.7"/>'
-    body += f'<path d="M{cx},{ty+d} L{cx-d},{ty} L{cx},{ty} Z" fill="{YELLOW}" opacity="0.7"/>'
-    body += f'<path d="M{cx-d},{ty} L{cx},{ty-d} L{cx},{ty} Z" fill="{GREEN}" opacity="0.7"/>'
-    # cola ondulada vertical con moños (slots)
-    ys = [ty + d + 60 + i * 96 for i in range(6)]
+             f'stroke="{INK}" stroke-width="4" opacity="0.4"/>')
+    # cola ondulada vertical con moños (slots) de varios colores
+    ys = [ty + d + 56 + i * 96 for i in range(6)]
     prev = (cx, ty + d)
     for i, y in enumerate(ys):
         x = cx + (28 if i % 2 else -28)
         body += (f'<path d="M{prev[0]},{prev[1]} Q{cx},{(prev[1]+y)/2:.0f} {x},{y}" '
                  f'fill="none" stroke="{BROWN}" stroke-width="6"/>')
         prev = (x, y)
+    bow_cols = [RED_D, BLUE_D, GREEN_D, YELLOW_D]
     for i, y in enumerate(ys):
         x = cx + (28 if i % 2 else -28)
-        body += slot(x, y, ORANGE_D)
+        body += slot(x, y, bow_cols[i % 4])
     save("24_cometa.svg", doc(500, 1000, body))
 
 
@@ -774,12 +772,12 @@ def build_collar():
     body += f'<path d="{dpath}" fill="none" stroke="{SLOT_GREY}" stroke-width="6"/>'
     body += f'<circle cx="{pts[0][0]}" cy="{pts[0][1]:.0f}" r="10" fill="{INK}" opacity="0.5"/>'
     body += f'<circle cx="{pts[-1][0]}" cy="{pts[-1][1]:.0f}" r="10" fill="{INK}" opacity="0.5"/>'
-    pattern = [RED, BLUE, YELLOW]
+    pattern = [RED, BLUE, RED]   # patrón rojo-azul-rojo...
+    dmap = {RED: RED_D, BLUE: BLUE_D}
     for i, (x, y) in enumerate(pts):
         if i < 3:
             c = pattern[i]
-            cd = {RED: RED_D, BLUE: BLUE_D, YELLOW: YELLOW_D}[c]
-            body += f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{SLOT_R}" fill="{c}" stroke="{cd}" stroke-width="4"/>'
+            body += f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{SLOT_R}" fill="{c}" stroke="{dmap[c]}" stroke-width="4"/>'
         else:
             body += slot(x, y, SLOT_GREY)
     save("26_collar.svg", doc(860, 380, body))
@@ -788,19 +786,49 @@ def build_collar():
 # ===========================================================================
 # 24. TABLA DE CONTEO 1-5
 # ===========================================================================
+def count_hand(cx, palm_cy, k):
+    """Mano estilizada mostrando k dedos levantados."""
+    skin, sd = "#F4C9A8", "#E3B492"
+    ptop = palm_cy - 43
+    fxs = [cx - 42, cx - 14, cx + 14, cx + 42]
+    ups = {1: {0}, 2: {0, 1}, 3: {0, 1, 2}, 4: {0, 1, 2, 3}, 5: {0, 1, 2, 3}}[k]
+    g = ""
+    for i, fx in enumerate(fxs):
+        ty = ptop - 78 if i in ups else ptop - 14
+        h = (ptop + 22) - ty
+        g += (f'<rect x="{fx-13}" y="{ty:.0f}" width="26" height="{h:.0f}" rx="13" '
+              f'fill="{skin}" stroke="{sd}" stroke-width="3"/>')
+    if k == 5:
+        g += (f'<g transform="rotate(-40 {cx-54} {palm_cy})">'
+              f'<rect x="{cx-67}" y="{palm_cy-58}" width="26" height="78" rx="13" '
+              f'fill="{skin}" stroke="{sd}" stroke-width="3"/></g>')
+    else:
+        g += (f'<rect x="{cx-70}" y="{palm_cy-4}" width="34" height="26" rx="13" '
+              f'fill="{skin}" stroke="{sd}" stroke-width="3"/>')
+    g += (f'<rect x="{cx-60}" y="{ptop}" width="120" height="88" rx="30" '
+          f'fill="{skin}" stroke="{sd}" stroke-width="3"/>')
+    return g
+
+
 def build_tabla():
-    cols = [120, 290, 460, 630, 800]
-    colors = [RED, BLUE, YELLOW, GREEN, PURPLE]
+    cols = [95, 270, 445, 620, 795]
     body = ""
-    for k, (cx, col) in enumerate(zip(cols, colors), start=1):
-        if k < 5:
-            body += f'<path d="M{cx+85},60 V{120+k*96}" stroke="#E9E9F0" stroke-width="3"/>'
-        body += (f'<circle cx="{cx}" cy="95" r="34" fill="{col}"/>'
-                 f'<text x="{cx}" y="108" text-anchor="middle" font-size="42" '
-                 f'font-weight="700" fill="#fff" font-family="Fredoka, sans-serif">{k}</text>')
+    for k, cx in enumerate(cols, start=1):
+        # mano que muestra el número
+        body += count_hand(cx, 150, k)
+        # caja del número
+        body += (f'<rect x="{cx-44}" y="222" width="88" height="64" rx="14" '
+                 f'fill="#fff" stroke="{INK}" stroke-width="3"/>'
+                 f'<text x="{cx}" y="270" text-anchor="middle" font-size="46" '
+                 f'font-weight="700" fill="{INK}" font-family="Fredoka, sans-serif">{k}</text>')
+        # "tablet" con la zona de stickers
+        body += (f'<rect x="{cx-74}" y="312" width="148" height="512" rx="22" '
+                 f'fill="#fff" stroke="{INK}" stroke-width="4"/>'
+                 f'<rect x="{cx-58}" y="342" width="116" height="448" rx="12" fill="#F1ECFA"/>'
+                 f'<circle cx="{cx}" cy="808" r="7" fill="none" stroke="#B8BECC" stroke-width="3"/>')
         for j in range(k):
-            body += slot(cx, 185 + j * 96, SLOT_GREY)
-    save("27_tabla.svg", doc(880, 700, body))
+            body += slot(cx, 392 + j * 86, SLOT_GREY)
+    save("27_tabla.svg", doc(890, 860, body))
 
 
 # ===========================================================================
@@ -817,34 +845,34 @@ def _filled_heart(cx, cy, s, color):
     return f'<path d="{path}" fill="{color}"/>'
 
 
-def _cupcake(cx, n, wrap, frost):
-    base = 480
-    g = f'{ground(cx, base+14, 110)}'
-    # papel (wrapper)
-    g += (f'<path d="M{cx-86},340 L{cx+86},340 L{cx+64},{base} '
-          f'Q{cx},{base+26} {cx-64},{base} Z" fill="{wrap}" stroke="#00000018" stroke-width="0"/>')
-    for off in (-50, -16, 18, 52):
-        g += f'<path d="M{cx+off},346 L{cx+off*0.82:.0f},{base-6}" stroke="#ffffff55" stroke-width="6"/>'
-    # crema
-    g += (f'<circle cx="{cx-46}" cy="320" r="58" fill="{frost}"/>'
-          f'<circle cx="{cx+46}" cy="320" r="58" fill="{frost}"/>'
-          f'<circle cx="{cx}" cy="286" r="64" fill="{frost}"/>')
-    # corazón con número
-    g += _filled_heart(cx, 312, 40, RED)
-    g += (f'<text x="{cx}" y="326" text-anchor="middle" font-size="40" '
+def _cupcake(cx, n, wrap, wrap_d, frost):
+    base = 500
+    g = f'{ground(cx, base+14, 115)}'
+    # crema (detrás, se apoya sobre el papel)
+    g += (f'<circle cx="{cx-48}" cy="338" r="60" fill="{frost}"/>'
+          f'<circle cx="{cx+48}" cy="338" r="60" fill="{frost}"/>'
+          f'<circle cx="{cx}" cy="300" r="66" fill="{frost}"/>')
+    # cerezas (slots) apoyadas SOBRE la crema, ordenadas
+    pos = {1: [(0, 282)],
+           2: [(-52, 300), (52, 300)],
+           3: [(-86, 322), (0, 280), (86, 322)]}[n]
+    for (dx, dy) in pos:
+        g += slot(cx + dx, dy, RED_D)
+    # papel (wrapper) con ranuras y número grande
+    g += (f'<path d="M{cx-90},356 L{cx+90},356 L{cx+66},{base} '
+          f'Q{cx},{base+28} {cx-66},{base} Z" fill="{wrap}"/>')
+    for off in (-58, -22, 14, 50):
+        g += f'<path d="M{cx+off},362 L{cx+off*0.8:.0f},{base-8}" stroke="{wrap_d}" stroke-width="5" opacity="0.5"/>'
+    g += (f'<text x="{cx}" y="455" text-anchor="middle" font-size="74" '
           f'font-weight="700" fill="#fff" font-family="Fredoka, sans-serif">{n}</text>')
-    # cerezas (slots) según número
-    xs = {1: [0], 2: [-50, 50], 3: [-92, 0, 92]}[n]
-    for dx in xs:
-        g += slot(cx + dx, 208, RED_D)
     return g
 
 
 def build_cupcakes():
-    body = _cupcake(160, 1, "#FFD3A6", "#FFC4CF")
-    body += _cupcake(440, 2, "#BFE3FF", "#BFEBD6")
-    body += _cupcake(720, 3, "#E5D2FF", "#FFE39E")
-    save("28_cupcakes.svg", doc(880, 560, body))
+    body = _cupcake(160, 1, "#FFB0C2", "#F58AA0", "#FFD7DE")
+    body += _cupcake(440, 2, "#8CC9FF", "#5BA8F0", "#CFEBFF")
+    body += _cupcake(720, 3, "#C9A6F0", "#A87FE0", "#E7D6FA")
+    save("28_cupcakes.svg", doc(880, 580, body))
 
 
 # ===========================================================================
