@@ -87,11 +87,11 @@ def save(name, svg):
 def draw_car(cx, by, color, dark, slots=True, sc=1.0):
     """Carrito plano y moderno. (cx, by) = centro sobre el suelo (eje de ruedas).
     slots=True -> ruedas como zonas de sticker (16 mm); False -> ruedas pintadas."""
-    # Carro mirando a la DERECHA (parabrisas y faro al frente-derecha)
+    # Carro mirando a la DERECHA: cabina atrás (izq.), capó largo y trompa al frente (der.)
     body = (
-        "M-158,-58 Q-158,-80 -134,-82 L-96,-82 "
-        "Q-78,-138 -20,-142 L60,-142 "
-        "Q104,-140 122,-92 L138,-82 Q160,-80 158,-58 "
+        "M-158,-56 Q-158,-78 -136,-80 L-120,-80 "
+        "Q-110,-130 -64,-134 L16,-134 "
+        "Q40,-133 52,-104 L140,-96 Q158,-94 158,-74 "
         "L158,-20 Q158,-6 142,-6 L-142,-6 Q-158,-6 -158,-20 Z"
     )
     inner = (
@@ -99,10 +99,10 @@ def draw_car(cx, by, color, dark, slots=True, sc=1.0):
         f'<path d="{body}" fill="{color}"/>'
         f'<path d="M-150,-30 L150,-30 Q156,-30 156,-22 L156,-18 Q156,-6 142,-6 '
         f'L-142,-6 Q-156,-6 -156,-18 L-156,-22 Q-156,-30 -150,-30 Z" fill="{dark}" opacity="0.16"/>'
-        f'<rect x="-78" y="-128" width="46" height="42" rx="13" fill="{SKY}" stroke="{dark}" stroke-width="3" opacity="0.95"/>'
-        f'<rect x="-20" y="-128" width="72" height="42" rx="13" fill="{SKY}" stroke="{dark}" stroke-width="3" opacity="0.95"/>'
-        f'<ellipse cx="151" cy="-44" rx="11" ry="14" fill="{YELLOW}" stroke="{YELLOW_D}" stroke-width="3"/>'
-        f'<ellipse cx="-152" cy="-44" rx="9" ry="12" fill="{RED}" stroke="{RED_D}" stroke-width="2" opacity="0.8"/>'
+        f'<rect x="-58" y="-126" width="44" height="40" rx="12" fill="{SKY}" stroke="{dark}" stroke-width="3" opacity="0.95"/>'
+        f'<path d="M-6,-126 L40,-122 Q50,-121 56,-100 L-6,-100 Z" fill="{SKY}" stroke="{dark}" stroke-width="3" stroke-linejoin="round" opacity="0.95"/>'
+        f'<ellipse cx="152" cy="-58" rx="10" ry="15" fill="{YELLOW}" stroke="{YELLOW_D}" stroke-width="3"/>'
+        f'<ellipse cx="-152" cy="-42" rx="9" ry="12" fill="{RED}" stroke="{RED_D}" stroke-width="2" opacity="0.8"/>'
     )
     for wx in (-84, 88):
         if slots:
