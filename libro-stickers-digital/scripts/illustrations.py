@@ -834,35 +834,37 @@ def build_collar():
 # 24. TABLA DE CONTEO 1-5
 # ===========================================================================
 def count_hand(cx, cy, k):
-    """Mano (puño) mostrando k dedos levantados, estilo limpio."""
-    skin, sd = "#F6CBA6", "#E0AE85"
-    fist_w, fist_h = 132, 96
-    fist_top = cy - fist_h / 2
-    fxs = [cx - 45, cx - 15, cx + 15, cx + 45]   # índice..meñique
+    """Mano (puño) mostrando k dedos levantados; estilo caricatura limpio."""
+    skin, sd, crease = "#F6CBA6", "#E2AC82", "#E0A877"
+    fw, fh = 130, 100
+    ftop = cy - fh / 2
+    fxs = [cx - 42, cx - 15, cx + 12, cx + 39]   # índice..meñique
     ups = {1: {0}, 2: {0, 1}, 3: {0, 1, 2}, 4: {0, 1, 2, 3}, 5: {0, 1, 2, 3}}[k]
     g = ""
+    # muñeca
+    g += f'<rect x="{cx-46}" y="{cy+fh/2-22:.0f}" width="92" height="44" rx="18" fill="{skin}" stroke="{sd}" stroke-width="3"/>'
     # dedos levantados (detrás del puño)
     for i, fx in enumerate(fxs):
         if i in ups:
-            ftop = fist_top - 92
-            g += (f'<rect x="{fx-14}" y="{ftop:.0f}" width="28" height="120" rx="14" '
-                  f'fill="{skin}" stroke="{sd}" stroke-width="3"/>')
-    # pulgar
+            top = ftop - 90
+            g += (f'<rect x="{fx-14}" y="{top:.0f}" width="28" height="{ftop+24-top:.0f}" '
+                  f'rx="14" fill="{skin}" stroke="{sd}" stroke-width="3"/>')
+            g += f'<path d="M{fx-7},{top+22:.0f} h14" stroke="{crease}" stroke-width="3" stroke-linecap="round" opacity="0.7"/>'
+    # pulgar extendido (solo en 5), detrás-izquierda
     if k == 5:
-        g += (f'<g transform="rotate(-32 {cx-60} {cy-6})">'
-              f'<rect x="{cx-74}" y="{cy-72}" width="28" height="86" rx="14" '
+        g += (f'<g transform="rotate(-36 {cx-60} {cy-2})">'
+              f'<rect x="{cx-74}" y="{cy-64}" width="27" height="80" rx="13" '
               f'fill="{skin}" stroke="{sd}" stroke-width="3"/></g>')
     # puño
-    g += (f'<rect x="{cx-fist_w/2:.0f}" y="{fist_top:.0f}" width="{fist_w}" '
-          f'height="{fist_h}" rx="34" fill="{skin}" stroke="{sd}" stroke-width="3"/>')
-    # nudillos de los dedos doblados (bultos sobre el puño)
+    g += (f'<rect x="{cx-fw/2:.0f}" y="{ftop:.0f}" width="{fw}" height="{fh}" rx="30" '
+          f'fill="{skin}" stroke="{sd}" stroke-width="3"/>')
+    # nudillos de los dedos doblados
     for i, fx in enumerate(fxs):
         if i not in ups:
-            g += (f'<circle cx="{fx}" cy="{fist_top+6:.0f}" r="15" '
-                  f'fill="{skin}" stroke="{sd}" stroke-width="3"/>')
-    # pulgar doblado (al costado) si no es 5
+            g += f'<circle cx="{fx}" cy="{ftop+10:.0f}" r="15" fill="{skin}" stroke="{sd}" stroke-width="3"/>'
+    # pulgar cruzado al frente (cuando no es 5)
     if k != 5:
-        g += (f'<circle cx="{cx-fist_w/2+6:.0f}" cy="{cy+6}" r="17" '
+        g += (f'<rect x="{cx-52}" y="{cy+4:.0f}" width="86" height="34" rx="17" '
               f'fill="{skin}" stroke="{sd}" stroke-width="3"/>')
     return g
 
@@ -953,16 +955,35 @@ def build_tren():
     body = f'<path d="M40,{rail_y} H850" stroke="{BROWN_D}" stroke-width="8" stroke-linecap="round"/>'
     for tx in range(60, 840, 46):
         body += f'<path d="M{tx},{rail_y} v14" stroke="{BROWN_D}" stroke-width="5" opacity="0.4"/>'
-    # locomotora mirando al FRENTE (izquierda): chimenea y faro a la izquierda,
-    # cabina hacia los vagones (derecha)
-    lx = 120
-    body += f'<rect x="{lx-62}" y="470" width="124" height="120" rx="16" fill="{INK}"/>'
-    body += f'<rect x="{lx+6}" y="428" width="56" height="64" rx="10" fill="{INK}"/>'      # cabina (derecha)
-    body += f'<rect x="{lx+18}" y="442" width="32" height="30" rx="7" fill="{SKY}"/>'       # ventana de la cabina
-    body += f'<rect x="{lx-44}" y="406" width="28" height="66" rx="8" fill="{INK}"/>'       # chimenea (frente)
-    body += f'<ellipse cx="{lx-30}" cy="406" rx="20" ry="8" fill="{INK}"/>'                 # boca de la chimenea
-    body += f'<circle cx="{lx-44}" cy="548" r="20" fill="{YELLOW}" stroke="{YELLOW_D}" stroke-width="3"/>'  # faro (frente)
-    body += _wheels(lx, 600)
+    # --- locomotora de vapor (mira a la izquierda) con humo ---
+    lx = 122
+    smoke = "#DBE0EA"
+    for dx, dy, r, op in [(-46, 444, 12, 0.95), (-56, 416, 15, 0.9),
+                          (-70, 384, 19, 0.85), (-88, 348, 23, 0.8),
+                          (-108, 310, 27, 0.7)]:
+        body += f'<circle cx="{lx+dx}" cy="{dy}" r="{r}" fill="{smoke}" opacity="{op}"/>'
+    # ruedas (detrás)
+    body += (f'<circle cx="{lx-26}" cy="600" r="36" fill="{INK}"/>'
+             f'<circle cx="{lx-26}" cy="600" r="14" fill="#fff"/><circle cx="{lx-26}" cy="600" r="5" fill="{INK}"/>')
+    for wx, wr in [(lx-82, 22), (lx+40, 22)]:
+        body += (f'<circle cx="{wx}" cy="606" r="{wr}" fill="{INK}"/>'
+                 f'<circle cx="{wx}" cy="606" r="8" fill="#fff"/>')
+    # caldera (cilindro) + banda
+    body += f'<rect x="{lx-86}" y="492" width="150" height="72" rx="36" fill="{BLUE}"/>'
+    body += f'<rect x="{lx-86}" y="544" width="150" height="14" rx="6" fill="{BLUE_D}" opacity="0.55"/>'
+    # frente redondo (smokebox) + faro + tope
+    body += f'<circle cx="{lx-86}" cy="528" r="36" fill="{BLUE_D}"/>'
+    body += f'<circle cx="{lx-96}" cy="528" r="13" fill="{YELLOW}" stroke="{YELLOW_D}" stroke-width="3"/>'
+    body += f'<rect x="{lx-118}" y="556" width="14" height="42" rx="5" fill="{INK}"/>'
+    # chimenea (funnel) + domo
+    body += f'<path d="M{lx-58},494 L{lx-34},494 L{lx-28},454 L{lx-64},454 Z" fill="{INK}"/>'
+    body += f'<ellipse cx="{lx-46}" cy="454" rx="20" ry="7" fill="{INK}"/>'
+    body += f'<path d="M{lx-6},492 a22,18 0 0 1 44,0 Z" fill="{BLUE_D}"/>'
+    # cabina (atrás)
+    body += f'<rect x="{lx+30}" y="446" width="62" height="118" rx="12" fill="{BLUE}"/>'
+    body += f'<rect x="{lx+30}" y="446" width="62" height="20" rx="9" fill="{BLUE_D}"/>'
+    body += f'<rect x="{lx+42}" y="478" width="38" height="34" rx="7" fill="{SKY}" stroke="{BLUE_D}" stroke-width="3"/>'
+    body += f'<path d="M{lx+62},540 H{lx+92}" stroke="{INK}" stroke-width="7"/>'
     # vagones 1-5
     cols = [(BLUE, BLUE_D), (RED, RED_D), (YELLOW, YELLOW_D), (GREEN, GREEN_D), (PURPLE, PURPLE_D)]
     xs = [270, 410, 550, 690, 830]
