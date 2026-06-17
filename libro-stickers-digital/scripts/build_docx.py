@@ -36,7 +36,7 @@ CYCLE = [RED, BLUE, YELLOW, GREEN]
 
 F_TITLE = "Baloo 2 ExtraBold"
 F_HEAD = "Fredoka"
-F_BODY = "Nunito"
+F_BODY = "Quicksand"   # texto amigable con "a" redonda de un solo piso
 
 EMU_CM = 360000
 
@@ -146,7 +146,11 @@ def add_sticker_image(doc, name, max_h_cm=19.5, align=WD_ALIGN_PARAGRAPH.CENTER)
     h_mm = w_mm * ph / pw
     if h_mm > max_h_cm * 10:         # salvaguarda de alto
         w_mm = w_mm * (max_h_cm * 10) / h_mm
-    p = para(doc, align=align, before=4, after=4, line=1.0)
+        h_mm = max_h_cm * 10
+    # centrado vertical aproximado: reparte el espacio sobrante arriba/abajo
+    avail_mm = 200.0
+    before_pt = max(6.0, (avail_mm - h_mm) / 2 * 2.835)
+    p = para(doc, align=align, before=before_pt, after=4, line=1.0)
     p.add_run().add_picture(path, width=Emu(int(w_mm / 10 * EMU_CM)))
     return p
 
@@ -378,7 +382,7 @@ activities = [
      "mientras la cola se llena de color.",
      "24_cometa.png"),
     ("22", "Del carro a la casa", GREEN,
-     "El carrito quiere llegar a su casa. Pega un sticker en cada círculo del "
+     "Los carritos quieren llegar a su casa. Pega un sticker en cada círculo del "
      "camino, de izquierda a derecha, para completar la ruta. Practicamos el "
      "trazo horizontal y la direccionalidad.",
      "25_camino.png"),

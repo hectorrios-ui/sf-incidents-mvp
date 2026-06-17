@@ -18,7 +18,7 @@ DOCX = os.path.join(BASE, "Libro_Actividades_Stickers_Mi_Dulce_Emma.docx")
 FAMILIES = {
     "Baloo 2 ExtraBold": {"Regular": "Baloo2-ExtraBold.ttf"},
     "Fredoka": {"Regular": "Fredoka-Regular.ttf", "Bold": "Fredoka-Bold.ttf"},
-    "Nunito": {"Regular": "Nunito-Regular.ttf", "Bold": "Nunito-Bold.ttf"},
+    "Quicksand": {"Regular": "Quicksand-Regular.ttf", "Bold": "Quicksand-Bold.ttf"},
 }
 STYLE_TAG = {
     "Regular": "w:embedRegular",

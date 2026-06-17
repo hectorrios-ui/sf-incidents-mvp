@@ -84,29 +84,40 @@ def save(name, svg):
 # ===========================================================================
 # 1. CARROS
 # ===========================================================================
-def car(color, dark):
-    win = SKY
-    return f'''
-    <g>
-      {ground(190, 232, 150)}
-      <rect x="86" y="44" width="208" height="96" rx="34" fill="{color}"/>
-      <rect x="18" y="104" width="344" height="92" rx="44" fill="{color}"/>
-      <rect x="18" y="150" width="344" height="46" rx="20" fill="{dark}" opacity="0.18"/>
-      <rect x="104" y="58" width="78" height="64" rx="20" fill="{win}"/>
-      <rect x="198" y="58" width="78" height="64" rx="20" fill="{win}"/>
-      <ellipse cx="350" cy="128" rx="13" ry="16" fill="{YELLOW}" stroke="{YELLOW_D}" stroke-width="3"/>
-      {slot(112, 196, dark)}
-      {slot(290, 196, dark)}
-    </g>'''
+def draw_car(cx, by, color, dark, slots=True, sc=1.0):
+    """Carrito plano y moderno. (cx, by) = centro sobre el suelo (eje de ruedas).
+    slots=True -> ruedas como zonas de sticker (16 mm); False -> ruedas pintadas."""
+    body = (
+        "M-158,-58 Q-158,-80 -132,-82 L-104,-82 "
+        "Q-84,-140 -30,-144 L66,-144 "
+        "Q114,-142 130,-86 L140,-82 Q160,-80 158,-58 "
+        "L158,-20 Q158,-6 142,-6 L-142,-6 Q-158,-6 -158,-20 Z"
+    )
+    inner = (
+        f'<ellipse cx="0" cy="30" rx="155" ry="20" fill="{SHADOW}" opacity="0.5"/>'
+        f'<path d="{body}" fill="{color}"/>'
+        f'<path d="M-150,-30 L150,-30 Q156,-30 156,-22 L156,-18 Q156,-6 142,-6 '
+        f'L-142,-6 Q-156,-6 -156,-18 L-156,-22 Q-156,-30 -150,-30 Z" fill="{dark}" opacity="0.16"/>'
+        f'<rect x="-92" y="-130" width="56" height="44" rx="14" fill="{SKY}" stroke="{dark}" stroke-width="3" opacity="0.95"/>'
+        f'<rect x="-24" y="-130" width="60" height="44" rx="14" fill="{SKY}" stroke="{dark}" stroke-width="3" opacity="0.95"/>'
+        f'<ellipse cx="150" cy="-44" rx="11" ry="14" fill="{YELLOW}" stroke="{YELLOW_D}" stroke-width="3"/>'
+        f'<ellipse cx="-152" cy="-44" rx="9" ry="12" fill="{RED}" stroke="{RED_D}" stroke-width="2" opacity="0.8"/>'
+    )
+    for wx in (-84, 88):
+        if slots:
+            inner += slot(wx, -2, dark)
+        else:
+            inner += (f'<circle cx="{wx}" cy="-2" r="40" fill="{INK}"/>'
+                      f'<circle cx="{wx}" cy="-2" r="17" fill="#fff"/>'
+                      f'<circle cx="{wx}" cy="-2" r="6" fill="{INK}"/>')
+    return f'<g transform="translate({cx},{by}) scale({sc})">{inner}</g>'
 
 
 def build_cars():
     cars = [(BLUE, BLUE_D), (RED, RED_D), (YELLOW, YELLOW_D), (GREEN, GREEN_D)]
-    positions = [(20, 30), (470, 70), (20, 360), (470, 400)]
-    body = ""
-    for (c, d), (x, y) in zip(cars, positions):
-        body += f'<g transform="translate({x},{y})">{car(c, d)}</g>'
-    save("04_carros.svg", doc(870, 700, body))
+    pos = [(210, 200), (610, 200), (210, 540), (610, 540)]
+    body = "".join(draw_car(x, y, c, d) for (c, d), (x, y) in zip(cars, pos))
+    save("04_carros.svg", doc(820, 700, body))
 
 
 # ===========================================================================
@@ -133,7 +144,7 @@ def build_hearts():
         (160, 490, GREEN), (440, 490, PURPLE), (720, 490, ORANGE),
     ]
     body = "".join(heart(x, y, s, c) for x, y, c in layout)
-    save("05_corazones.svg", doc(880, 720, body))
+    save("05_corazones.svg", doc(880, 630, body))
 
 
 # ===========================================================================
@@ -162,7 +173,7 @@ def build_sun():
         f'<path d="M{cx-30},{cy+58} Q{cx},{cy+74} {cx+30},{cy+58}" '
         f'fill="{RED}" stroke="none" opacity="0.85"/>'
     )
-    save("06_sol.svg", doc(660, 740, body))
+    save("06_sol.svg", doc(660, 690, body))
 
 
 # ===========================================================================
@@ -290,7 +301,7 @@ def build_spiders():
     cols = [165, 430, 695]
     rows = [140, 355, 570, 785]
     body = "".join(spider(x, y) for y in rows for x in cols)
-    save("10_aranas.svg", doc(860, 920, body))
+    save("10_aranas.svg", doc(860, 870, body))
 
 
 # ===========================================================================
@@ -309,9 +320,9 @@ def cherry_pair(x, y):
 
 
 def build_cherries():
-    spots = [(180, 240), (520, 240), (180, 470), (520, 470), (180, 700), (520, 700)]
+    spots = [(210, 280), (560, 280), (210, 660), (560, 660)]
     body = "".join(cherry_pair(x, y) for x, y in spots)
-    save("11_cerezas.svg", doc(760, 800, body))
+    save("11_cerezas.svg", doc(800, 820, body))
 
 
 # ===========================================================================
@@ -579,26 +590,26 @@ def build_mariquita():
 # Distribución de manchas para conteo 1-4 (cabe en una sola página a 16 mm).
 _COUNT_LAYOUT = {
     1: [(0, 5)],
-    2: [(-85, 5), (85, 5)],
-    3: [(-85, -45), (85, -45), (0, 72)],
-    4: [(-85, -52), (85, -52), (-85, 72), (85, 72)],
+    2: [(-76, 5), (76, 5)],
+    3: [(-76, -40), (76, -40), (0, 64)],
+    4: [(-76, -46), (76, -46), (-76, 64), (76, 64)],
 }
 
 
 def build_mariquitas_conteo():
-    """Cuatro mariquitas (1-4) en una sola página; manchas de 16 mm."""
-    R = 155
-    grid = [(255, 265, 1), (615, 265, 2), (255, 700, 3), (615, 700, 4)]
+    """Cuatro mariquitas (1-4) más pequeñas, espaciadas y con números grandes."""
+    R = 122
+    grid = [(235, 230, 1), (645, 230, 2), (235, 650, 3), (645, 650, 4)]
     body = ""
     for cx, cy, n in grid:
         body += ladybug(cx, cy, R, _COUNT_LAYOUT[n], plus=False)
-        by = cy + R * 1.04 + 52
+        by = cy + R * 1.04 + 72            # número grande y protagonista
         col = [RED, BLUE, YELLOW, GREEN][(n - 1) % 4]
-        body += (f'<circle cx="{cx}" cy="{by}" r="32" fill="{col}"/>'
-                 f'<text x="{cx}" y="{by+13}" text-anchor="middle" '
-                 f'font-size="40" font-weight="700" fill="#fff" '
+        body += (f'<circle cx="{cx}" cy="{by}" r="48" fill="{col}"/>'
+                 f'<text x="{cx}" y="{by+20}" text-anchor="middle" '
+                 f'font-size="62" font-weight="700" fill="#fff" '
                  f'font-family="Fredoka, sans-serif">{n}</text>')
-    save("21_conteo.svg", doc(860, 980, body))
+    save("21_conteo.svg", doc(880, 880, body))
 
 
 # ===========================================================================
@@ -692,10 +703,9 @@ def build_abeja():
     cx = 220
     body = _bee(cx, 110)
     body += _deco_flower(cx, 900, PURPLE)
-    body += f'<path d="M{cx},940 V1000" stroke="{LEAF}" stroke-width="0"/>'
     for i in range(6):
         body += slot(cx, 250 + i * 96, YELLOW_D)
-    save("23_abeja.svg", doc(440, 1000, body))
+    save("23_abeja.svg", doc(440, 970, body))
 
 
 # ===========================================================================
@@ -726,22 +736,12 @@ def build_cometa():
     for i, y in enumerate(ys):
         x = cx + (28 if i % 2 else -28)
         body += slot(x, y, bow_cols[i % 4])
-    save("24_cometa.svg", doc(500, 1000, body))
+    save("24_cometa.svg", doc(500, 920, body))
 
 
 # ===========================================================================
 # 22. CAMINO DEL CARRO A LA CASA — línea horizontal
 # ===========================================================================
-def _mini_car(cx, cy, color, dark):
-    g = f'{ground(cx, cy+60, 95)}'
-    g += f'<rect x="{cx-70}" y="{cy-58}" width="120" height="48" rx="22" fill="{color}"/>'
-    g += f'<rect x="{cx-90}" y="{cy-24}" width="180" height="56" rx="26" fill="{color}"/>'
-    g += f'<rect x="{cx-58}" y="{cy-50}" width="46" height="38" rx="12" fill="{SKY}"/>'
-    g += f'<circle cx="{cx-48}" cy="{cy+36}" r="24" fill="{INK}"/><circle cx="{cx-48}" cy="{cy+36}" r="10" fill="#fff"/>'
-    g += f'<circle cx="{cx+48}" cy="{cy+36}" r="24" fill="{INK}"/><circle cx="{cx+48}" cy="{cy+36}" r="10" fill="#fff"/>'
-    return g
-
-
 def _house(cx, cy):
     g = f'<rect x="{cx-78}" y="{cy-40}" width="156" height="120" rx="8" fill="#FFE2A8" stroke="{BROWN_D}" stroke-width="5"/>'
     g += f'<path d="M{cx-96},{cy-40} L{cx},{cy-120} L{cx+96},{cy-40} Z" fill="{RED}" stroke="{RED_D}" stroke-width="5" stroke-linejoin="round"/>'
@@ -751,62 +751,80 @@ def _house(cx, cy):
 
 
 def build_camino():
-    cy = 230
-    body = f'<path d="M150,{cy+70} H760" stroke="#D9D2C4" stroke-width="14" stroke-linecap="round"/>'
-    body += _mini_car(120, cy, RED, RED_D)
-    body += _house(772, cy)
-    for i in range(5):
-        body += slot(250 + i * 95, cy + 70, SLOT_GREY)
-    save("25_camino.svg", doc(880, 380, body))
+    road = 250
+    body = f'<path d="M20,{road} H705" stroke="#D9D2C4" stroke-width="16" stroke-linecap="round"/>'
+    # dos autos (azul detrás, rojo delante) sobre la vía
+    body += draw_car(95, road, BLUE, BLUE_D, slots=False, sc=0.52)
+    body += draw_car(245, road, RED, RED_D, slots=False, sc=0.52)
+    # zonas de sticker a lo largo de la vía (horizontal)
+    for i in range(4):
+        body += slot(370 + i * 92, road, SLOT_GREY)
+    body += _house(772, road - 38)
+    save("25_camino.svg", doc(880, 420, body))
 
 
 # ===========================================================================
 # 23. COLLAR DE CUENTAS — patrón de colores
 # ===========================================================================
-def build_collar():
-    cx = 430
+def _collar(cx, y0, pattern):
+    """Un collar: 8 cuentas en arco; las 3 primeras dan el patrón, el resto slots."""
     xs = [120 + i * 88 for i in range(8)]
-    pts = [(x, 300 - 0.0019 * (x - cx) ** 2) for x in xs]
-    body = ""
-    dpath = "M" + " L".join(f"{x:.0f},{y:.0f}" for x, y in pts)
-    body += f'<path d="{dpath}" fill="none" stroke="{SLOT_GREY}" stroke-width="6"/>'
-    body += f'<circle cx="{pts[0][0]}" cy="{pts[0][1]:.0f}" r="10" fill="{INK}" opacity="0.5"/>'
-    body += f'<circle cx="{pts[-1][0]}" cy="{pts[-1][1]:.0f}" r="10" fill="{INK}" opacity="0.5"/>'
-    pattern = [RED, BLUE, RED]   # patrón rojo-azul-rojo...
-    dmap = {RED: RED_D, BLUE: BLUE_D}
+    pts = [(x, y0 - 0.0019 * (x - cx) ** 2) for x in xs]
+    dmap = {RED: RED_D, BLUE: BLUE_D, YELLOW: YELLOW_D, GREEN: GREEN_D}
+    g = "M" + " L".join(f"{x:.0f},{y:.0f}" for x, y in pts)
+    g = f'<path d="{g}" fill="none" stroke="{SLOT_GREY}" stroke-width="6"/>'
+    g += f'<circle cx="{pts[0][0]}" cy="{pts[0][1]:.0f}" r="10" fill="{INK}" opacity="0.5"/>'
+    g += f'<circle cx="{pts[-1][0]}" cy="{pts[-1][1]:.0f}" r="10" fill="{INK}" opacity="0.5"/>'
     for i, (x, y) in enumerate(pts):
         if i < 3:
             c = pattern[i]
-            body += f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{SLOT_R}" fill="{c}" stroke="{dmap[c]}" stroke-width="4"/>'
+            g += f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{SLOT_R}" fill="{c}" stroke="{dmap[c]}" stroke-width="4"/>'
         else:
-            body += slot(x, y, SLOT_GREY)
-    save("26_collar.svg", doc(860, 380, body))
+            g += slot(x, y, SLOT_GREY)
+    return g
+
+
+def build_collar():
+    cx = 430
+    body = _collar(cx, 250, [RED, BLUE, RED])
+    body += _collar(cx, 620, [YELLOW, GREEN, YELLOW])
+    save("26_collar.svg", doc(860, 740, body))
 
 
 # ===========================================================================
 # 24. TABLA DE CONTEO 1-5
 # ===========================================================================
-def count_hand(cx, palm_cy, k):
-    """Mano estilizada mostrando k dedos levantados."""
-    skin, sd = "#F4C9A8", "#E3B492"
-    ptop = palm_cy - 43
-    fxs = [cx - 42, cx - 14, cx + 14, cx + 42]
+def count_hand(cx, cy, k):
+    """Mano (puño) mostrando k dedos levantados, estilo limpio."""
+    skin, sd = "#F6CBA6", "#E0AE85"
+    fist_w, fist_h = 132, 96
+    fist_top = cy - fist_h / 2
+    fxs = [cx - 45, cx - 15, cx + 15, cx + 45]   # índice..meñique
     ups = {1: {0}, 2: {0, 1}, 3: {0, 1, 2}, 4: {0, 1, 2, 3}, 5: {0, 1, 2, 3}}[k]
     g = ""
+    # dedos levantados (detrás del puño)
     for i, fx in enumerate(fxs):
-        ty = ptop - 78 if i in ups else ptop - 14
-        h = (ptop + 22) - ty
-        g += (f'<rect x="{fx-13}" y="{ty:.0f}" width="26" height="{h:.0f}" rx="13" '
-              f'fill="{skin}" stroke="{sd}" stroke-width="3"/>')
+        if i in ups:
+            ftop = fist_top - 92
+            g += (f'<rect x="{fx-14}" y="{ftop:.0f}" width="28" height="120" rx="14" '
+                  f'fill="{skin}" stroke="{sd}" stroke-width="3"/>')
+    # pulgar
     if k == 5:
-        g += (f'<g transform="rotate(-40 {cx-54} {palm_cy})">'
-              f'<rect x="{cx-67}" y="{palm_cy-58}" width="26" height="78" rx="13" '
+        g += (f'<g transform="rotate(-32 {cx-60} {cy-6})">'
+              f'<rect x="{cx-74}" y="{cy-72}" width="28" height="86" rx="14" '
               f'fill="{skin}" stroke="{sd}" stroke-width="3"/></g>')
-    else:
-        g += (f'<rect x="{cx-70}" y="{palm_cy-4}" width="34" height="26" rx="13" '
+    # puño
+    g += (f'<rect x="{cx-fist_w/2:.0f}" y="{fist_top:.0f}" width="{fist_w}" '
+          f'height="{fist_h}" rx="34" fill="{skin}" stroke="{sd}" stroke-width="3"/>')
+    # nudillos de los dedos doblados (bultos sobre el puño)
+    for i, fx in enumerate(fxs):
+        if i not in ups:
+            g += (f'<circle cx="{fx}" cy="{fist_top+6:.0f}" r="15" '
+                  f'fill="{skin}" stroke="{sd}" stroke-width="3"/>')
+    # pulgar doblado (al costado) si no es 5
+    if k != 5:
+        g += (f'<circle cx="{cx-fist_w/2+6:.0f}" cy="{cy+6}" r="17" '
               f'fill="{skin}" stroke="{sd}" stroke-width="3"/>')
-    g += (f'<rect x="{cx-60}" y="{ptop}" width="120" height="88" rx="30" '
-          f'fill="{skin}" stroke="{sd}" stroke-width="3"/>')
     return g
 
 
@@ -845,34 +863,38 @@ def _filled_heart(cx, cy, s, color):
     return f'<path d="{path}" fill="{color}"/>'
 
 
-def _cupcake(cx, n, wrap, wrap_d, frost):
-    base = 500
-    g = f'{ground(cx, base+14, 115)}'
-    # crema (detrás, se apoya sobre el papel)
-    g += (f'<circle cx="{cx-48}" cy="338" r="60" fill="{frost}"/>'
-          f'<circle cx="{cx+48}" cy="338" r="60" fill="{frost}"/>'
-          f'<circle cx="{cx}" cy="300" r="66" fill="{frost}"/>')
-    # cerezas (slots) apoyadas SOBRE la crema, ordenadas
-    pos = {1: [(0, 282)],
-           2: [(-52, 300), (52, 300)],
-           3: [(-86, 322), (0, 280), (86, 322)]}[n]
+def _cupcake(cx, fy, n, wrap, wrap_d, frost):
+    """Cupcake centrado en la crema (fy). Número dentro de un corazón en el cuerpo."""
+    base = fy + 200
+    g = f'{ground(cx, base+10, 110)}'
+    # cerezas (slots) en pirámide SOBRE la crema
+    pos = {1: [(0, fy-80)],
+           2: [(-54, fy-66), (54, fy-66)],
+           3: [(0, fy-104), (-58, fy-56), (58, fy-56)]}[n]
     for (dx, dy) in pos:
         g += slot(cx + dx, dy, RED_D)
-    # papel (wrapper) con ranuras y número grande
-    g += (f'<path d="M{cx-90},356 L{cx+90},356 L{cx+66},{base} '
-          f'Q{cx},{base+28} {cx-66},{base} Z" fill="{wrap}"/>')
+    # crema
+    g += (f'<circle cx="{cx-48}" cy="{fy+16}" r="60" fill="{frost}"/>'
+          f'<circle cx="{cx+48}" cy="{fy+16}" r="60" fill="{frost}"/>'
+          f'<circle cx="{cx}" cy="{fy-18}" r="66" fill="{frost}"/>')
+    # papel (wrapper)
+    g += (f'<path d="M{cx-90},{fy+44} L{cx+90},{fy+44} L{cx+66},{base} '
+          f'Q{cx},{base+26} {cx-66},{base} Z" fill="{wrap}"/>')
     for off in (-58, -22, 14, 50):
-        g += f'<path d="M{cx+off},362 L{cx+off*0.8:.0f},{base-8}" stroke="{wrap_d}" stroke-width="5" opacity="0.5"/>'
-    g += (f'<text x="{cx}" y="455" text-anchor="middle" font-size="74" '
+        g += f'<path d="M{cx+off},{fy+50} L{cx+off*0.8:.0f},{base-8}" stroke="{wrap_d}" stroke-width="5" opacity="0.5"/>'
+    # corazón con el número, en el centro del cuerpo
+    g += _filled_heart(cx, fy+112, 40, RED)
+    g += (f'<text x="{cx}" y="{fy+126}" text-anchor="middle" font-size="44" '
           f'font-weight="700" fill="#fff" font-family="Fredoka, sans-serif">{n}</text>')
     return g
 
 
 def build_cupcakes():
-    body = _cupcake(160, 1, "#FFB0C2", "#F58AA0", "#FFD7DE")
-    body += _cupcake(440, 2, "#8CC9FF", "#5BA8F0", "#CFEBFF")
-    body += _cupcake(720, 3, "#C9A6F0", "#A87FE0", "#E7D6FA")
-    save("28_cupcakes.svg", doc(880, 580, body))
+    # pirámide: 3 arriba, 1 y 2 abajo
+    body = _cupcake(440, 250, 3, "#C9A6F0", "#A87FE0", "#E7D6FA")
+    body += _cupcake(235, 545, 1, "#FFB0C2", "#F58AA0", "#FFD7DE")
+    body += _cupcake(645, 545, 2, "#8CC9FF", "#5BA8F0", "#CFEBFF")
+    save("28_cupcakes.svg", doc(880, 800, body))
 
 
 # ===========================================================================

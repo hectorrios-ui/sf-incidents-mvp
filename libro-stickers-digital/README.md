@@ -32,7 +32,7 @@ legibles. Pensada para crecer hacia un **libro interactivo y digital**.
 - **Tipografías** (llamativas pero muy claras para niños):
   - Títulos: **Baloo 2 ExtraBold**
   - Subtítulos: **Fredoka**
-  - Texto: **Nunito**
+  - Texto: **Quicksand** (la "a" redonda de un solo piso, muy amigable)
 
 ## 📖 Contenido
 
