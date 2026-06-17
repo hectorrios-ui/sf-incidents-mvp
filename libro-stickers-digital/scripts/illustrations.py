@@ -683,26 +683,46 @@ def _deco_flower(cx, cy, petal):
 
 
 def _bee(cx, cy):
-    g = f'<defs><clipPath id="beeb"><ellipse cx="{cx}" cy="{cy}" rx="78" ry="56"/></clipPath></defs>'
-    g += f'<ellipse cx="{cx-86}" cy="{cy-34}" rx="46" ry="30" fill="#fff" stroke="{SLOT_GREY}" stroke-width="4"/>'
-    g += f'<ellipse cx="{cx+86}" cy="{cy-34}" rx="46" ry="30" fill="#fff" stroke="{SLOT_GREY}" stroke-width="4"/>'
-    g += f'<ellipse cx="{cx}" cy="{cy}" rx="78" ry="56" fill="{YELLOW}"/>'
+    """Abejita de caricatura (vista lateral, cara a la izquierda)."""
+    wing, wing_d = "#EAF4FF", "#AFC6E6"
+    g = f'<defs><clipPath id="beeb"><ellipse cx="{cx}" cy="{cy}" rx="82" ry="54"/></clipPath></defs>'
+    # antenas
+    g += (f'<path d="M{cx-44},{cy-44} C{cx-58},{cy-78} {cx-78},{cy-86} {cx-92},{cy-84}" '
+          f'fill="none" stroke="{INK}" stroke-width="5" stroke-linecap="round"/>'
+          f'<path d="M{cx-22},{cy-50} C{cx-26},{cy-84} {cx-40},{cy-96} {cx-56},{cy-98}" '
+          f'fill="none" stroke="{INK}" stroke-width="5" stroke-linecap="round"/>'
+          f'<circle cx="{cx-92}" cy="{cy-84}" r="8" fill="{INK}"/>'
+          f'<circle cx="{cx-56}" cy="{cy-98}" r="8" fill="{INK}"/>')
+    # alitas (detrás del cuerpo)
+    g += (f'<g transform="rotate(-18 {cx+18} {cy-46})">'
+          f'<ellipse cx="{cx+18}" cy="{cy-58}" rx="34" ry="50" fill="{wing}" stroke="{wing_d}" stroke-width="4"/></g>'
+          f'<g transform="rotate(16 {cx+56} {cy-44})">'
+          f'<ellipse cx="{cx+56}" cy="{cy-54}" rx="30" ry="44" fill="{wing}" stroke="{wing_d}" stroke-width="4"/></g>')
+    # aguijón
+    g += f'<path d="M{cx+80},{cy} l34,-12 l-10,12 l10,12 Z" fill="{INK}"/>'
+    # cuerpo
+    g += f'<ellipse cx="{cx}" cy="{cy}" rx="82" ry="54" fill="{YELLOW}"/>'
+    # franjas negras (solo en la parte trasera)
     g += '<g clip-path="url(#beeb)">'
-    for off in (-30, 14, 58):
+    for off in (6, 40, 74):
         g += f'<rect x="{cx+off}" y="{cy-60}" width="22" height="120" fill="{INK}"/>'
     g += '</g>'
-    g += f'<circle cx="{cx-78}" cy="{cy}" r="34" fill="{INK}"/>'
-    g += (f'<circle cx="{cx-86}" cy="{cy-8}" r="6" fill="#fff"/>'
-          f'<path d="M{cx-95},{cy+8} q10,8 20,2" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>')
-    g += (f'<path d="M{cx-96},{cy-30} q-12,-18 -26,-20" fill="none" stroke="{INK}" stroke-width="4" stroke-linecap="round"/>'
-          f'<circle cx="{cx-124}" cy="{cy-52}" r="6" fill="{INK}"/>')
-    g += f'<path d="M{cx+78},{cy} l30,-16 l-4,18 l20,8 l-26,10 Z" fill="{INK}"/>'
+    # carita (al frente, izquierda)
+    g += (f'<circle cx="{cx-46}" cy="{cy-6}" r="11" fill="#fff"/>'
+          f'<circle cx="{cx-20}" cy="{cy-6}" r="11" fill="#fff"/>'
+          f'<circle cx="{cx-44}" cy="{cy-4}" r="5.5" fill="{INK}"/>'
+          f'<circle cx="{cx-18}" cy="{cy-4}" r="5.5" fill="{INK}"/>'
+          f'<circle cx="{cx-46}" cy="{cy-9}" r="1.8" fill="#fff"/>'
+          f'<circle cx="{cx-20}" cy="{cy-9}" r="1.8" fill="#fff"/>'
+          f'<path d="M{cx-44},{cy+18} Q{cx-30},{cy+30} {cx-14},{cy+18}" fill="none" '
+          f'stroke="{INK}" stroke-width="4" stroke-linecap="round"/>'
+          f'<circle cx="{cx-56}" cy="{cy+12}" r="8" fill="{RED}" opacity="0.22"/>')
     return g
 
 
 def build_abeja():
-    cx = 220
-    body = _bee(cx, 110)
+    cx = 230
+    body = _bee(cx, 135)
     body += _deco_flower(cx, 900, PURPLE)
     for i in range(6):
         body += slot(cx, 250 + i * 96, YELLOW_D)
