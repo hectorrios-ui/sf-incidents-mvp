@@ -10,6 +10,7 @@ Construye el documento Word profesional del
 """
 
 import os
+import re
 from PIL import Image
 from docx import Document
 from docx.shared import Pt, Cm, RGBColor, Emu
@@ -20,7 +21,12 @@ from docx.oxml import OxmlElement
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PNG = os.path.join(BASE, "assets", "png")
+SVG = os.path.join(BASE, "assets", "svg")
 OUT = os.path.join(BASE, "Libro_Actividades_Stickers_Mi_Dulce_Emma.docx")
+
+# Escala física común: 1 unidad SVG = 0.20 mm  ->  cada slot (r=40) = 16 mm.
+MM_PER_UNIT = 0.20
+CONTENT_W_MM = (21.59 - 1.8 - 1.8) * 10   # ancho útil en Carta = 179.9 mm
 
 # Paleta
 RED, BLUE, YELLOW, GREEN = "FF5168", "2E8BFF", "F0B021", "22A455"
@@ -117,6 +123,33 @@ def add_image(doc, name, max_w_cm=15.5, max_h_cm=18.5, align=WD_ALIGN_PARAGRAPH.
     return p
 
 
+def _viewbox_width(png_name):
+    """Lee el ancho del viewBox del SVG correspondiente (en unidades)."""
+    svg_path = os.path.join(SVG, os.path.splitext(png_name)[0] + ".svg")
+    with open(svg_path, encoding="utf-8") as f:
+        head = f.read(600)
+    m = re.search(r'viewBox="0 0 ([\d.]+) ([\d.]+)"', head)
+    return float(m.group(1))
+
+
+def add_sticker_image(doc, name, max_h_cm=19.5, align=WD_ALIGN_PARAGRAPH.CENTER):
+    """Coloca la ilustración a su ancho FÍSICO real, de modo que cada zona
+    de sticker imprima exactamente 16 mm (escala común MM_PER_UNIT)."""
+    path = os.path.join(PNG, name)
+    vbw = _viewbox_width(name)
+    w_mm = vbw * MM_PER_UNIT
+    if w_mm > CONTENT_W_MM:          # salvaguarda: nunca exceder el ancho útil
+        w_mm = CONTENT_W_MM
+    with Image.open(path) as im:
+        pw, ph = im.size
+    h_mm = w_mm * ph / pw
+    if h_mm > max_h_cm * 10:         # salvaguarda de alto
+        w_mm = w_mm * (max_h_cm * 10) / h_mm
+    p = para(doc, align=align, before=4, after=4, line=1.0)
+    p.add_run().add_picture(path, width=Emu(int(w_mm / 10 * EMU_CM)))
+    return p
+
+
 def page_break(doc):
     doc.add_page_break()
 
@@ -126,8 +159,9 @@ def page_break(doc):
 # ---------------------------------------------------------------------------
 doc = Document()
 sec = doc.sections[0]
-sec.page_height = Cm(29.7)
-sec.page_width = Cm(21.0)
+# Tamaño CARTA (Letter) — estándar de impresión en Colombia
+sec.page_height = Cm(27.94)
+sec.page_width = Cm(21.59)
 sec.top_margin = Cm(1.5)
 sec.bottom_margin = Cm(1.5)
 sec.left_margin = Cm(1.8)
@@ -326,7 +360,7 @@ activities = [
      "negras como indique cada una: 1 mancha a la primera, 2 a la segunda, 3 a la "
      "tercera… y así hasta llegar a 6. Cuenta en voz alta mientras las colocas "
      "para practicar los números y la correspondencia.",
-     "21_mariquitas_conteo.png"),
+     ["21_conteo_a.png", "21_conteo_b.png"]),
     ("17", "Helado de chispas", GREEN,
      "¡Qué rico helado! Decóralo con chispas de colores: pega un sticker en cada "
      "puntito de las bolas. Combina los colores como más te gusten y trabaja la "
@@ -357,8 +391,14 @@ for n, title, accent, instr, img in activities:
     p = para(doc, WD_ALIGN_PARAGRAPH.LEFT, after=6, before=6, line=1.2, keep=True)
     set_run(p.add_run(instr), F_BODY, 14, INK)
 
-    # Ilustración
-    add_image(doc, img, max_w_cm=15.8, max_h_cm=19.0)
+    # Ilustración(es) — colocadas a su tamaño físico (stickers de 16 mm)
+    images = img if isinstance(img, list) else [img]
+    for k, im_name in enumerate(images):
+        if k > 0:
+            p = para(doc, WD_ALIGN_PARAGRAPH.LEFT, after=6, before=0, line=1.2, keep=True)
+            p.paragraph_format.page_break_before = True
+            set_run(p.add_run(f"{title} (continuación)"), F_HEAD, 16, accent, True)
+        add_sticker_image(doc, im_name, max_h_cm=20.5)
 
     if n != activities[-1][0]:
         page_break(doc)

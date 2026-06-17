@@ -1,52 +1,52 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 840" width="900" height="840" font-family="Fredoka, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 870 840" width="870" height="840" font-family="Fredoka, sans-serif">
 
 
       <g>
-        <path d="M217,23.0 a13,13 0 0 1 26,0" fill="none" stroke="#3A3A4A" stroke-width="5"/>
-        <rect x="176.0" y="35.0" width="108.0" height="36" rx="14" fill="#FF5168"/>
-        <path d="M155.0,71.0
-                 Q155.0,65.0 170.0,65.0
-                 L290.0,65.0
-                 Q305.0,65.0 305.0,71.0
-                 L299.0,233.0
-                 Q299.0,255.0 282.5,255.0
-                 L177.5,255.0
-                 Q161.0,255.0 161.0,233.0 Z"
-              fill="#EAF4FF" stroke="#3A3A4A" stroke-width="5" stroke-linejoin="round" opacity="0.9"/><circle cx="204" cy="168" r="11" fill="#FF5168"/><circle cx="254" cy="150" r="11" fill="#34C76E"/><circle cx="228" cy="208" r="11" fill="#FFC83D"/><circle cx="260" cy="202" r="11" fill="#2E8BFF"/><rect x="182.0" y="79.0" width="96.0" height="40" rx="13" fill="#FFFFFF" stroke="#3A3A4A" stroke-width="3.5"/><text x="230" y="107" text-anchor="middle" font-size="24" font-weight="700" fill="#3A3A4A">Pocos</text></g>
+        <path d="M212,23.0 a13,13 0 0 1 26,0" fill="none" stroke="#3A3A4A" stroke-width="5"/>
+        <rect x="171.0" y="35.0" width="108.0" height="36" rx="14" fill="#FF5168"/>
+        <path d="M150.0,71.0
+                 Q150.0,65.0 165.0,65.0
+                 L285.0,65.0
+                 Q300.0,65.0 300.0,71.0
+                 L294.0,233.0
+                 Q294.0,255.0 277.5,255.0
+                 L172.5,255.0
+                 Q156.0,255.0 156.0,233.0 Z"
+              fill="#EAF4FF" stroke="#3A3A4A" stroke-width="5" stroke-linejoin="round" opacity="0.9"/><circle cx="199" cy="168" r="11" fill="#FF5168"/><circle cx="249" cy="150" r="11" fill="#34C76E"/><circle cx="223" cy="208" r="11" fill="#FFC83D"/><circle cx="255" cy="202" r="11" fill="#2E8BFF"/><rect x="177.0" y="79.0" width="96.0" height="40" rx="13" fill="#FFFFFF" stroke="#3A3A4A" stroke-width="3.5"/><text x="225" y="107" text-anchor="middle" font-size="24" font-weight="700" fill="#3A3A4A">Pocos</text></g>
       <g>
-        <path d="M217,328.0 a13,13 0 0 1 26,0" fill="none" stroke="#3A3A4A" stroke-width="7"/>
-        <rect x="140.0" y="340.0" width="180.0" height="55" rx="14" fill="#FF5168"/>
-        <path d="M105.0,376.0
-                 Q105.0,370.0 130.0,370.0
-                 L330.0,370.0
-                 Q355.0,370.0 355.0,376.0
-                 L345.0,768.0
-                 Q345.0,790.0 317.5,790.0
-                 L142.5,790.0
-                 Q115.0,790.0 115.0,768.0 Z"
-              fill="#EAF4FF" stroke="#3A3A4A" stroke-width="7" stroke-linejoin="round" opacity="0.9"/><rect x="150.0" y="384.0" width="160.0" height="50" rx="13" fill="#FFFFFF" stroke="#3A3A4A" stroke-width="3.5"/><text x="230" y="422" text-anchor="middle" font-size="34" font-weight="700" fill="#3A3A4A">Pocos</text></g>
+        <path d="M212,328.0 a13,13 0 0 1 26,0" fill="none" stroke="#3A3A4A" stroke-width="7"/>
+        <rect x="135.0" y="340.0" width="180.0" height="55" rx="14" fill="#FF5168"/>
+        <path d="M100.0,376.0
+                 Q100.0,370.0 125.0,370.0
+                 L325.0,370.0
+                 Q350.0,370.0 350.0,376.0
+                 L340.0,768.0
+                 Q340.0,790.0 312.5,790.0
+                 L137.5,790.0
+                 Q110.0,790.0 110.0,768.0 Z"
+              fill="#EAF4FF" stroke="#3A3A4A" stroke-width="7" stroke-linejoin="round" opacity="0.9"/><rect x="145.0" y="384.0" width="160.0" height="50" rx="13" fill="#FFFFFF" stroke="#3A3A4A" stroke-width="3.5"/><text x="225" y="422" text-anchor="middle" font-size="34" font-weight="700" fill="#3A3A4A">Pocos</text></g>
       <g>
-        <path d="M647,18.0 a13,13 0 0 1 26,0" fill="none" stroke="#3A3A4A" stroke-width="5"/>
-        <rect x="597.0" y="30.0" width="126.0" height="39" rx="14" fill="#FF5168"/>
-        <path d="M572.5,66.0
-                 Q572.5,60.0 590.0,60.0
-                 L730.0,60.0
-                 Q747.5,60.0 747.5,66.0
-                 L740.5,268.0
-                 Q740.5,290.0 721.25,290.0
-                 L598.75,290.0
-                 Q579.5,290.0 579.5,268.0 Z"
-              fill="#EAF4FF" stroke="#3A3A4A" stroke-width="5" stroke-linejoin="round" opacity="0.9"/><circle cx="614" cy="157" r="13" fill="#FF5168"/><circle cx="658" cy="153" r="13" fill="#2E8BFF"/><circle cx="702" cy="159" r="13" fill="#FFC83D"/><circle cx="610" cy="195" r="13" fill="#34C76E"/><circle cx="652" cy="193" r="13" fill="#B5774A"/><circle cx="696" cy="197" r="13" fill="#2FB463"/><circle cx="616" cy="233" r="13" fill="#FF5168"/><circle cx="660" cy="231" r="13" fill="#2E8BFF"/><circle cx="704" cy="231" r="13" fill="#FFC83D"/><circle cx="636" cy="269" r="13" fill="#34C76E"/><circle cx="682" cy="269" r="13" fill="#B5774A"/><circle cx="718" cy="195" r="13" fill="#2FB463"/><rect x="604.0" y="74.0" width="112.0" height="44" rx="13" fill="#FFFFFF" stroke="#3A3A4A" stroke-width="3.5"/><text x="660" y="106" text-anchor="middle" font-size="28" font-weight="700" fill="#3A3A4A">Muchos</text></g>
+        <path d="M632,18.0 a13,13 0 0 1 26,0" fill="none" stroke="#3A3A4A" stroke-width="5"/>
+        <rect x="582.0" y="30.0" width="126.0" height="39" rx="14" fill="#FF5168"/>
+        <path d="M557.5,66.0
+                 Q557.5,60.0 575.0,60.0
+                 L715.0,60.0
+                 Q732.5,60.0 732.5,66.0
+                 L725.5,268.0
+                 Q725.5,290.0 706.25,290.0
+                 L583.75,290.0
+                 Q564.5,290.0 564.5,268.0 Z"
+              fill="#EAF4FF" stroke="#3A3A4A" stroke-width="5" stroke-linejoin="round" opacity="0.9"/><circle cx="599" cy="157" r="13" fill="#FF5168"/><circle cx="643" cy="153" r="13" fill="#2E8BFF"/><circle cx="687" cy="159" r="13" fill="#FFC83D"/><circle cx="595" cy="195" r="13" fill="#34C76E"/><circle cx="637" cy="193" r="13" fill="#B5774A"/><circle cx="681" cy="197" r="13" fill="#2FB463"/><circle cx="601" cy="233" r="13" fill="#FF5168"/><circle cx="645" cy="231" r="13" fill="#2E8BFF"/><circle cx="689" cy="231" r="13" fill="#FFC83D"/><circle cx="621" cy="269" r="13" fill="#34C76E"/><circle cx="667" cy="269" r="13" fill="#B5774A"/><circle cx="703" cy="195" r="13" fill="#2FB463"/><rect x="589.0" y="74.0" width="112.0" height="44" rx="13" fill="#FFFFFF" stroke="#3A3A4A" stroke-width="3.5"/><text x="645" y="106" text-anchor="middle" font-size="28" font-weight="700" fill="#3A3A4A">Muchos</text></g>
       <g>
-        <path d="M647,328.0 a13,13 0 0 1 26,0" fill="none" stroke="#3A3A4A" stroke-width="7"/>
-        <rect x="562.8" y="340.0" width="194.4" height="57" rx="14" fill="#FF5168"/>
-        <path d="M525.0,376.0
-                 Q525.0,370.0 552.0,370.0
-                 L768.0,370.0
-                 Q795.0,370.0 795.0,376.0
-                 L784.2,788.0
-                 Q784.2,810.0 754.5,810.0
-                 L565.5,810.0
-                 Q535.8,810.0 535.8,788.0 Z"
-              fill="#EAF4FF" stroke="#3A3A4A" stroke-width="7" stroke-linejoin="round" opacity="0.9"/><rect x="573.6" y="384.0" width="172.8" height="50" rx="13" fill="#FFFFFF" stroke="#3A3A4A" stroke-width="3.5"/><text x="660" y="422" text-anchor="middle" font-size="34" font-weight="700" fill="#3A3A4A">Muchos</text></g>
+        <path d="M632,328.0 a13,13 0 0 1 26,0" fill="none" stroke="#3A3A4A" stroke-width="7"/>
+        <rect x="547.8" y="340.0" width="194.4" height="57" rx="14" fill="#FF5168"/>
+        <path d="M510.0,376.0
+                 Q510.0,370.0 537.0,370.0
+                 L753.0,370.0
+                 Q780.0,370.0 780.0,376.0
+                 L769.2,788.0
+                 Q769.2,810.0 739.5,810.0
+                 L550.5,810.0
+                 Q520.8,810.0 520.8,788.0 Z"
+              fill="#EAF4FF" stroke="#3A3A4A" stroke-width="7" stroke-linejoin="round" opacity="0.9"/><rect x="558.6" y="384.0" width="172.8" height="50" rx="13" fill="#FFFFFF" stroke="#3A3A4A" stroke-width="3.5"/><text x="645" y="422" text-anchor="middle" font-size="34" font-weight="700" fill="#3A3A4A">Muchos</text></g>
 </svg>

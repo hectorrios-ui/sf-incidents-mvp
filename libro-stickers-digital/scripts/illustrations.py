@@ -4,28 +4,40 @@ Generador de ilustraciones vectoriales (SVG) para el
 "Libro de Actividades con Stickers de Colores" — Mi Dulce Emma.
 
 Diseño plano, moderno y alegre. Cada actividad se exporta como SVG
-independiente (ideal para un futuro libro interactivo y digital) en
-assets/svg/. Las zonas punteadas marcan dónde el peque pega su sticker.
+independiente (ideal para un futuro libro interactivo y digital).
+
+>>> Homologación de stickers <<<
+Todos los stickers son círculos de 16 mm de diámetro. Para garantizarlo,
+TODO el libro usa una escala física común: MM_PER_UNIT (mm por unidad SVG).
+Cada zona de sticker (slot) se dibuja con radio SLOT_R, de modo que su
+diámetro impreso = 2 * SLOT_R * MM_PER_UNIT = 16 mm. En el documento Word,
+cada ilustración se coloca con un ancho = (ancho_del_viewBox) * MM_PER_UNIT,
+por lo que cualquier slot, en cualquier página, mide exactamente 16 mm.
 """
 
 import os
+import math
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SVG_DIR = os.path.join(BASE, "assets", "svg")
 os.makedirs(SVG_DIR, exist_ok=True)
 
-# ---------------------------------------------------------------------------
-# Paleta alegre y amigable
-# ---------------------------------------------------------------------------
+# --- Escala física común (no cambiar sin recalcular lienzos) ---------------
+MM_PER_UNIT = 0.20            # 1 unidad SVG = 0.20 mm
+STICKER_MM = 16.0             # diámetro objetivo de cada sticker
+SLOT_R = STICKER_MM / 2 / MM_PER_UNIT   # = 40 unidades  -> diámetro 80u = 16 mm
+
+# --- Paleta alegre y amigable ----------------------------------------------
 RED, RED_D       = "#FF5168", "#E23B50"
 BLUE, BLUE_D     = "#2E8BFF", "#1F6FE0"
 YELLOW, YELLOW_D = "#FFC83D", "#F0B021"
 GREEN, GREEN_D   = "#34C76E", "#22A455"
+PURPLE, PURPLE_D = "#9B6DD6", "#7E4FC0"
+ORANGE, ORANGE_D = "#FF9F43", "#F08A23"
 LEAF, LEAF_D     = "#2FB463", "#1E8C49"
 BROWN, BROWN_D   = "#B5774A", "#925C36"
 INK              = "#3A3A4A"
 SKY              = "#EAF4FF"
-CREAM            = "#FFFCF4"
 WHITE            = "#FFFFFF"
 SLOT_FILL        = "#F6F8FC"
 SLOT_GREY        = "#C7CCD8"
@@ -33,7 +45,6 @@ SHADOW           = "#E6E1D6"
 
 
 def doc(w, h, body, bg=None):
-    """Envuelve el contenido en un SVG completo y responsivo."""
     rect = f'<rect width="{w}" height="{h}" rx="36" fill="{bg}"/>' if bg else ""
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" '
@@ -42,18 +53,17 @@ def doc(w, h, body, bg=None):
     )
 
 
-def slot(cx, cy, r, color=SLOT_GREY, show_plus=True):
-    """Zona punteada donde el niño pega el sticker."""
+def slot(cx, cy, color=SLOT_GREY, r=SLOT_R, show_plus=True):
+    """Zona punteada donde se pega un sticker de 16 mm (r = SLOT_R)."""
     plus = ""
     if show_plus:
         s = r * 0.42
-        plus = (
-            f'<path d="M{cx-s},{cy} H{cx+s} M{cx},{cy-s} V{cy+s}" '
-            f'stroke="{color}" stroke-width="{max(3,r*0.10):.1f}" '
-            f'stroke-linecap="round" opacity="0.55"/>'
-        )
+        plus = (f'<path d="M{cx-s:.1f},{cy:.1f} H{cx+s:.1f} '
+                f'M{cx:.1f},{cy-s:.1f} V{cy+s:.1f}" '
+                f'stroke="{color}" stroke-width="{max(3,r*0.10):.1f}" '
+                f'stroke-linecap="round" opacity="0.55"/>')
     return (
-        f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{SLOT_FILL}" '
+        f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="{SLOT_FILL}" '
         f'stroke="{color}" stroke-width="{max(3,r*0.13):.1f}" '
         f'stroke-dasharray="{r*0.55:.1f} {r*0.45:.1f}" stroke-linecap="round"/>{plus}'
     )
@@ -72,46 +82,37 @@ def save(name, svg):
 
 
 # ===========================================================================
-# 1. CARROS  — Pon las llantas al carro según el color
+# 1. CARROS
 # ===========================================================================
 def car(color, dark):
-    """Devuelve un <g> con un carrito (viewBox interno 0 0 380 250)."""
     win = SKY
     return f'''
     <g>
       {ground(190, 232, 150)}
-      <!-- cabina -->
       <rect x="86" y="44" width="208" height="96" rx="34" fill="{color}"/>
-      <!-- cuerpo -->
       <rect x="18" y="104" width="344" height="92" rx="44" fill="{color}"/>
       <rect x="18" y="150" width="344" height="46" rx="20" fill="{dark}" opacity="0.18"/>
-      <!-- ventanas -->
       <rect x="104" y="58" width="78" height="64" rx="20" fill="{win}"/>
       <rect x="198" y="58" width="78" height="64" rx="20" fill="{win}"/>
-      <!-- faro -->
       <ellipse cx="350" cy="128" rx="13" ry="16" fill="{YELLOW}" stroke="{YELLOW_D}" stroke-width="3"/>
-      <!-- ruedas (zonas de sticker) -->
-      {slot(112, 196, 38, dark)}
-      {slot(290, 196, 38, dark)}
+      {slot(112, 196, dark)}
+      {slot(290, 196, dark)}
     </g>'''
 
 
 def build_cars():
     cars = [(BLUE, BLUE_D), (RED, RED_D), (YELLOW, YELLOW_D), (GREEN, GREEN_D)]
+    positions = [(20, 30), (470, 70), (20, 360), (470, 400)]
     body = ""
-    positions = [(40, 30), (470, 230), (40, 380), (470, 30)]
-    # arrange 2 columns, staggered for dynamism
-    positions = [(30, 20), (490, 60), (30, 360), (490, 400)]
     for (c, d), (x, y) in zip(cars, positions):
-        body += f'<g transform="translate({x},{y}) scale(1.05)">{car(c, d)}</g>'
-    save("04_carros.svg", doc(940, 700, body))
+        body += f'<g transform="translate({x},{y})">{car(c, d)}</g>'
+    save("04_carros.svg", doc(870, 700, body))
 
 
 # ===========================================================================
-# 2. CORAZONES — Asociación de colores
+# 2. CORAZONES (6: amarillo, azul, rojo, verde, morado, naranja)
 # ===========================================================================
-def heart(cx, cy, s, color, dark, filled=False):
-    # corazón centrado en cx,cy con "radio" s
+def heart(cx, cy, s, color):
     path = (
         f'M{cx},{cy+s*0.95} '
         f'C{cx-s*1.35},{cy+s*0.05} {cx-s*1.15},{cy-s*0.95} {cx-s*0.5},{cy-s*0.95} '
@@ -119,43 +120,34 @@ def heart(cx, cy, s, color, dark, filled=False):
         f'C{cx},{cy-s*0.62} {cx+s*0.18},{cy-s*0.95} {cx+s*0.5},{cy-s*0.95} '
         f'C{cx+s*1.15},{cy-s*0.95} {cx+s*1.35},{cy+s*0.05} {cx},{cy+s*0.95} Z'
     )
-    if filled:
-        return f'<path d="{path}" fill="{color}"/>'
     return (
         f'<path d="{path}" fill="{SLOT_FILL}" stroke="{color}" '
         f'stroke-width="14" stroke-linejoin="round"/>'
-        f'<text x="{cx}" y="{cy+8}" font-size="34" fill="{color}" '
-        f'text-anchor="middle" opacity="0.5" font-weight="700">+</text>'
     )
 
 
 def build_hearts():
-    body = (
-        heart(190, 230, 130, YELLOW, YELLOW_D)
-        + heart(660, 200, 140, BLUE, BLUE_D)
-        + heart(420, 470, 135, RED, RED_D)
-    )
-    save("05_corazones.svg", doc(900, 700, body))
+    s = 108
+    layout = [
+        (160, 215, YELLOW), (440, 215, BLUE), (720, 215, RED),
+        (160, 490, GREEN), (440, 490, PURPLE), (720, 490, ORANGE),
+    ]
+    body = "".join(heart(x, y, s, c) for x, y, c in layout)
+    save("05_corazones.svg", doc(880, 720, body))
 
 
 # ===========================================================================
-# 3. SOL — Pega los rayos del sol (amarillo)
+# 3. SOL
 # ===========================================================================
 def build_sun():
-    cx, cy, R = 380, 390, 130
-    import math
+    cx, cy, R = 330, 370, 120
+    ring = R + 105
     body = ""
-    # rayos = slots amarillos alrededor
     n = 12
     for i in range(n):
         a = math.radians(i * 360 / n - 90)
-        rx = cx + math.cos(a) * (R + 110)
-        ry = cy + math.sin(a) * (R + 110)
-        body += slot(rx, ry, 34, YELLOW_D)
-    # cara del sol
+        body += slot(cx + math.cos(a) * ring, cy + math.sin(a) * ring, YELLOW_D)
     body += f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="{YELLOW}"/>'
-    body += f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="{YELLOW_D}" opacity="0.0"/>'
-    # gafas de sol cool
     body += f'''
       <g>
         <rect x="{cx-92}" y="{cy-34}" width="78" height="58" rx="22" fill="{INK}"/>
@@ -164,30 +156,26 @@ def build_sun():
         <rect x="{cx-80}" y="{cy-26}" width="26" height="16" rx="8" fill="#FFFFFF" opacity="0.35"/>
         <rect x="{cx+26}" y="{cy-26}" width="26" height="16" rx="8" fill="#FFFFFF" opacity="0.35"/>
       </g>'''
-    # sonrisa
     body += (
         f'<path d="M{cx-46},{cy+46} Q{cx},{cy+96} {cx+46},{cy+46}" '
         f'fill="none" stroke="{INK}" stroke-width="9" stroke-linecap="round"/>'
         f'<path d="M{cx-30},{cy+58} Q{cx},{cy+74} {cx+30},{cy+58}" '
         f'fill="{RED}" stroke="none" opacity="0.85"/>'
     )
-    save("06_sol.svg", doc(760, 780, body))
+    save("06_sol.svg", doc(660, 740, body))
 
 
 # ===========================================================================
-# 4. NUBE Y LLUVIA — Pega la lluvia (azul)
+# 4. NUBE Y LLUVIA
 # ===========================================================================
-# Silueta de nube normalizada (caja de diseño 0..124 x 6..80) -> bbox limpio
 _CLOUD_PATH = (
     "M24,78 C10,78 2,66 8,54 C0,44 6,28 22,30 C26,14 48,8 60,20 "
     "C70,6 98,8 102,26 C118,26 122,46 110,56 C118,66 110,78 96,78 Z"
 )
-_CLOUD_W, _CLOUD_H = 124.0, 74.0   # ancho de diseño y alto (de y=6 a y=80)
+_CLOUD_W = 124.0
 
 
 def cloud(x, y, w, color, fill=WHITE, stroke=12, face=False):
-    """Dibuja una nube COMPLETA dentro de la caja (x, y, w, w*0.6).
-    (x, y) = esquina superior-izquierda de la caja."""
     sc = w / _CLOUD_W
     tx, ty = x, y - 6 * sc
     sw = stroke / sc
@@ -207,25 +195,20 @@ def cloud(x, y, w, color, fill=WHITE, stroke=12, face=False):
 
 
 def build_cloud():
-    # nube completa centrada arriba (caja 620 ancho -> alto ~372)
-    body = cloud(110, 40, 620, BLUE, WHITE, stroke=14, face=True)
-    # gotas en zig-zag debajo
-    layout = [
-        (210, 470), (390, 510), (570, 470),
-        (300, 620), (480, 620), (660, 580),
-        (210, 730), (390, 740), (570, 730),
-    ]
+    body = cloud(60, 40, 600, BLUE, WHITE, stroke=14, face=True)
+    layout = [(180, 480), (360, 520), (540, 480),
+              (180, 615), (360, 655), (540, 615),
+              (180, 750), (360, 750), (540, 750)]
     for (x, y) in layout:
-        body += slot(x, y, 30, BLUE_D)
-    save("07_nube_lluvia.svg", doc(840, 800, body))
+        body += slot(x, y, BLUE_D)
+    save("07_nube_lluvia.svg", doc(720, 820, body))
 
 
 # ===========================================================================
-# 5. ÁRBOL — Pon las manzanas rojas
+# 5. ÁRBOL
 # ===========================================================================
 def build_tree():
     body = ground(380, 770, 230, 34)
-    # copa
     body += f'''
       <path d="M380,90
         C250,70 150,150 165,255
@@ -236,32 +219,23 @@ def build_tree():
         C695,360 675,265 600,255
         C615,150 510,72 380,90 Z"
         fill="#Dff3e4" stroke="{GREEN_D}" stroke-width="12" stroke-linejoin="round"/>'''
-    # tronco
     body += f'<path d="M345,470 C338,560 330,640 322,720 L438,720 C432,640 424,560 418,470 Z" fill="{BROWN}"/>'
     body += f'<path d="M380,500 C376,560 372,640 368,720" stroke="{BROWN_D}" stroke-width="8" fill="none" opacity="0.6"/>'
-    # pasto
-    grass = ""
     for i in range(14):
         x = 60 + i * 48
-        grass += f'<path d="M{x},770 q10,-40 20,0" fill="none" stroke="{GREEN}" stroke-width="9" stroke-linecap="round"/>'
-    body += grass
-    # manzanas (slots rojos)
-    apples = [
-        (230, 200), (360, 175), (480, 215),
-        (175, 300), (300, 290), (430, 300), (545, 285),
-        (250, 400), (380, 395), (500, 400),
-        (335, 470),
-    ]
+        body += f'<path d="M{x},770 q10,-40 20,0" fill="none" stroke="{GREEN}" stroke-width="9" stroke-linecap="round"/>'
+    apples = [(250, 200), (380, 195), (510, 205),
+              (190, 300), (320, 300), (450, 300), (575, 295),
+              (255, 400), (385, 400), (510, 400)]
     for (x, y) in apples:
-        body += slot(x, y, 30, RED_D)
+        body += slot(x, y, RED_D)
     save("08_arbol_manzanas.svg", doc(760, 820, body))
 
 
 # ===========================================================================
-# 6. ORUGUITAS GLOTONAS — Completa cada oruga según el color
+# 6. ORUGUITAS
 # ===========================================================================
 def caterpillar(x, y, color, dark):
-    # cabeza
     g = f'''
       <g transform="translate({x},{y})">
         <path d="M-2,-58 q-14,-26 -4,-40" fill="none" stroke="{INK}" stroke-width="5" stroke-linecap="round"/>
@@ -277,69 +251,50 @@ def caterpillar(x, y, color, dark):
         <circle cx="-22" cy="10" r="8" fill="{RED}" opacity="0.22"/>
         <circle cx="26" cy="10" r="8" fill="{RED}" opacity="0.22"/>
       </g>'''
-    # cuerpo: 5 slots
     for i in range(5):
-        g += slot(x + 92 + i * 86, y, 40, dark)
+        g += slot(x + 170 + i * 96, y, dark)
     return g
 
 
 def build_caterpillars():
-    rows = [
-        (YELLOW, YELLOW_D),
-        (GREEN, GREEN_D),
-        (BROWN, BROWN_D),
-        (RED, RED_D),
-        (BLUE, BLUE_D),
-    ]
+    rows = [(YELLOW, YELLOW_D), (GREEN, GREEN_D), (BROWN, BROWN_D),
+            (RED, RED_D), (BLUE, BLUE_D)]
     body = ""
     for i, (c, d) in enumerate(rows):
         body += caterpillar(70, 125 + i * 152, c, d)
-    save("09_oruguitas.svg", doc(640, 860, body))
+    save("09_oruguitas.svg", doc(620, 860, body))
 
 
 # ===========================================================================
-# 7. ARAÑAS — Pon el sticker negro
+# 7. ARAÑAS
 # ===========================================================================
-def spider(x, y, s=1.0):
-    legs = ""
-    import math
+def spider(x, y):
+    g = ""
     for side in (-1, 1):
-        for k, ang in enumerate((28, 8, -10, -28)):
-            a = math.radians(ang)
-            x1 = x + side * 30 * s
-            y1 = y - 6 * s + k * 0  # base near body
-            lx = x + side * (78) * s
-            ly = y + (-34 + k * 24) * s
-            mx = x + side * 50 * s
-            my = y + (-30 + k * 22) * s - 14 * s
-            legs += (f'<path d="M{x1},{y+(-26+k*18)*s} Q{mx},{my} {lx},{ly}" '
-                     f'fill="none" stroke="{INK}" stroke-width="{7*s:.1f}" stroke-linecap="round"/>')
-    body = legs
-    body += f'<circle cx="{x}" cy="{y}" r="{30*s}" fill="{SLOT_FILL}" stroke="{INK}" stroke-width="{4*s:.1f}" stroke-dasharray="{16*s:.1f} {13*s:.1f}" stroke-linecap="round"/>'
-    body += f'<path d="M{x-12*s},{y} h{24*s} M{x},{y-12*s} v{24*s}" stroke="{INK}" stroke-width="{3.5*s:.1f}" stroke-linecap="round" opacity="0.5"/>'
-    # cabecita arriba
-    body += f'<circle cx="{x}" cy="{y-40*s}" r="{12*s}" fill="{INK}"/>'
-    body += f'<circle cx="{x-4*s}" cy="{y-42*s}" r="{2.6*s}" fill="#fff"/><circle cx="{x+4*s}" cy="{y-42*s}" r="{2.6*s}" fill="#fff"/>'
-    return body
+        for k in range(4):
+            base_y = y - 22 + k * 15
+            mx = x + side * 54
+            my = y + (-28 + k * 20) - 12
+            lx = x + side * 78
+            ly = y + (-30 + k * 22)
+            g += (f'<path d="M{x+side*32},{base_y} Q{mx},{my} {lx},{ly}" '
+                  f'fill="none" stroke="{INK}" stroke-width="7" stroke-linecap="round"/>')
+    g += f'<circle cx="{x}" cy="{y-52}" r="12" fill="{INK}"/>'
+    g += (f'<circle cx="{x-4}" cy="{y-54}" r="2.6" fill="#fff"/>'
+          f'<circle cx="{x+4}" cy="{y-54}" r="2.6" fill="#fff"/>')
+    g += slot(x, y, INK)
+    return g
 
 
 def build_spiders():
-    body = ""
-    coords = [
-        (150, 130), (470, 120),
-        (300, 250), (610, 250),
-        (150, 380), (440, 380),
-        (300, 510), (640, 500),
-        (150, 630), (470, 630),
-        (310, 760), (640, 760),
-    ]
-    for (x, y) in coords:
-        body += spider(x, y, 1.0)
-    save("10_aranas.svg", doc(780, 870, body))
+    cols = [165, 430, 695]
+    rows = [140, 355, 570, 785]
+    body = "".join(spider(x, y) for y in rows for x in cols)
+    save("10_aranas.svg", doc(860, 920, body))
 
 
 # ===========================================================================
-# 8. CEREZAS — Usa el sticker rojo
+# 8. CEREZAS
 # ===========================================================================
 def cherry_pair(x, y):
     g = f'''
@@ -347,23 +302,20 @@ def cherry_pair(x, y):
         <path d="M40,-150 C20,-90 -20,-40 -55,-10" fill="none" stroke="{LEAF}" stroke-width="11" stroke-linecap="round"/>
         <path d="M40,-150 C60,-92 95,-44 120,-12" fill="none" stroke="{LEAF}" stroke-width="11" stroke-linecap="round"/>
         <path d="M40,-150 C70,-176 118,-170 126,-150 C108,-132 64,-138 40,-150 Z" fill="{LEAF}"/>
-        <path d="M40,-150 C64,-150 108,-132 126,-150" fill="none" stroke="{LEAF_D}" stroke-width="4" opacity="0.6"/>
       </g>'''
-    g += slot(x - 55, y - 10 + 36, 34, RED_D)
-    g += slot(x + 120, y - 12 + 36, 34, RED_D)
+    g += slot(x - 55, y + 26, RED_D)
+    g += slot(x + 120, y + 24, RED_D)
     return g
 
 
 def build_cherries():
-    body = ""
-    spots = [(170, 240), (520, 240), (170, 470), (520, 470), (170, 700), (520, 700)]
-    for (x, y) in spots:
-        body += cherry_pair(x, y)
-    save("11_cerezas.svg", doc(820, 800, body))
+    spots = [(180, 240), (520, 240), (180, 470), (520, 470), (180, 700), (520, 700)]
+    body = "".join(cherry_pair(x, y) for x, y in spots)
+    save("11_cerezas.svg", doc(760, 800, body))
 
 
 # ===========================================================================
-# 9. HUEVOS — Pega la yema (amarillo)
+# 9. HUEVOS
 # ===========================================================================
 def egg(cx, cy):
     p = (
@@ -375,7 +327,7 @@ def egg(cx, cy):
         f'C{cx-110},{cy-85} {cx-45},{cy-115} {cx},{cy-95} Z'
     )
     g = f'<path d="{p}" fill="{WHITE}" stroke="{INK}" stroke-width="9" stroke-linejoin="round"/>'
-    g += slot(cx, cy, 38, YELLOW_D)
+    g += slot(cx, cy, YELLOW_D)
     return g
 
 
@@ -385,89 +337,77 @@ def build_eggs():
 
 
 # ===========================================================================
-# 10. SANDÍA — Pega las semillas (negro)
+# 10. SANDÍA
 # ===========================================================================
 def build_watermelon():
     cx = 400
     body = ground(cx, 600, 250, 28)
-    # corteza verde (arco exterior)
     body += f'''
       <path d="M120,470 Q400,640 680,470 Q700,520 690,545 Q400,720 110,545 Q100,520 120,470 Z"
             fill="{GREEN}" stroke="{GREEN_D}" stroke-width="8" stroke-linejoin="round"/>'''
-    # pulpa roja (triángulo redondeado)
     body += f'''
-      <path d="M400,110 L150,500 Q400,610 650,500 Z"
+      <path d="M400,100 L150,500 Q400,610 650,500 Z"
             fill="{RED}" stroke="{RED_D}" stroke-width="8" stroke-linejoin="round"/>'''
-    body += f'<path d="M400,130 L175,495 Q400,592 625,495 Z" fill="#FFFFFF" opacity="0.10"/>'
-    # semillas (slots negros)
-    seeds = [(400, 245), (340, 330), (455, 330), (300, 415),
-             (400, 405), (505, 415), (250, 480), (400, 485), (555, 480)]
+    body += f'<path d="M400,120 L175,495 Q400,592 625,495 Z" fill="#FFFFFF" opacity="0.10"/>'
+    seeds = [(400, 250), (350, 345), (450, 345),
+             (305, 440), (400, 440), (495, 440)]
     for (x, y) in seeds:
-        body += slot(x, y, 22, INK)
-    save("13_sandia.svg", doc(800, 660, body))
+        body += slot(x, y, INK)
+    save("13_sandia.svg", doc(800, 680, body))
 
 
 # ===========================================================================
-# 11. FLORES — Decora las flores
+# 11. FLORES (todas a la misma escala -> slots de 16 mm)
 # ===========================================================================
-def flower(cx, cy, scale=1.0):
-    import math
-    g = f'<g transform="translate({cx},{cy}) scale({scale})">'
-    # tallo
+def flower(cx, cy):
+    g = f'<g transform="translate({cx},{cy})">'
     g += f'<path d="M0,40 C-6,160 -6,250 0,330" stroke="{LEAF}" stroke-width="16" fill="none" stroke-linecap="round"/>'
-    # hojas
     g += f'<path d="M0,150 C-70,120 -110,150 -120,200 C-60,210 -10,195 0,160 Z" fill="{LEAF}"/>'
     g += f'<path d="M0,200 C70,170 110,200 120,250 C60,260 10,245 0,210 Z" fill="{LEAF_D}"/>'
-    # pétalos = 5 slots alrededor
-    R = 78
+    R = 80
+    g += "</g>"
+    # pétalos (slots) en coordenadas absolutas, mismo tamaño 16 mm
     for i in range(5):
         a = math.radians(i * 72 - 90)
-        g += slot(math.cos(a) * R, math.sin(a) * R, 40, INK if False else SLOT_GREY)
-    # centro
-    g += f'<circle cx="0" cy="0" r="38" fill="{YELLOW}" stroke="{YELLOW_D}" stroke-width="5"/>'
-    g += "</g>"
+        g += slot(cx + math.cos(a) * R, cy + math.sin(a) * R, SLOT_GREY)
+    g += f'<circle cx="{cx}" cy="{cy}" r="38" fill="{YELLOW}" stroke="{YELLOW_D}" stroke-width="5"/>'
     return g
 
 
 def build_flowers():
-    body = ground(440, 760, 360, 30)
-    body += flower(440, 230, 1.0)
-    body += flower(180, 360, 0.86)
-    body += flower(700, 380, 0.86)
-    # pasto
+    body = ground(440, 720, 360, 28)
+    body += flower(160, 250)
+    body += flower(440, 320)
+    body += flower(720, 250)
     for i in range(16):
         x = 40 + i * 50
-        body += f'<path d="M{x},770 q9,-38 18,0" fill="none" stroke="{GREEN}" stroke-width="8" stroke-linecap="round"/>'
-    save("14_flores.svg", doc(880, 800, body))
+        body += f'<path d="M{x},730 q9,-38 18,0" fill="none" stroke="{GREEN}" stroke-width="8" stroke-linecap="round"/>'
+    save("14_flores.svg", doc(880, 760, body))
 
 
 # ===========================================================================
-# 12. ARCOÍRIS — Pega los círculos de colores
+# 12. ARCOÍRIS (horizontal). Slots de 16 mm a lo largo de cada arco.
 # ===========================================================================
 def build_rainbow():
-    """Arcoíris horizontal (panorámico) con nubes completas en las bases."""
-    import math
-    cx, base_y = 590, 470
-    arcs = [(RED, 430), (YELLOW, 365), (GREEN, 300), (BLUE, 235)]
+    cx, base_y = 440, 460
+    arcs = [(RED, 400), (YELLOW, 305), (GREEN, 210), (BLUE, 115)]
     stroke_map = {RED: RED_D, YELLOW: YELLOW_D, GREEN: GREEN_D, BLUE: BLUE_D}
-    band = 60
+    band = 64
     body = ""
-    # bandas suaves de color
     for color, r in arcs:
         body += (f'<path d="M{cx-r},{base_y} A{r},{r} 0 0 1 {cx+r},{base_y}" '
                  f'fill="none" stroke="{color}" stroke-width="{band}" opacity="0.16"/>')
-    # slots sobre cada arco (zona superior, despejada de las nubes)
-    n = 7
+    span = math.radians(120)            # de 30° a 150°
     for color, r in arcs:
+        n = max(3, round(span * r / 105))
         for i in range(n):
             ang = math.radians(30 + i * (120 / (n - 1)))
             x = cx + math.cos(ang) * r
             y = base_y - math.sin(ang) * r
-            body += slot(x, y, 24, stroke_map[color])
-    # nubes completas encima de las bases
-    body += cloud(10, 392, 300, "#B9C7DE", WHITE, stroke=11)
-    body += cloud(870, 392, 300, "#B9C7DE", WHITE, stroke=11)
-    save("15_arcoiris.svg", doc(1180, 590, body))
+            body += slot(x, y, stroke_map[color])
+    body += cloud(0, 392, 300, "#B9C7DE", WHITE, stroke=11)
+    body += cloud(580, 392, 300, "#B9C7DE", WHITE, stroke=11)
+    save("15_arcoiris.svg", doc(880, 620, body))
 
 
 # ===========================================================================
@@ -490,10 +430,8 @@ def jar(cx, cy, w, h, label, dots=None, sw=7):
                  L{cx-half*0.7},{cy+h/2}
                  Q{cx-half*0.92},{cy+h/2} {cx-half*0.92},{cy+h/2-22} Z"
               fill="{SKY}" stroke="{INK}" stroke-width="{sw}" stroke-linejoin="round" opacity="0.9"/>'''
-    # puntos (ejemplo)
     for (dx, dy, col) in dots:
         body += f'<circle cx="{cx+dx}" cy="{cy+dy}" r="{w*0.075:.0f}" fill="{col}"/>'
-    # etiqueta encima
     body += (f'<rect x="{cx-half*0.64}" y="{cy-h/2+34}" width="{half*1.28}" height="{fs+16:.0f}" '
              f'rx="13" fill="{WHITE}" stroke="{INK}" stroke-width="3.5"/>'
              f'<text x="{cx}" y="{cy-h/2+38+fs:.0f}" text-anchor="middle" '
@@ -504,52 +442,41 @@ def jar(cx, cy, w, h, label, dots=None, sw=7):
 def build_jars():
     pal = [RED, BLUE, YELLOW, GREEN, BROWN, LEAF]
     body = ""
-    # --- Columna POCOS: ejemplo (pocos puntos) + frasco a llenar ---
     pocos_dots = [(-26, 18, RED), (24, 0, GREEN), (-2, 58, YELLOW), (30, 52, BLUE)]
-    body += jar(230, 150, 150, 210, "Pocos", dots=pocos_dots, sw=5)
-    body += jar(230, 570, 250, 440, "Pocos")
-    # --- Columna MUCHOS: ejemplo (muchos puntos) + frasco a llenar ---
-    grid = [(-46,-8),(-2,-12),(42,-6),(-50,30),(-8,28),(36,32),
-            (-44,68),(0,66),(44,66),(-24,104),(22,104),(58,30)]
+    body += jar(225, 150, 150, 210, "Pocos", dots=pocos_dots, sw=5)
+    body += jar(225, 570, 250, 440, "Pocos")
+    grid = [(-46, -8), (-2, -12), (42, -6), (-50, 30), (-8, 28), (36, 32),
+            (-44, 68), (0, 66), (44, 66), (-24, 104), (22, 104), (58, 30)]
     muchos_dots = [(dx, dy, pal[i % len(pal)]) for i, (dx, dy) in enumerate(grid)]
-    body += jar(660, 165, 175, 250, "Muchos", dots=muchos_dots, sw=5)
-    body += jar(660, 580, 270, 460, "Muchos")
-    save("16_frascos.svg", doc(900, 840, body))
+    body += jar(645, 165, 175, 250, "Muchos", dots=muchos_dots, sw=5)
+    body += jar(645, 580, 270, 460, "Muchos")
+    save("16_frascos.svg", doc(870, 840, body))
 
 
 # ===========================================================================
-# 14. SEMÁFORO — Pon los stickers: rojo, amarillo y verde
+# 14. SEMÁFORO
 # ===========================================================================
 def build_semaforo():
-    cx = 380
-    body = ground(cx, 800, 150, 26)
-    # poste
+    cx = 300
+    body = ground(cx, 800, 140, 26)
     body += f'<rect x="{cx-16}" y="600" width="32" height="200" rx="12" fill="{INK}" opacity="0.85"/>'
-    # caja del semáforo
-    body += (f'<rect x="{cx-130}" y="70" width="260" height="540" rx="60" '
-             f'fill="{INK}"/>')
-    body += (f'<rect x="{cx-104}" y="96" width="208" height="488" rx="46" '
-             f'fill="#4A4A5E"/>')
-    # tres luces (slots) con visera
-    lights = [(210, RED, RED_D), (340, YELLOW, YELLOW_D), (470, GREEN, GREEN_D)]
-    for (cy, col, cold) in lights:
-        # visera
-        body += (f'<path d="M{cx-66},{cy-72} q66,-30 132,0 l0,16 q-66,-26 -132,0 Z" '
+    body += f'<rect x="{cx-110}" y="70" width="220" height="520" rx="54" fill="{INK}"/>'
+    body += f'<rect x="{cx-86}" y="94" width="172" height="472" rx="40" fill="#4A4A5E"/>'
+    lights = [(200, RED_D), (330, YELLOW_D), (460, GREEN_D)]
+    for (cy, cold) in lights:
+        body += (f'<path d="M{cx-54},{cy-62} q54,-26 108,0 l0,14 q-54,-22 -108,0 Z" '
                  f'fill="{INK}"/>')
-        body += slot(cx, cy, 58, cold)
-    save("17_semaforo.svg", doc(760, 840, body))
+        body += slot(cx, cy, cold)
+    save("17_semaforo.svg", doc(600, 820, body))
 
 
 # ===========================================================================
-# 15. MARIPOSA — Decora las alas (simetría)
+# 15. MARIPOSA
 # ===========================================================================
 def build_mariposa():
-    """Mariposa simétrica con alas de silueta real (lado derecho espejado)."""
-    cx = 450
+    cx = 440
     fore_fill, fore_line = "#EAF1FF", BLUE_D
     hind_fill, hind_line = "#FFE9EC", RED_D
-
-    # --- lado derecho (se reflejará para el izquierdo) ---
     fore = (
         f'M{cx+10},250 '
         f'C{cx+95},168 {cx+255},150 {cx+305},232 '
@@ -567,60 +494,42 @@ def build_mariposa():
     right = (
         f'<path d="{hind}" fill="{hind_fill}" stroke="{hind_line}" stroke-width="9" stroke-linejoin="round"/>'
         f'<path d="{fore}" fill="{fore_fill}" stroke="{fore_line}" stroke-width="9" stroke-linejoin="round"/>'
-        # detalle decorativo del borde
-        f'<path d="M{cx+250},170 C{cx+300},195 {cx+322},240 {cx+318},285" '
-        f'fill="none" stroke="{fore_line}" stroke-width="5" opacity="0.35" stroke-linecap="round"/>'
-        # slots (zonas de sticker)
-        + slot(cx + 165, 232, 34, fore_line)
-        + slot(cx + 245, 270, 27, fore_line)
-        + slot(cx + 150, 318, 29, fore_line)
-        + slot(cx + 140, 442, 30, hind_line)
-        + slot(cx + 196, 502, 25, hind_line)
+        + slot(cx + 150, 232, fore_line)
+        + slot(cx + 250, 292, fore_line)
+        + slot(cx + 135, 458, hind_line)
+        + slot(cx + 212, 512, hind_line)
     )
-
     body = ground(cx, 760, 250, 26)
     body += right
     body += f'<g transform="translate({2*cx},0) scale(-1,1)">{right}</g>'
-
-    # --- cuerpo central (simétrico) ---
-    body += (
-        # abdomen segmentado
-        f'<path d="M{cx-24},278 Q{cx-30},470 {cx},632 Q{cx+30},470 {cx+24},278 Z" fill="{INK}"/>'
-    )
+    body += (f'<path d="M{cx-24},278 Q{cx-30},470 {cx},632 Q{cx+30},470 {cx+24},278 Z" fill="{INK}"/>')
     for yy in (330, 380, 430, 480, 530, 575):
         wv = 22 - (yy - 330) * 0.018
         body += (f'<path d="M{cx-wv:.0f},{yy} Q{cx},{yy+9} {cx+wv:.0f},{yy}" '
                  f'fill="none" stroke="#5A5A6E" stroke-width="3.5" stroke-linecap="round"/>')
-    # tórax y cabeza
     body += f'<ellipse cx="{cx}" cy="262" rx="30" ry="40" fill="{INK}"/>'
     body += f'<circle cx="{cx}" cy="200" r="30" fill="{INK}"/>'
-    # carita
     body += (f'<circle cx="{cx-11}" cy="196" r="5" fill="#fff"/>'
              f'<circle cx="{cx+11}" cy="196" r="5" fill="#fff"/>'
              f'<path d="M{cx-11},208 q11,11 22,0" fill="none" stroke="#fff" '
              f'stroke-width="3.5" stroke-linecap="round"/>')
-    # antenas con bolita
     body += (f'<path d="M{cx-13},176 C{cx-42},120 {cx-74},100 {cx-92},96" '
              f'fill="none" stroke="{INK}" stroke-width="7" stroke-linecap="round"/>'
              f'<path d="M{cx+13},176 C{cx+42},120 {cx+74},100 {cx+92},96" '
              f'fill="none" stroke="{INK}" stroke-width="7" stroke-linecap="round"/>'
-             f'<circle cx="{cx-92}" cy="92" r="12" fill="{INK}"/>'
-             f'<circle cx="{cx+92}" cy="92" r="12" fill="{INK}"/>')
-    save("18_mariposa.svg", doc(900, 800, body))
+             f'<circle cx="{cx-92}" cy="96" r="12" fill="{INK}"/>'
+             f'<circle cx="{cx+92}" cy="96" r="12" fill="{INK}"/>')
+    save("18_mariposa.svg", doc(880, 800, body))
 
 
 # ===========================================================================
-# 16. MARIQUITA — Pon los puntos negros
+# 16/17. MARIQUITA (función reutilizable) + conteo en 2 páginas
 # ===========================================================================
-def ladybug(cx, cy, R, spots, spot_r=None, legs=True, plus=True):
-    """Dibuja una mariquita centrada en (cx, cy) con 'radio' R.
-    'spots' son offsets (dx, dy) en px desde el centro (zonas de sticker)."""
+def ladybug(cx, cy, R, spots, legs=True, plus=True):
     s = R / 250.0
     RX, RY = R, R * 1.04
-    spot_r = spot_r if spot_r is not None else 0.168 * R
     hy = cy - RY + 70 * s
     out = ""
-    # patitas (3 por lado, dobladas), detrás del cuerpo
     if legs:
         for sx in (-1, 1):
             for yy in (-0.6, -0.04, 0.5):
@@ -633,7 +542,6 @@ def ladybug(cx, cy, R, spots, spot_r=None, legs=True, plus=True):
                         f'L{j1x:.1f},{j1y:.1f} L{ftx:.1f},{fty:.1f}" fill="none" '
                         f'stroke="{INK}" stroke-width="{13*s:.1f}" '
                         f'stroke-linecap="round" stroke-linejoin="round"/>')
-    # antenas con bolita
     out += (f'<path d="M{cx-58*s:.1f},{hy:.1f} C{cx-92*s:.1f},{hy-80*s:.1f} '
             f'{cx-120*s:.1f},{hy-110*s:.1f} {cx-128*s:.1f},{hy-128*s:.1f}" '
             f'fill="none" stroke="{INK}" stroke-width="{9*s:.1f}" stroke-linecap="round"/>'
@@ -642,25 +550,20 @@ def ladybug(cx, cy, R, spots, spot_r=None, legs=True, plus=True):
             f'fill="none" stroke="{INK}" stroke-width="{9*s:.1f}" stroke-linecap="round"/>'
             f'<circle cx="{cx-128*s:.1f}" cy="{hy-128*s:.1f}" r="{15*s:.1f}" fill="{INK}"/>'
             f'<circle cx="{cx+128*s:.1f}" cy="{hy-128*s:.1f}" r="{15*s:.1f}" fill="{INK}"/>')
-    # cuerpo rojo
     out += f'<ellipse cx="{cx}" cy="{cy}" rx="{RX}" ry="{RY}" fill="{RED}"/>'
-    # cabeza (domo)
     out += (f'<path d="M{cx-150*s:.1f},{hy:.1f} a{150*s:.1f},{128*s:.1f} 0 0 1 {300*s:.1f},0 '
             f'C{cx+150*s:.1f},{hy+30*s:.1f} {cx-150*s:.1f},{hy+30*s:.1f} {cx-150*s:.1f},{hy:.1f} Z" '
             f'fill="{INK}"/>')
-    # ojitos
     out += (f'<circle cx="{cx-58*s:.1f}" cy="{hy-26*s:.1f}" r="{20*s:.1f}" fill="#fff"/>'
             f'<circle cx="{cx+58*s:.1f}" cy="{hy-26*s:.1f}" r="{20*s:.1f}" fill="#fff"/>'
             f'<circle cx="{cx-58*s:.1f}" cy="{hy-22*s:.1f}" r="{9*s:.1f}" fill="{INK}"/>'
             f'<circle cx="{cx+58*s:.1f}" cy="{hy-22*s:.1f}" r="{9*s:.1f}" fill="{INK}"/>'
             f'<circle cx="{cx-62*s:.1f}" cy="{hy-30*s:.1f}" r="{3.2*s:.1f}" fill="#fff"/>'
             f'<circle cx="{cx+54*s:.1f}" cy="{hy-30*s:.1f}" r="{3.2*s:.1f}" fill="#fff"/>')
-    # línea central
     out += (f'<path d="M{cx},{hy+24*s:.1f} L{cx},{cy+RY-26*s:.1f}" stroke="{RED_D}" '
             f'stroke-width="{11*s:.1f}" stroke-linecap="round"/>')
-    # manchas (slots)
     for (dx, dy) in spots:
-        out += slot(cx + dx, cy + dy, spot_r, INK, show_plus=plus)
+        out += slot(cx + dx, cy + dy, INK, show_plus=plus)
     return out
 
 
@@ -669,53 +572,47 @@ def build_mariquita():
     body = ground(cx, cy + R * 1.04 + 18, 235, 28)
     spots = [(-118, -54), (-150, 70), (-86, 176),
              (118, -54), (150, 70), (86, 176)]
-    body += ladybug(cx, cy, R, spots, spot_r=42)
+    body += ladybug(cx, cy, R, spots)
     save("19_mariquita.svg", doc(820, 800, body))
 
 
-def _spot_layout(n, R):
-    """Distribución (dx, dy) en px para n manchas (estilo equilibrado)."""
-    frac = {
-        1: [(0, 0.12)],
-        2: [(-0.34, 0.0), (0.34, 0.0)],
-        3: [(-0.36, -0.12), (0.36, -0.12), (0, 0.32)],
-        4: [(-0.34, -0.14), (0.34, -0.14), (-0.34, 0.4), (0.34, 0.4)],
-        5: [(-0.36, -0.18), (0.36, -0.18), (0, 0.12), (-0.36, 0.46), (0.36, 0.46)],
-        6: [(-0.36, -0.22), (0.36, -0.22), (-0.4, 0.16), (0.4, 0.16),
-            (-0.32, 0.54), (0.32, 0.54)],
-    }[n]
-    return [(dx * R, dy * R) for dx, dy in frac]
+# Distribución horizontal (máx. 3 columnas) para que quepan slots de 16 mm.
+_COUNT_LAYOUT = {
+    1: [(0, 12)],
+    2: [(-95, 12), (95, 12)],
+    3: [(-100, -32), (100, -32), (0, 60)],
+    4: [(-100, -38), (100, -38), (-100, 72), (100, 72)],
+    5: [(-105, -38), (0, -38), (105, -38), (-58, 74), (58, 74)],
+    6: [(-105, -42), (0, -42), (105, -42), (-105, 72), (0, 72), (105, 72)],
+}
+
+
+def _conteo_page(name, numbers):
+    R = 150
+    spots3 = [(230, 230), (630, 230), (430, 700)]
+    body = ""
+    for (cx, cy), n in zip(spots3, numbers):
+        body += ladybug(cx, cy, R, _COUNT_LAYOUT[n], plus=False)
+        by = cy + R * 1.04 + 60
+        col = [RED, BLUE, YELLOW, GREEN, PURPLE, ORANGE][(n - 1) % 6]
+        body += (f'<circle cx="{cx}" cy="{by}" r="32" fill="{col}"/>'
+                 f'<text x="{cx}" y="{by+13}" text-anchor="middle" '
+                 f'font-size="40" font-weight="700" fill="#fff" '
+                 f'font-family="Fredoka, sans-serif">{n}</text>')
+    save(name, doc(860, 980, body))
 
 
 def build_mariquitas_conteo():
-    """Seis mariquitas para practicar conteo: 1, 2, 3, 4, 5 y 6 manchas."""
-    R = 96
-    cols = [200, 510, 820]
-    rows = [235, 565]
-    body = ""
-    n = 0
-    for cy in rows:
-        for cx in cols:
-            n += 1
-            body += ladybug(cx, cy, R, _spot_layout(n, R),
-                            spot_r=0.18 * R, plus=False)
-            # número debajo
-            by = cy + R * 1.04 + 64
-            col = [RED, BLUE, YELLOW, GREEN][(n - 1) % 4]
-            body += (f'<circle cx="{cx}" cy="{by}" r="30" fill="{col}"/>'
-                     f'<text x="{cx}" y="{by+13}" text-anchor="middle" '
-                     f'font-size="38" font-weight="700" fill="#fff" '
-                     f'font-family="Fredoka, sans-serif">{n}</text>')
-    save("21_mariquitas_conteo.svg", doc(1020, 840, body))
+    _conteo_page("21_conteo_a.svg", [1, 2, 3])
+    _conteo_page("21_conteo_b.svg", [4, 5, 6])
 
 
 # ===========================================================================
-# 18. HELADO — Decóralo con chispas de colores
+# 18. HELADO — chispas (stickers de 16 mm)
 # ===========================================================================
 def build_helado():
     cx = 350
     body = ground(cx, 952, 140, 24)
-    # cono (barquillo) con rejilla recortada al triángulo
     cone_path = f'M{cx-118},560 L{cx+118},560 L{cx},902 Z'
     body += f'<defs><clipPath id="cono"><path d="{cone_path}"/></clipPath></defs>'
     body += (f'<path d="{cone_path}" fill="#E0A969" stroke="#C2884A" '
@@ -725,35 +622,28 @@ def build_helado():
         body += f'<path d="M{cx+off},540 L{cx+off+210},950"/>'
         body += f'<path d="M{cx+off},950 L{cx+off+210},540"/>'
     body += '</g>'
-    # bola inferior (rosa) y superior (menta)
-    body += (f'<circle cx="{cx}" cy="468" r="152" fill="#FFC4CF" stroke="#F58aa0" stroke-width="8"/>')
-    body += (f'<circle cx="{cx}" cy="320" r="126" fill="#BFEBD6" stroke="#4FBF93" stroke-width="8"/>')
-    # cereza arriba
-    body += (f'<path d="M{cx},196 C{cx+8},172 {cx+30},166 {cx+40},168" '
+    body += f'<circle cx="{cx}" cy="468" r="158" fill="#FFC4CF" stroke="#F58aa0" stroke-width="8"/>'
+    body += f'<circle cx="{cx}" cy="316" r="132" fill="#BFEBD6" stroke="#4FBF93" stroke-width="8"/>'
+    body += (f'<path d="M{cx},192 C{cx+8},168 {cx+30},162 {cx+40},164" '
              f'fill="none" stroke="{LEAF}" stroke-width="8" stroke-linecap="round"/>'
-             f'<circle cx="{cx}" cy="206" r="30" fill="{RED}" stroke="{RED_D}" stroke-width="6"/>'
-             f'<circle cx="{cx-10}" cy="198" r="7" fill="#fff" opacity="0.5"/>')
-    # chispas (slots) sobre las bolas
-    upper = [(-52, -28), (8, -52), (58, -18), (-22, 12), (44, 38),
-             (-58, 28), (22, 56), (-2, -8)]
-    lower = [(-86, -42), (-24, -58), (52, -52), (98, -12), (-104, 22),
-             (-44, 16), (26, 4), (84, 36), (-72, 74), (4, 74), (66, 82),
-             (-14, -16), (118, 18)]
+             f'<circle cx="{cx}" cy="202" r="30" fill="{RED}" stroke="{RED_D}" stroke-width="6"/>'
+             f'<circle cx="{cx-10}" cy="194" r="7" fill="#fff" opacity="0.5"/>')
+    upper = [(-55, 5), (48, -22), (0, 62)]
+    lower = [(-92, -28), (18, -52), (96, 12), (-52, 58), (58, 62)]
     for (dx, dy) in upper:
-        body += slot(cx + dx, 320 + dy, 17, SLOT_GREY, show_plus=False)
+        body += slot(cx + dx, 316 + dy, SLOT_GREY)
     for (dx, dy) in lower:
-        body += slot(cx + dx, 468 + dy, 17, SLOT_GREY, show_plus=False)
+        body += slot(cx + dx, 468 + dy, SLOT_GREY)
     save("20_helado.svg", doc(700, 980, body))
 
 
 # ===========================================================================
-# Avatar de presentación (mamá + peque) y confeti de portada
+# Avatar de presentación y confeti de portada
 # ===========================================================================
 def build_avatar():
     body = f'''
       <g>
         {ground(260, 540, 200, 26)}
-        <!-- Mamá -->
         <g>
           <rect x="120" y="300" width="180" height="230" rx="70" fill="{BLUE}"/>
           <path d="M150,310 q60,-40 120,0 l0,30 q-60,-30 -120,0 Z" fill="#fff" opacity="0.18"/>
@@ -767,7 +657,6 @@ def build_avatar():
           <circle cx="168" cy="248" r="11" fill="{RED}" opacity="0.22"/>
           <circle cx="252" cy="248" r="11" fill="{RED}" opacity="0.22"/>
         </g>
-        <!-- Peque -->
         <g>
           <rect x="300" y="360" width="150" height="180" rx="56" fill="{YELLOW}"/>
           <circle cx="375" cy="312" r="66" fill="#F8D2B4"/>
@@ -778,7 +667,6 @@ def build_avatar():
           <path d="M358,340 q17,16 34,0" fill="none" stroke="{INK}" stroke-width="5" stroke-linecap="round"/>
           <circle cx="344" cy="330" r="9" fill="{RED}" opacity="0.25"/>
           <circle cx="408" cy="330" r="9" fill="{RED}" opacity="0.25"/>
-          <!-- lacito -->
           <path d="M375,250 l-26,-16 l0,32 Z" fill="{RED}"/>
           <path d="M375,250 l26,-16 l0,32 Z" fill="{RED}"/>
           <circle cx="375" cy="250" r="8" fill="{RED_D}"/>
@@ -790,14 +678,13 @@ def build_avatar():
 def build_confetti(name, w, h):
     import random
     random.seed(7)
-    cols = [RED, BLUE, YELLOW, GREEN, BROWN, LEAF]
+    cols = [RED, BLUE, YELLOW, GREEN, PURPLE, ORANGE]
     body = ""
     for _ in range(46):
         x = random.uniform(10, w - 10)
         y = random.uniform(10, h - 10)
         r = random.uniform(7, 18)
-        c = random.choice(cols)
-        body += f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r:.0f}" fill="{c}" opacity="0.92"/>'
+        body += f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r:.0f}" fill="{random.choice(cols)}" opacity="0.92"/>'
     save(name, doc(w, h, body))
 
 

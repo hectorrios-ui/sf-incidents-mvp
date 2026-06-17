@@ -3,7 +3,6 @@
 
       <g>
         <ellipse cx="260" cy="540" rx="200" ry="26" fill="#E6E1D6" opacity="0.55"/>
-        <!-- Mamá -->
         <g>
           <rect x="120" y="300" width="180" height="230" rx="70" fill="#2E8BFF"/>
           <path d="M150,310 q60,-40 120,0 l0,30 q-60,-30 -120,0 Z" fill="#fff" opacity="0.18"/>
@@ -17,7 +16,6 @@
           <circle cx="168" cy="248" r="11" fill="#FF5168" opacity="0.22"/>
           <circle cx="252" cy="248" r="11" fill="#FF5168" opacity="0.22"/>
         </g>
-        <!-- Peque -->
         <g>
           <rect x="300" y="360" width="150" height="180" rx="56" fill="#FFC83D"/>
           <circle cx="375" cy="312" r="66" fill="#F8D2B4"/>
@@ -28,7 +26,6 @@
           <path d="M358,340 q17,16 34,0" fill="none" stroke="#3A3A4A" stroke-width="5" stroke-linecap="round"/>
           <circle cx="344" cy="330" r="9" fill="#FF5168" opacity="0.25"/>
           <circle cx="408" cy="330" r="9" fill="#FF5168" opacity="0.25"/>
-          <!-- lacito -->
           <path d="M375,250 l-26,-16 l0,32 Z" fill="#FF5168"/>
           <path d="M375,250 l26,-16 l0,32 Z" fill="#FF5168"/>
           <circle cx="375" cy="250" r="8" fill="#E23B50"/>

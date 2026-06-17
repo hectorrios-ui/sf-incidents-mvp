@@ -15,10 +15,18 @@ legibles. Pensada para crecer hacia un **libro interactivo y digital**.
 | `fonts/` | Tipografías usadas (Baloo 2, Fredoka, Nunito — Google Fonts, licencia OFL). |
 | `scripts/` | Código que genera todo, de forma reproducible. |
 
+## 📐 Formato e impresión
+
+- **Tamaño de página: Carta (Letter, 21.59 × 27.94 cm)** — estándar en Colombia.
+- **Stickers homologados: todos circulares de 16 mm de diámetro.** Todo el libro
+  usa una escala física común (`MM_PER_UNIT = 0.20` mm/unidad) y cada zona de
+  sticker se dibuja con un radio fijo, de modo que **cualquier slot, en cualquier
+  página, imprime exactamente 16 mm**.
+
 ## 🎨 Diseño
 
 - **Estilo:** plano (flat), moderno y amigable. Cada zona punteada `( + )`
-  indica dónde el peque pega su sticker.
+  indica dónde el peque pega su sticker de 16 mm.
 - **Paleta:** rojo, azul, amarillo y verde vivos (coherente con las
   actividades de asociación de color del original).
 - **Tipografías** (llamativas pero muy claras para niños):
@@ -29,9 +37,10 @@ legibles. Pensada para crecer hacia un **libro interactivo y digital**.
 ## 📖 Contenido
 
 Portada · ¡Hola! (presentación de Andrea) · ¿Qué trabajamos? + **18 actividades**:
-Carritos, Corazones, Sol, Nube y lluvia, Árbol de manzanas, Oruguitas,
-Arañitas, Cerezas, Huevos, Sandía, Flores, Arcoíris, Semáforo, Mariposa,
-Mariquita, A contar mariquitas (conteo), Helado de chispas y Muchos/Pocos.
+Carritos, Corazones (6: amarillo, azul, rojo, verde, morado y naranja), Sol,
+Nube y lluvia, Árbol de manzanas, Oruguitas, Arañitas, Cerezas, Huevos, Sandía,
+Flores, Arcoíris, Semáforo, Mariposa, Mariquita, A contar mariquitas (conteo
+1–6, en dos páginas) y Helado de chispas y Muchos/Pocos.
 
 ## 🔁 Regenerar todo
 
