@@ -675,10 +675,6 @@ def build_manos():
 def _pretty_flower(cx, cy):
     petal, petal_d = "#FF8FB3", "#F06C98"
     g = ""
-    # tallo con hoja (conecta con el camino de stickers de arriba)
-    g += f'<path d="M{cx},{cy-128} L{cx},{cy-40}" stroke="{LEAF}" stroke-width="13" stroke-linecap="round"/>'
-    g += (f'<path d="M{cx},{cy-96} C{cx-50},{cy-116} {cx-66},{cy-86} {cx-44},{cy-70} '
-          f'C{cx-18},{cy-76} {cx-4},{cy-88} {cx},{cy-96} Z" fill="{LEAF}"/>')
     # pétalos
     for i in range(8):
         a = math.radians(i * 45)
