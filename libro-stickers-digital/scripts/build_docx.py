@@ -30,6 +30,7 @@ CONTENT_W_MM = (21.59 - 1.8 - 1.8) * 10   # ancho útil en Carta = 179.9 mm
 
 # Paleta
 RED, BLUE, YELLOW, GREEN = "FF5168", "2E8BFF", "F0B021", "22A455"
+PURPLE, ORANGE = "7E4FC0", "F08A23"
 INK, SOFT = "3A3A4A", "8A8AA0"
 CYCLE = [RED, BLUE, YELLOW, GREEN]
 
@@ -356,11 +357,11 @@ activities = [
      "cuéntalos uno por uno.",
      "19_mariquita.png"),
     ("16", "A contar mariquitas", RED,
-     "Aquí tienes seis mariquitas y cada una lleva su número. Pega tantas manchas "
-     "negras como indique cada una: 1 mancha a la primera, 2 a la segunda, 3 a la "
-     "tercera… y así hasta llegar a 6. Cuenta en voz alta mientras las colocas "
-     "para practicar los números y la correspondencia.",
-     ["21_conteo_a.png", "21_conteo_b.png"]),
+     "Cada mariquita lleva su número. Pega tantas manchas negras como indique "
+     "cada una: 1 mancha a la primera, 2 a la segunda, 3 a la tercera y 4 a la "
+     "cuarta. Cuenta en voz alta mientras las colocas para practicar los números "
+     "y la correspondencia uno a uno.",
+     "21_conteo.png"),
     ("17", "Helado de chispas", GREEN,
      "¡Qué rico helado! Decóralo con chispas de colores: pega un sticker en cada "
      "puntito de las bolas. Combina los colores como más te gusten y trabaja la "
@@ -371,14 +372,55 @@ activities = [
      "muchos. Ahora llena tú los frascos vacíos: uno con pocos y otro con muchos. "
      "Así aprendemos las cantidades y comparamos dónde hay más y dónde hay menos.",
      "16_frascos.png"),
+    ("19", "Manos contadoras", BLUE,
+     "¡A contar con los deditos! Pega un sticker en la yema de cada dedo y "
+     "cuéntalos uno a uno: 1, 2, 3… hasta llegar a 10. Ideal para practicar el "
+     "conteo uno a uno y la coordinación de las manitos.",
+     "22_manos.png"),
+    ("20", "La abeja y la flor", YELLOW,
+     "Ayuda a la abejita a bajar hasta la flor. Pega un sticker en cada círculo "
+     "siguiendo la línea de arriba hacia abajo, sin salirte. Así practicamos el "
+     "trazo vertical, tan importante para empezar a escribir.",
+     "23_abeja.png"),
+    ("21", "Mi cometa", RED,
+     "¡A volar la cometa! Decora su cola pegando un moño (sticker) en cada "
+     "círculo, de arriba hacia abajo. Trabajamos el trazo vertical y la atención "
+     "mientras la cola se llena de color.",
+     "24_cometa.png"),
+    ("22", "Del carro a la casa", GREEN,
+     "El carrito quiere llegar a su casa. Pega un sticker en cada círculo del "
+     "camino, de izquierda a derecha, para completar la ruta. Practicamos el "
+     "trazo horizontal y la direccionalidad.",
+     "25_camino.png"),
+    ("23", "Collar de colores", PURPLE,
+     "¡Arma un collar precioso! Observa el patrón de colores que ya empezó "
+     "(rojo, azul, amarillo…) y continúalo pegando los stickers en el mismo "
+     "orden. Trabajamos los patrones y la secuencia lógica.",
+     "26_collar.png"),
+    ("24", "Tabla de conteo", BLUE,
+     "Mira el número de cada columna y pega esa cantidad de stickers debajo: "
+     "1 en la columna del 1, 2 en la del 2… hasta el 5. Cuenta en voz alta para "
+     "reforzar el conteo uno a uno y la noción de cantidad.",
+     "27_tabla.png"),
+    ("25", "Cupcakes ricos", RED,
+     "¡Cupcakes deliciosos! Cada uno tiene un número dentro de un corazón. Pega "
+     "encima esa cantidad de cerezas (stickers): 1 cereza al cupcake 1, 2 al "
+     "cupcake 2 y 3 al cupcake 3.",
+     "28_cupcakes.png"),
+    ("26", "Tren de colores", GREEN,
+     "¡Sube la carga al tren! Cada vagón tiene su número, del 1 al 5. Pega encima "
+     "de cada vagón esa cantidad de stickers como si fueran su carga y cuéntalos "
+     "mientras el tren avanza por las vías.",
+     "29_tren.png"),
 ]
 
-for n, title, accent, instr, img in activities:
-    # Encabezado: badge nº + título + regla de color
+for idx, (n, title, accent, instr, img) in enumerate(activities):
+    # Encabezado: badge nº + título + regla de color (cada actividad en su página)
     p = para(doc, WD_ALIGN_PARAGRAPH.LEFT, after=2, before=0, keep=True)
+    if idx > 0:
+        p.paragraph_format.page_break_before = True
     badge = p.add_run(f"  {n}  ")
     set_run(badge, F_HEAD, 14, "FFFFFF", True)
-    # sombrear el badge
     rpr = badge._element.get_or_add_rPr()
     sh = OxmlElement('w:shd'); sh.set(qn('w:val'), 'clear')
     sh.set(qn('w:color'), 'auto'); sh.set(qn('w:fill'), accent)
@@ -387,8 +429,8 @@ for n, title, accent, instr, img in activities:
     set_run(p.add_run(title), F_HEAD, 24, accent, True)
     bottom_rule(p, accent, size=16)
 
-    # Instrucción
-    p = para(doc, WD_ALIGN_PARAGRAPH.LEFT, after=6, before=6, line=1.2, keep=True)
+    # Instrucción (sin keep_with_next para que la imagen pueda fluir si hace falta)
+    p = para(doc, WD_ALIGN_PARAGRAPH.LEFT, after=6, before=6, line=1.2)
     set_run(p.add_run(instr), F_BODY, 14, INK)
 
     # Ilustración(es) — colocadas a su tamaño físico (stickers de 16 mm)
@@ -399,9 +441,6 @@ for n, title, accent, instr, img in activities:
             p.paragraph_format.page_break_before = True
             set_run(p.add_run(f"{title} (continuación)"), F_HEAD, 16, accent, True)
         add_sticker_image(doc, im_name, max_h_cm=20.5)
-
-    if n != activities[-1][0]:
-        page_break(doc)
 
 # Pie final
 para(doc, after=2, before=18)

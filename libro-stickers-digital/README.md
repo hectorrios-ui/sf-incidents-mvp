@@ -36,11 +36,13 @@ legibles. Pensada para crecer hacia un **libro interactivo y digital**.
 
 ## 📖 Contenido
 
-Portada · ¡Hola! (presentación de Andrea) · ¿Qué trabajamos? + **18 actividades**:
-Carritos, Corazones (6: amarillo, azul, rojo, verde, morado y naranja), Sol,
-Nube y lluvia, Árbol de manzanas, Oruguitas, Arañitas, Cerezas, Huevos, Sandía,
-Flores, Arcoíris, Semáforo, Mariposa, Mariquita, A contar mariquitas (conteo
-1–6, en dos páginas) y Helado de chispas y Muchos/Pocos.
+Portada · ¡Hola! (presentación de Andrea) · ¿Qué trabajamos? + **26 actividades**:
+Carritos, Corazones (6 colores), Sol, Nube y lluvia, Árbol de manzanas,
+Oruguitas, Arañitas, Cerezas, Huevos, Sandía, Flores, Arcoíris, Semáforo,
+Mariposa, Mariquita, A contar mariquitas (1–4), Helado de chispas, Muchos/Pocos,
+Manos contadoras, La abeja y la flor (trazo vertical), Mi cometa (trazo
+vertical), Del carro a la casa (trazo horizontal), Collar de colores (patrones),
+Tabla de conteo (1–5), Cupcakes (1–3) y Tren de colores (1–5).
 
 ## 🔁 Regenerar todo
 
