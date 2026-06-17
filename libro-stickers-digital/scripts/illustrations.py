@@ -599,17 +599,17 @@ _COUNT_LAYOUT = {
 def build_mariquitas_conteo():
     """Cuatro mariquitas (1-4) más pequeñas, espaciadas y con números grandes."""
     R = 122
-    grid = [(235, 230, 1), (645, 230, 2), (235, 650, 3), (645, 650, 4)]
+    grid = [(235, 235, 1), (645, 235, 2), (235, 690, 3), (645, 690, 4)]
     body = ""
     for cx, cy, n in grid:
         body += ladybug(cx, cy, R, _COUNT_LAYOUT[n], plus=False)
-        by = cy + R * 1.04 + 72            # número grande y protagonista
+        by = cy + R * 1.04 + 66            # número grande y protagonista
         col = [RED, BLUE, YELLOW, GREEN][(n - 1) % 4]
-        body += (f'<circle cx="{cx}" cy="{by}" r="48" fill="{col}"/>'
-                 f'<text x="{cx}" y="{by+20}" text-anchor="middle" '
-                 f'font-size="62" font-weight="700" fill="#fff" '
+        body += (f'<circle cx="{cx}" cy="{by}" r="46" fill="{col}"/>'
+                 f'<text x="{cx}" y="{by+19}" text-anchor="middle" '
+                 f'font-size="60" font-weight="700" fill="#fff" '
                  f'font-family="Fredoka, sans-serif">{n}</text>')
-    save("21_conteo.svg", doc(880, 880, body))
+    save("21_conteo.svg", doc(880, 950, body))
 
 
 # ===========================================================================
@@ -882,15 +882,15 @@ def _cupcake(cx, fy, n, wrap, wrap_d, frost):
     g += (f'<text x="{cx}" y="{fy+126}" text-anchor="middle" font-size="44" '
           f'font-weight="700" fill="#fff" font-family="Fredoka, sans-serif">{n}</text>')
     # crema bien cremosa (remolino de varios bultos)
-    swirl = [(-52, 24, 56), (52, 24, 56), (-28, -10, 52), (28, -10, 52),
-             (0, 22, 58), (0, -44, 48)]
+    swirl = [(-54, 26, 58), (54, 26, 58), (-30, -8, 54), (30, -8, 54),
+             (0, 24, 60), (0, -42, 50)]
     for dx, dy, r in swirl:
         g += f'<circle cx="{cx+dx}" cy="{fy+dy}" r="{r}" fill="{frost}"/>'
-    g += f'<circle cx="{cx-20}" cy="{fy-30}" r="20" fill="{fl}" opacity="0.35"/>'
-    # cerezas (slots) ENCIMA de la crema, visibles
-    pos = {1: [(0, fy-66)],
-           2: [(-50, fy-58), (50, fy-58)],
-           3: [(0, fy-92), (-56, fy-46), (56, fy-46)]}[n]
+    g += f'<circle cx="{cx-20}" cy="{fy-28}" r="20" fill="{fl}" opacity="0.35"/>'
+    # cerezas (slots) ANIDADAS Y VISIBLES sobre la crema (dibujadas al final)
+    pos = {1: [(0, fy-44)],
+           2: [(-48, fy-38), (48, fy-38)],
+           3: [(0, fy-60), (-54, fy-30), (54, fy-30)]}[n]
     for (dx, dy) in pos:
         g += slot(cx + dx, dy, RED_D)
     return g
