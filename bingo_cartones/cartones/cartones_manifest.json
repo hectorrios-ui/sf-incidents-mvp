@@ -1,0 +1,136 @@
+{
+  "titulo": "Bingo de animales - Mi dulce Emma",
+  "centro": "Mi dulce Emma",
+  "cartones": [
+    {
+      "carton": 1,
+      "animales": [
+        "Morsa",
+        "Cerdo",
+        "Langosta",
+        "Foca",
+        "Oso",
+        "Caballo",
+        "Jirafa",
+        "Tortuga"
+      ]
+    },
+    {
+      "carton": 2,
+      "animales": [
+        "Delfín",
+        "Caballo",
+        "Oveja",
+        "Elefante",
+        "Cebra",
+        "Estrella de mar",
+        "Cerdo",
+        "Foca"
+      ]
+    },
+    {
+      "carton": 3,
+      "animales": [
+        "Vaca",
+        "Tortuga",
+        "Caballo",
+        "Langosta",
+        "Cebra",
+        "Estrella de mar",
+        "Delfín",
+        "Jirafa"
+      ]
+    },
+    {
+      "carton": 4,
+      "animales": [
+        "Cebra",
+        "Elefante",
+        "Foca",
+        "Tiburón",
+        "Perro",
+        "Oso",
+        "Delfín",
+        "Oveja"
+      ]
+    },
+    {
+      "carton": 5,
+      "animales": [
+        "León",
+        "Jirafa",
+        "Langosta",
+        "Cebra",
+        "Cerdo",
+        "Pulpo",
+        "Estrella de mar",
+        "Buey"
+      ]
+    },
+    {
+      "carton": 6,
+      "animales": [
+        "Perro",
+        "Elefante",
+        "Oso",
+        "Oveja",
+        "Burro",
+        "Caballo",
+        "Vaca",
+        "Delfín"
+      ]
+    },
+    {
+      "carton": 7,
+      "animales": [
+        "Caballo",
+        "Estrella de mar",
+        "Tortuga",
+        "Foca",
+        "Delfín",
+        "Jirafa",
+        "León",
+        "Burro"
+      ]
+    },
+    {
+      "carton": 8,
+      "animales": [
+        "Jirafa",
+        "Caballo",
+        "Estrella de mar",
+        "Delfín",
+        "Buey",
+        "Tiburón",
+        "Langosta",
+        "Elefante"
+      ]
+    },
+    {
+      "carton": 9,
+      "animales": [
+        "Buey",
+        "Caballo",
+        "Tortuga",
+        "Morsa",
+        "Elefante",
+        "Burro",
+        "Pulpo",
+        "Foca"
+      ]
+    },
+    {
+      "carton": 10,
+      "animales": [
+        "Caballo",
+        "Cebra",
+        "Oveja",
+        "Morsa",
+        "Tortuga",
+        "Cerdo",
+        "Elefante",
+        "León"
+      ]
+    }
+  ]
+}
