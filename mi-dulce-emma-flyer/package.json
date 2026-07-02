@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "assets": "node generate-assets.js",
+    "extract": "python3 extract-from-referencia.py",
     "pdf": "./export-pdf.sh"
   },
   "keywords": [],

@@ -1,21 +1,11 @@
 #!/bin/bash
 set -euo pipefail
-
 DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$DIR"
 
+if [ -f assets/referencia.jpg ] || [ -f assets/referencia.png ] || [ -f assets/referencia.webp ]; then
+  python3 extract-from-referencia.py
+fi
+
 node generate-assets.js
-
-HTML_FILE="$DIR/flyer.html"
-PDF_FILE="$DIR/Mi-Dulce-Emma-Flyer.pdf"
-
-google-chrome \
-  --headless=new \
-  --disable-gpu \
-  --no-sandbox \
-  --print-to-pdf="$PDF_FILE" \
-  --print-to-pdf-no-header \
-  --no-pdf-header-footer \
-  "file://$HTML_FILE"
-
-echo "PDF generado: $PDF_FILE"
+python3 export-pdf.py
