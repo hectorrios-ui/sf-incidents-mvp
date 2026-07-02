@@ -1,0 +1,16 @@
+{
+  "name": "mi-dulce-emma-flyer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "assets": "node generate-assets.js",
+    "pdf": "./export-pdf.sh"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  }
+}
