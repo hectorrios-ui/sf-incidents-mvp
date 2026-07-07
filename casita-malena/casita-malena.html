@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La casita de Malena</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #3a3a4a;
+      --sky: #eaf4ff;
+      --cream: #fff9f0;
+      --shadow: 0 8px 32px rgba(58, 58, 74, 0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    @page {
+      size: letter portrait;
+      margin: 12mm;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      background: linear-gradient(160deg, #d8ecff 0%, #fff4e8 100%);
+      font-family: 'Nunito', sans-serif;
+      color: var(--ink);
+    }
+
+    .page {
+      width: min(100%, 816px);
+      background: var(--cream);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 4px solid #fff;
+    }
+
+    .header {
+      padding: 28px 32px 12px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: #ffe8f0;
+      color: #e23b50;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.05;
+      color: #ff5168;
+      text-shadow: 0 2px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    .subtitle {
+      margin-top: 10px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #5a5a6e;
+    }
+
+    .instructions {
+      margin: 0 32px 18px;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: #fff;
+      border: 2px dashed #c7ccd8;
+      font-size: 0.98rem;
+      line-height: 1.5;
+    }
+
+    .instructions strong {
+      color: #2e8bff;
+    }
+
+    .scene-wrap {
+      padding: 8px 24px 28px;
+    }
+
+    .scene {
+      width: 100%;
+      display: block;
+      border-radius: 22px;
+      background: #fff;
+      border: 3px solid #f0ebe2;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 0 32px 24px;
+      font-size: 0.9rem;
+      color: #7a7a8c;
+    }
+
+    .footer span {
+      font-weight: 700;
+      color: #ff5168;
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: #fff;
+      }
+
+      .page {
+        width: 100%;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <div class="badge">Actividad con stickers</div>
+      <h1>La casita de Malena</h1>
+      <p class="subtitle">¡Ayuda a Malena a decorar su casita con stickers de colores!</p>
+    </header>
+
+    <p class="instructions">
+      Usa stickers de <strong>16 mm</strong> para completar el techo, las flores del jardín,
+      el sol y las nubecitas. ¡Puedes inventar tu propio diseño!
+    </p>
+
+    <div class="scene-wrap">
+      <svg class="scene" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 720" aria-label="Ilustración de la casita de Malena">
+        <defs>
+          <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#EAF4FF"/>
+            <stop offset="100%" stop-color="#F7FBFF"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Cielo -->
+        <rect width="880" height="720" rx="22" fill="url(#skyGrad)"/>
+
+        <!-- Nubes con slots -->
+        <g opacity="0.95">
+          <ellipse cx="130" cy="95" rx="58" ry="34" fill="#fff" stroke="#C7CCD8" stroke-width="4"/>
+          <ellipse cx="170" cy="82" rx="42" ry="28" fill="#fff" stroke="#C7CCD8" stroke-width="4"/>
+          <ellipse cx="95" cy="82" rx="36" ry="24" fill="#fff" stroke="#C7CCD8" stroke-width="4"/>
+          <circle cx="130" cy="95" r="40" fill="#F6F8FC" stroke="#C7CCD8" stroke-width="5.2" stroke-dasharray="22 18"/>
+          <path d="M113.2,95 H146.8 M130,78.2 V111.8" stroke="#C7CCD8" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+
+          <ellipse cx="720" cy="120" rx="64" ry="36" fill="#fff" stroke="#C7CCD8" stroke-width="4"/>
+          <ellipse cx="765" cy="106" rx="46" ry="30" fill="#fff" stroke="#C7CCD8" stroke-width="4"/>
+          <ellipse cx="682" cy="108" rx="38" ry="26" fill="#fff" stroke="#C7CCD8" stroke-width="4"/>
+          <circle cx="720" cy="120" r="40" fill="#F6F8FC" stroke="#C7CCD8" stroke-width="5.2" stroke-dasharray="22 18"/>
+          <path d="M703.2,120 H736.8 M720,103.2 V136.8" stroke="#C7CCD8" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+        </g>
+
+        <!-- Sol con slot -->
+        <g transform="translate(760,78)">
+          <circle r="52" fill="#FFC83D" stroke="#F0B021" stroke-width="5"/>
+          <g stroke="#F0B021" stroke-width="6" stroke-linecap="round">
+            <line x1="0" y1="-78" x2="0" y2="-62"/>
+            <line x1="55" y1="-55" x2="44" y2="-44"/>
+            <line x1="78" y1="0" x2="62" y2="0"/>
+            <line x1="55" y1="55" x2="44" y2="44"/>
+            <line x1="0" y1="78" x2="0" y2="62"/>
+            <line x1="-55" y1="55" x2="-44" y2="44"/>
+            <line x1="-78" y1="0" x2="-62" y2="0"/>
+            <line x1="-55" y1="-55" x2="-44" y2="-44"/>
+          </g>
+          <circle r="40" fill="#F6F8FC" stroke="#C7CCD8" stroke-width="5.2" stroke-dasharray="22 18"/>
+          <path d="M-16.8,0 H16.8 M0,-16.8 V16.8" stroke="#C7CCD8" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+        </g>
+
+        <!-- Colinas -->
+        <ellipse cx="220" cy="610" rx="260" ry="70" fill="#D8F5E3" opacity="0.9"/>
+        <ellipse cx="620" cy="630" rx="320" ry="82" fill="#C4EFD4" opacity="0.95"/>
+
+        <!-- Camino -->
+        <path d="M340,680 C420,560 460,500 440,420 C430,380 410,350 390,330"
+              fill="none" stroke="#D9D2C4" stroke-width="22" stroke-linecap="round"/>
+
+        <!-- Cerca -->
+        <g stroke="#B5774A" stroke-width="5" stroke-linecap="round">
+          <line x1="90" y1="500" x2="90" y2="560"/>
+          <line x1="130" y1="500" x2="130" y2="560"/>
+          <line x1="170" y1="500" x2="170" y2="560"/>
+          <line x1="210" y1="500" x2="210" y2="560"/>
+          <line x1="80" y1="520" x2="220" y2="520"/>
+          <line x1="80" y1="545" x2="220" y2="545"/>
+        </g>
+
+        <!-- Flores del jardín (slots) -->
+        <g>
+          <line x1="250" y1="560" x2="250" y2="530" stroke="#34C76E" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="250" cy="530" r="40" fill="#F6F8FC" stroke="#C7CCD8" stroke-width="5.2" stroke-dasharray="22 18"/>
+          <path d="M233.2,530 H266.8 M250,513.2 V546.8" stroke="#C7CCD8" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+
+          <line x1="300" y1="575" x2="300" y2="545" stroke="#34C76E" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="300" cy="545" r="40" fill="#F6F8FC" stroke="#C7CCD8" stroke-width="5.2" stroke-dasharray="22 18"/>
+          <path d="M283.2,545 H316.8 M300,528.2 V561.8" stroke="#C7CCD8" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+
+          <line x1="560" y1="585" x2="560" y2="555" stroke="#34C76E" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="560" cy="555" r="40" fill="#F6F8FC" stroke="#C7CCD8" stroke-width="5.2" stroke-dasharray="22 18"/>
+          <path d="M543.2,555 H576.8 M560,538.2 V571.8" stroke="#C7CCD8" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+
+          <line x1="620" y1="570" x2="620" y2="540" stroke="#34C76E" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="620" cy="540" r="40" fill="#F6F8FC" stroke="#C7CCD8" stroke-width="5.2" stroke-dasharray="22 18"/>
+          <path d="M603.2,540 H636.8 M620,523.2 V556.8" stroke="#C7CCD8" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+
+          <line x1="700" y1="560" x2="700" y2="530" stroke="#34C76E" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="700" cy="530" r="40" fill="#F6F8FC" stroke="#C7CCD8" stroke-width="5.2" stroke-dasharray="22 18"/>
+          <path d="M683.2,530 H716.8 M700,513.2 V546.8" stroke="#C7CCD8" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+        </g>
+
+        <!-- Sombra de la casa -->
+        <ellipse cx="440" cy="610" rx="210" ry="28" fill="#E6E1D6" opacity="0.55"/>
+
+        <!-- Casita -->
+        <g transform="translate(440,430)">
+          <!-- Cuerpo -->
+          <rect x="-150" y="-20" width="300" height="200" rx="12" fill="#FFE2A8" stroke="#925C36" stroke-width="6"/>
+          <!-- Techo -->
+          <path d="M-180,-20 L0,-150 L180,-20 Z" fill="#FF5168" stroke="#E23B50" stroke-width="6" stroke-linejoin="round"/>
+          <!-- Slots en el techo -->
+          <circle cx="-70" cy="-72" r="40" fill="#F6F8FC" stroke="#C7CCD8" stroke-width="5.2" stroke-dasharray="22 18"/>
+          <path d="M-86.8,-72 H-53.2 M-70,-88.8 V-55.2" stroke="#C7CCD8" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+          <circle cx="0" cy="-95" r="40" fill="#F6F8FC" stroke="#C7CCD8" stroke-width="5.2" stroke-dasharray="22 18"/>
+          <path d="M-16.8,-95 H16.8 M0,-111.8 V-78.2" stroke="#C7CCD8" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+          <circle cx="70" cy="-72" r="40" fill="#F6F8FC" stroke="#C7CCD8" stroke-width="5.2" stroke-dasharray="22 18"/>
+          <path d="M53.2,-72 H86.8 M70,-88.8 V-55.2" stroke="#C7CCD8" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+          <!-- Chimenea -->
+          <rect x="88" y="-125" width="34" height="58" rx="6" fill="#B5774A" stroke="#925C36" stroke-width="4"/>
+          <circle cx="105" cy="-132" r="40" fill="#F6F8FC" stroke="#C7CCD8" stroke-width="5.2" stroke-dasharray="22 18"/>
+          <path d="M88.2,-132 H121.8 M105,-148.8 V-115.2" stroke="#C7CCD8" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+          <!-- Puerta -->
+          <rect x="-42" y="70" width="84" height="110" rx="12" fill="#B5774A" stroke="#925C36" stroke-width="5"/>
+          <circle cx="24" cy="125" r="8" fill="#FFC83D" stroke="#F0B021" stroke-width="3"/>
+          <!-- Ventanas -->
+          <rect x="-118" y="35" width="70" height="70" rx="10" fill="#EAF4FF" stroke="#925C36" stroke-width="4"/>
+          <line x1="-83" y1="35" x2="-83" y2="105" stroke="#925C36" stroke-width="4"/>
+          <line x1="-118" y1="70" x2="-48" y2="70" stroke="#925C36" stroke-width="4"/>
+          <circle cx="-83" cy="70" r="40" fill="#F6F8FC" stroke="#C7CCD8" stroke-width="5.2" stroke-dasharray="22 18"/>
+          <path d="M-99.8,70 H-66.2 M-83,53.2 V86.8" stroke="#C7CCD8" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+
+          <rect x="48" y="35" width="70" height="70" rx="10" fill="#EAF4FF" stroke="#925C36" stroke-width="4"/>
+          <line x1="83" y1="35" x2="83" y2="105" stroke="#925C36" stroke-width="4"/>
+          <line x1="48" y1="70" x2="118" y2="70" stroke="#925C36" stroke-width="4"/>
+          <circle cx="83" cy="70" r="40" fill="#F6F8FC" stroke="#C7CCD8" stroke-width="5.2" stroke-dasharray="22 18"/>
+          <path d="M66.2,70 H99.8 M83,53.2 V86.8" stroke="#C7CCD8" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+
+          <!-- Letrero -->
+          <rect x="-72" y="8" width="144" height="34" rx="17" fill="#fff" stroke="#E23B50" stroke-width="4"/>
+          <text x="0" y="31" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="22" font-weight="700" fill="#FF5168">Malena</text>
+        </g>
+
+        <!-- Malena -->
+        <g transform="translate(250,500)">
+          <ellipse cx="0" cy="78" rx="52" ry="14" fill="#E6E1D6" opacity="0.55"/>
+          <!-- Vestido -->
+          <path d="M-34,30 Q0,10 34,30 L44,95 Q0,108 -44,95 Z" fill="#9B6DD6" stroke="#7E4FC0" stroke-width="4" stroke-linejoin="round"/>
+          <!-- Brazos -->
+          <path d="M-30,38 Q-58,48 -52,68" fill="none" stroke="#FFD8BE" stroke-width="14" stroke-linecap="round"/>
+          <path d="M30,38 Q58,48 52,68" fill="none" stroke="#FFD8BE" stroke-width="14" stroke-linecap="round"/>
+          <!-- Cabeza -->
+          <circle cx="0" cy="0" r="38" fill="#FFD8BE" stroke="#E8B896" stroke-width="4"/>
+          <!-- Cabello -->
+          <path d="M-36,-4 Q-8,-48 36,-4 Q28,18 0,10 Q-28,18 -36,-4 Z" fill="#5A3828" stroke="#4A2D20" stroke-width="3"/>
+          <circle cx="-24" cy="-8" r="10" fill="#5A3828"/>
+          <circle cx="24" cy="-8" r="10" fill="#5A3828"/>
+          <!-- Carita -->
+          <circle cx="-12" cy="4" r="4" fill="#3A3A4A"/>
+          <circle cx="12" cy="4" r="4" fill="#3A3A4A"/>
+          <path d="M-10,18 Q0,26 10,18" fill="none" stroke="#E23B50" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="-18" cy="12" r="6" fill="#FFB6C8" opacity="0.55"/>
+          <circle cx="18" cy="12" r="6" fill="#FFB6C8" opacity="0.55"/>
+        </g>
+
+        <!-- Mariposa -->
+        <g transform="translate(680,470)">
+          <ellipse cx="-18" cy="0" rx="22" ry="28" fill="#FF9F43" stroke="#F08A23" stroke-width="3"/>
+          <ellipse cx="18" cy="0" rx="22" ry="28" fill="#FF9F43" stroke="#F08A23" stroke-width="3"/>
+          <ellipse cx="0" cy="0" rx="6" ry="24" fill="#3A3A4A"/>
+        </g>
+      </svg>
+    </div>
+
+    <footer class="footer">
+      <p>con amor, <span>@_mi_dulce_emma</span></p>
+      <p>Stickers de 16 mm</p>
+    </footer>
+  </main>
+</body>
+</html>
