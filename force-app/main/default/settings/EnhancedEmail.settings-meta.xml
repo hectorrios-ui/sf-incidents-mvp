@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EnhancedEmailSettings xmlns="http://soap.sforce.com/2006/04/metadata">
+    <enableEnhancedEmails>true</enableEnhancedEmails>
+    <enableEmailToSalesforce>true</enableEmailToSalesforce>
+    <enableSendTextEmailOnly>false</enableSendTextEmailOnly>
+    <enableSendTextOnly>false</enableSendTextOnly>
+    <enableShareEmailBodyWithMyBrandedEmailEnabled>false</enableShareEmailBodyWithMyBrandedEmailEnabled>
+    <enableUseDefaultBrandInMessaging>false</enableUseDefaultBrandInMessaging>
+</EnhancedEmailSettings>
