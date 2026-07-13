@@ -7,6 +7,13 @@
                         <h2 class="slds-text-heading_small">Case created successfully! Case #{caseNumber}</h2>
                     </span>
                 </div>
+                <lightning-button
+                    variant="brand"
+                    label="Create Another Case"
+                    icon-name="utility:add"
+                    onclick={handleReset}
+                    class="slds-var-m-top_small">
+                </lightning-button>
             </template>
 
             <template if:false={showSuccess}>
