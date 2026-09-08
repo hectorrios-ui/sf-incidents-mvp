@@ -48,65 +48,32 @@ That's it. No need to create the credential from scratch.
 
 ---
 
-### Step 3 — Set the AI API key in the External Credential
-
-The `LLM_Provider_API_Key` External Credential shell is deployed with the package but **the secret value never deploys via metadata** — Salesforce strips it for security. You must set it manually every time on a new org.
-
-Setup → **Named Credentials** → **External Credentials** tab → `LLM Provider API Key` → **Principals** section → click the principal row → **Edit** → paste your AI API key (`sk-ant-api03-...` for Anthropic, `sk-...` for OpenAI) into the `x-api-key` field → **Save**.
-
-> ⚠️ If this step is skipped, the AI callout silently fails and the Slack message shows `Proposed fix: n/a` with no error. Always verify with a smoke test after setup.
-
-> The key is stored as an `x-api-key` header value injected automatically on every callout — your Apex never sees the raw key.
-
----
-
-### Step 4 — (Already done) AI Named Credential
-
-`LLM_Provider_API` Named Credential is deployed with the package pointing to `https://api.anthropic.com`. No action needed unless switching to a different AI provider base URL.
-
----
-
-### Step 5 — Grant permission to the External Credential
-
-The running user (or integration user) must be granted access to the External Credential principal, otherwise callouts silently fail.
-
-Setup → **Named Credentials** → **External Credentials** → `LLM Provider API Key` → **Principals** → click your principal → **Permission Sets** → add `SF_incident_MVP` (or your integration permission set).
-
----
-
-### Step 6 — Deploy the package
+### Step 3 — Deploy the package
 
 ```bash
-sf project deploy start --source-dir force-app/main/default -o <your-org-alias>
+./scripts/deploy-org.sh <your-org-alias>
+# Custom Metadata records are excluded via .forceignore (org config preserved)
 ```
 
 ---
 
-### Step 7 — Activate the Flow
+### Step 4 — Activate the Flow
 
 Setup → **Flows** → `Feedback_Send_Slack_On_New` → **Activate**.
 
 ---
 
-### Step 8 — Configure Custom Metadata
+### Step 5 — Configure Slack Custom Metadata
 
-#### Slack config
 Setup → **Custom Metadata Types** → `Ops Incident Slack Config` → **Manage Records** → `Default`:
 - **Slack Named Credential**: `Slack_Webhook`
-
-#### AI config
-Setup → **Custom Metadata Types** → `Ops Incident AI Config` → **Manage Records** → `Default`:
-- **Enabled**: ✅
-- **Named Credential Api Name**: `LLM_Provider_API`
-- **Provider**: `Anthropic_Messages` (or `OpenAI_Chat`)
-- **Model**: `claude-sonnet-4-6` (or your preferred model)
-- **Temperature**: `0.2`
-- **Max Output Tokens**: `600`
-- **Relative Api Path**: `v1/messages` (or `v1/chat/completions` for OpenAI)
+- **Auto Analyze Enabled**: ✅ (optional)
+- **Claude Slack User Id**: Claude bot member id (optional)
+- **Project Label**: e.g. `ClientA-UAT` (optional)
 
 ---
 
-### Step 9 — (Optional) Map Slack user IDs for @-mentions
+### Step 6 — (Optional) Map Slack user IDs for @-mentions
 
 Setup → **Custom Metadata Types** → `Slack User Mapping` → **Manage Records** → **New** for each teammate:
 - **Salesforce Username**: their full SF username (e.g. `hector.rios@company.com.uatsb`)
@@ -119,10 +86,8 @@ Setup → **Custom Metadata Types** → `Slack User Mapping` → **Manage Record
 | Credential | Type | Purpose | Contains secret? |
 |---|---|---|---|
 | `Slack_Webhook` | Legacy Named Credential | Slack incoming webhook URL | Yes — URL is the token |
-| `LLM_Provider_API_Key` | External Credential | AI API key storage | Yes — set manually in Setup |
-| `LLM_Provider_API` | Named Credential | AI provider base URL + auth | No — references External Credential |
 
-> ⚠️ **Never commit credential files to git.** They are excluded via `.forceignore`. Recreate them in each org manually using this guide.
+LLM Named Credentials are **not** part of this MVP (Claude runs in Slack, not Apex).
 
 ---
 
@@ -136,21 +101,16 @@ Setup → **Custom Metadata Types** → `Slack User Mapping` → **Manage Record
 - `SlackMessageTs__c` prevents duplicate sends.
 - Slack payload includes:
   - Feedback metadata (status, type, persona, link, description)
-  - Record Id for Claude / Cursor / MCP handoff
-  - Collaboration prompt (analyze in-thread)
+  - Record Id + **Org Context** (edition/sandbox/host/project label)
+  - Optional auto-@Claude analyze prompt
 
-AI suggestions are **not** generated in Apex anymore. Salesforce posts facts to Slack; Claude/Cursor in the thread propose fixes (Phase 2+).
-
-### AI side (legacy, optional)
-
-- `FeedbackLlmAdvisor` remains in the package but is **no longer called** by `FeedbackSlackService`.
-- Prefer Slack-native Claude / ClaudeForce + MCP instead of Apex callouts.
+AI analysis happens in **Claude in Slack**, not Apex.
 
 ### Security / access
 
-- `SF_incident_MVP` permission set updated for new fields/classes.
+- `SF_incident_MVP` permission set for Feedback + Apex access.
 - Slack Named Credential is required for notifications.
-- LLM Named Credential is optional after Phase 1 (only if you still use `FeedbackLlmAdvisor` manually).
+- No LLM API keys are stored in Salesforce for this MVP.
 
 ---
 

@@ -7,7 +7,7 @@ This guide will help you deploy the UAT Feedback package to a fresh Salesforce o
 - Salesforce CLI installed (`npm install -g @salesforce/cli`)
 - Git clone of this repository
 - Slack workspace (for webhook)
-- Anthropic or OpenAI API key (for AI suggestions)
+- Claude in Slack invited to the target channel (for auto-analyze)
 
 ## Option 1: Automated Script (Recommended)
 
