@@ -73,23 +73,7 @@ After deployment, you **must** configure these items manually (Salesforce doesn'
    - Setup → Named Credentials → **Slack_Webhook**
    - Edit → Paste webhook URL → Save
 
-### 2. AI API Key (Required)
-
-1. Get your API key:
-   - Anthropic: https://console.anthropic.com/
-   - OpenAI: https://platform.openai.com/
-
-2. In Salesforce:
-   - Setup → Named Credentials → **External Credentials** tab
-   - **LLM Provider API Key** → Principals section
-   - Click the principal → Edit
-   - Paste API key in `x-api-key` field → Save
-
-3. Grant permission:
-   - Setup → Permission Sets → **SF_incident_MVP**
-   - Add the External Credential → Save
-
-### 3. Assign Permission Set + open the app (Required)
+### 2. Assign Permission Set + open the app (Required)
 
 Without this, **Feedback will not appear** in App Launcher.
 
@@ -101,26 +85,17 @@ Or: Setup → Permission Sets → **SF Incident MVP** → Manage Assignments →
 
 Then App Launcher → **UAT Feedback** (or search **Feedback**).
 
-### 4. Activate Flow (Required)
+### 3. Activate Flow (Required)
 
 - Setup → Flows → **Feedback_Send_Slack_On_New**
 - Click **Activate**
 
-### 4. Verify Custom Metadata (Optional - has defaults)
+### 4. Verify Slack Custom Metadata
 
-**Slack Config:**
 - Setup → Custom Metadata Types → **Ops Incident Slack Config**
 - Manage Records → **Default**
-- Verify: Slack Named Credential = `Slack_Webhook`
-
-**AI Config:**
-- Setup → Custom Metadata Types → **Ops Incident AI Config**
-- Manage Records → **Default**
-- Verify settings:
-  - Enabled: ✅
-  - Provider: `Anthropic_Messages` (or `OpenAI_Chat`)
-  - Model: `claude-sonnet-4-6`
-  - Named Credential: `LLM_Provider_API`
+- Slack Named Credential = `Slack_Webhook`
+- Optional: Auto Analyze + Claude Slack User Id + Project Label
 
 ### 5. Map Slack Users (Optional - for @mentions)
 
@@ -137,40 +112,31 @@ Then App Launcher → **UAT Feedback** (or search **Feedback**).
    - Status = **New**
    - Save
 
-2. Check Slack - you should see the notification!
-
-3. In Slack thread, try:
-   ```
-   @Cursor analyze this feedback and suggest a fix
-   ```
+2. Check Slack - you should see the notification (org context + optional @Claude)!
 
 ## What's Included
 
-This deployment includes:
+See `docs/MVP-COMPONENTS.md`. Core pieces:
 
-- ✅ `Feedback__c` custom object (20 fields)
-- ✅ Apex classes (Slack service, AI advisor, KPI tracking)
-- ✅ Trigger + Flow automation
-- ✅ LWC components (Feedback button, Create case)
-- ✅ Named Credentials (configured shells)
-- ✅ Custom Metadata Types
-- ✅ List views & record pages
+- ✅ `Feedback__c` + tab + UAT Feedback app
+- ✅ `FeedbackSlackService` + KPI trigger/services
+- ✅ Flow `Feedback_Send_Slack_On_New`
+- ✅ Slack Named Credential shell + Slack CMDT
+- ✅ MCP invocables (for when Claude in Slack is org-connected)
+- ❌ No Apex LLM / OpenAI / Anthropic credentials
 
 ## Troubleshooting
 
 **Slack messages not sending?**
 - Check Named Credential URL is correct
-- Test webhook with curl to verify it works
 - Check Flow is activated
 
-**AI suggestions showing "n/a"?**
-- Verify API key is set in External Credential
-- Check permission set grants access to credential
-- Review Custom Metadata AI config
+**Claude not waking?**
+- Auto Analyze Enabled + Claude Slack User Id on Slack CMDT
+- Claude invited to the channel
 
-**Deployment errors?**
-- Run: `sf project deploy start --source-dir force-app/main/default -o your-org --dry-run`
-- Check API version compatibility (currently 64.0)
+**Feedback not visible?**
+- Assign `SF_incident_MVP` permission set
 
 ## Next Steps
 

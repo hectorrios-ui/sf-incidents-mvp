@@ -4,15 +4,19 @@ force-app/main/default/genAiPromptTemplates/
 force-app/main/default/genAiFunctions/
 
 # Custom Metadata RECORDS are org-specific (Claude Slack user id, auto-analyze flags,
-# named credential names, project labels, AI model, etc.). Deploying them overwrites
-# Legend/client sandbox configuration on every push. Keep type/field defs in objects/;
-# configure Default records once per org in Setup.
+# named credential names, project labels, etc.). Deploying/packaging them overwrites
+# client sandbox configuration. Keep type/field defs in objects/; configure Default
+# records once per org in Setup.
 force-app/main/default/customMetadata/
 
+# Adjacent experiments — not part of the UAT Feedback → Slack → Claude package
+force-app/main/default/lwc/nF_CreateCase/
+force-app/main/default/lwc/nF_FeedbackButton/
+force-app/main/default/flexipages/Contact_Record_Page.flexipage-meta.xml
+force-app/main/default/objects/Feedback__c/webLinks/
+
 # Credential files are safe to commit — secrets are replaced with REPLACE_ME placeholders.
-# After deploying to a new org, update the actual values in Setup:
-#   - Slack_Webhook NC → paste the Slack incoming webhook URL
-#   - LLM_Provider_API_Key External Credential → paste the AI API key
+# After install: Setup → Named Credentials → Slack_Webhook → paste webhook URL.
 
 **/jsconfig.json
 **/.eslintrc.json
