@@ -81,7 +81,19 @@ After deployment, you **must** configure these items manually (Salesforce doesn'
    - Setup → Permission Sets → **SF_incident_MVP**
    - Add the External Credential → Save
 
-### 3. Activate Flow (Required)
+### 3. Assign Permission Set + open the app (Required)
+
+Without this, **Feedback will not appear** in App Launcher.
+
+```bash
+sf org assign permset -n SF_incident_MVP -o <your-org-alias>
+```
+
+Or: Setup → Permission Sets → **SF Incident MVP** → Manage Assignments → add your user.
+
+Then App Launcher → **UAT Feedback** (or search **Feedback**).
+
+### 4. Activate Flow (Required)
 
 - Setup → Flows → **Feedback_Send_Slack_On_New**
 - Click **Activate**
