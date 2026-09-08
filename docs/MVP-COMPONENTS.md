@@ -7,9 +7,11 @@ Lean package: Salesforce is system of record + Slack notifier only (no Apex LLM)
 ### Data
 | Component | Purpose |
 |-----------|---------|
-| `Feedback__c` (+ fields, list views) | System of record for UAT feedback |
+| `Feedback__c` (+ fields, list views, layout, compact layout) | System of record for UAT feedback |
+| `Feedback__c` validation `Issue_Description_Required` | Issue Description required (Html cannot be field-required) |
 | `Feedback__c` tab | App Launcher visibility |
 | `UAT_Feedback` Lightning app | Consultant workspace |
+| `Slack_Config__mdt` / `Slack_User_Mapping__mdt` layouts | Setup UI for Claude/Slack config |
 
 ### Automation
 | Component | Purpose |

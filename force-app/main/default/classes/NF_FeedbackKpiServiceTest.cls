@@ -57,6 +57,7 @@ private class NF_FeedbackKpiServiceTest {
         User u = pickAnyUser();
         Feedback__c f = new Feedback__c(
             Issue_Name__c = 'Born In Progress',
+            Issue_Description__c = 'KPI born in progress coverage.',
             Status__c = 'In Progress',
             Assigned_To__c = u.Id
         );

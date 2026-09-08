@@ -51,7 +51,12 @@ private class NF_FeedbackSlackServiceTest {
     @IsTest
     static void renderAssignee_returnsNameWhenNoMapping() {
         User u = [SELECT Id, Name, Username FROM User WHERE IsActive = true LIMIT 1];
-        Feedback__c f = new Feedback__c(Issue_Name__c = 'x', Status__c = 'New', Assigned_To__c = u.Id);
+        Feedback__c f = new Feedback__c(
+            Issue_Name__c = 'x',
+            Issue_Description__c = 'Assignee render without mapping.',
+            Status__c = 'New',
+            Assigned_To__c = u.Id
+        );
         insert f;
         f = [SELECT Assigned_To__c, Assigned_To__r.Name, Assigned_To__r.Username FROM Feedback__c WHERE Id = :f.Id];
 
@@ -63,7 +68,12 @@ private class NF_FeedbackSlackServiceTest {
     @IsTest
     static void renderAssignee_returnsSlackMentionWhenMapped() {
         User u = [SELECT Id, Name, Username FROM User WHERE IsActive = true LIMIT 1];
-        Feedback__c f = new Feedback__c(Issue_Name__c = 'x', Status__c = 'New', Assigned_To__c = u.Id);
+        Feedback__c f = new Feedback__c(
+            Issue_Name__c = 'x',
+            Issue_Description__c = 'Assignee render with mapping.',
+            Status__c = 'New',
+            Assigned_To__c = u.Id
+        );
         insert f;
         f = [SELECT Assigned_To__c, Assigned_To__r.Name, Assigned_To__r.Username FROM Feedback__c WHERE Id = :f.Id];
 
@@ -77,7 +87,11 @@ private class NF_FeedbackSlackServiceTest {
 
     @IsTest
     static void recordUrl_containsLightningPathAndId() {
-        Feedback__c f = new Feedback__c(Issue_Name__c = 'Link test', Status__c = 'New');
+        Feedback__c f = new Feedback__c(
+            Issue_Name__c = 'Link test',
+            Issue_Description__c = 'Record URL coverage.',
+            Status__c = 'New'
+        );
         insert f;
         String url = NF_FeedbackSlackService.recordUrl(f.Id);
         System.assert(url.contains('/lightning/r/Feedback__c/'), 'URL should contain Lightning record path');
