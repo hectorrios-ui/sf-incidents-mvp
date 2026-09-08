@@ -160,17 +160,18 @@ AI suggestions are **not** generated in Apex anymore. Salesforce posts facts to 
 Feedback__c created/updated (Status = New)
     -> Record-Triggered Flow
     -> Apex: FeedbackSlackService (async callout)
-        -> Slack message to internal channel (facts + record link + Id)
+        -> Slack message (facts + Record Id + optional @Claude auto-analyze)
         -> Feedback__c.SlackMessageTs__c = sent:timestamp
 
 Slack thread
-    -> Team triage discussion
-    -> Claude / ClaudeForce (optional MCP Salesforce tools) suggests fix
-    -> @cursor command to implement fix
-    -> PR generated/reviewed
-    -> Feedback status updated in Salesforce
+    -> Claude auto-mentioned (optional)
+    -> Claude / Cursor uses Salesforce MCP to load Feedback__c
+    -> Propose fix in-thread
+    -> @cursor implements + PR
+    -> MCP Update Feedback (Status / Solution)
 ```
 
+See also: [docs/PHASE3-SALESFORCE-MCP.md](./docs/PHASE3-SALESFORCE-MCP.md)
 ---
 
 ## 4) Slack Channel Design
