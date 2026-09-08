@@ -1,6 +1,6 @@
 # MVP component inventory — UAT Feedback → Slack → Claude
 
-Clean package after removing Apex LLM integration.
+Lean package: Salesforce is system of record + Slack notifier only (no Apex LLM).
 
 ## Core MVP (required)
 
@@ -23,7 +23,7 @@ Clean package after removing Apex LLM integration.
 |-----------|---------|
 | `Slack_Config__mdt` | Webhook NC name, Claude user id, auto-analyze, project label |
 | `Slack_User_Mapping__mdt` | Optional assignee @mentions |
-| `Slack_Webhook` Named Credential | Incoming webhook URL (secret in org) |
+| `Slack_Webhook` Named Credential | Incoming webhook URL (secret in org; not packaged) |
 | `SF_incident_MVP` permission set | Object/Apex/app access |
 
 ### What each Slack message includes
@@ -46,27 +46,21 @@ Use when Slack/Salesforce admins connect Hosted MCP to Claude in Slack.
 
 ---
 
-## Explicitly removed from MVP package
+## Explicitly removed from repo / package
 
 | Removed | Why |
 |---------|-----|
 | `FeedbackLlmAdvisor` (+ test) | Apex LLM callouts retired |
-| `Ops_Incident_AI_Config__mdt` (removed) | Was Apex LLM only |
+| `Ops_Incident_AI_Config__mdt` | Was Apex LLM only |
 | `LLM_Provider_API` Named Credential | No longer used |
 | `LLM_Provider_API_Key` External Credential | No longer used |
 | `Feedback_Mark_In_Progress_After_Slack` | Intentional fault smoke test only |
+| `nF_CreateCase` / `nF_FeedbackButton` LWCs | Contact-page experiments — not Slack MVP |
+| Contact Record Page flexipage | Hosted those LWCs only |
+| Feedback webLinks `Send_to_Slack` / `Slack_Alerts` | Legacy Slack package links |
+| Contact tab on `UAT_Feedback` app | Not part of consultancy MVP |
 
-**Org cleanup (Legend):** deactivate/delete the intentional fault Flow if it was deployed; you may leave unused LLM credentials or delete them manually.
-
----
-
-## Adjacent (in repo, not required for this MVP)
-
-| Component | Notes |
-|-----------|---------|
-| `nF_CreateCase` LWC + Contact flexipage | Separate UX experiment |
-| `nF_FeedbackButton` LWC | Optional UI entry point |
-| Feedback webLinks `Send_to_Slack` / `Slack_Alerts` | Legacy Slack package links; not required for webhook path |
+**Org cleanup:** deactivate/delete leftover fault Flow or LLM credentials if still present from older deploys.
 
 ---
 

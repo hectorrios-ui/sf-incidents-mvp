@@ -16,7 +16,6 @@
 `Feedback__c` object API name unchanged (data + reports stay stable).
 
 ## After upgrading package version
-1. Activate Flow **NF Feedback Send Slack On New** (old flow name is gone)
-2. Re-check CMDT: **Slack Config** → Default  
-   (recreate Default if upgrade dropped the old Ops_* record — records are not packaged)
-3. Perm set still `SF_incident_MVP` (assigns new `NF_*` Apex classes)
+1. Activate Flow **NF Feedback Send Slack On New**
+2. Re-check CMDT: **Slack Config** → Default (recreate if needed — records not packaged)
+3. Perm set still `SF_incident_MVP`

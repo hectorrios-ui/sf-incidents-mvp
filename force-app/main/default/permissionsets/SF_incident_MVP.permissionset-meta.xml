@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>Access to Feedback object, Slack/AI Apex services, and UAT Feedback app.</description>
+    <description>Access to Feedback object, Slack/MCP Apex services, and UAT Feedback app.</description>
     <hasActivationRequired>false</hasActivationRequired>
     <label>SF Incident MVP</label>
     <applicationVisibilities>

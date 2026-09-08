@@ -123,10 +123,9 @@ Then install the **new** `04t…` version.
 Excluded via `.forceignore` (on purpose):
 
 - `customMetadata/` records (org-specific Claude/Slack settings)  
-- Experiment LWCs / Contact flexipage  
-- Feedback webLinks that depend on other Slack packages  
+- `namedCredentials/` / `externalCredentials/` (create `Slack_Webhook` manually after install)  
 
-Included: Feedback object, Slack service, KPI trigger, Flows, Slack CMDT **types**, MCP invocables, app/tab/permset, Slack_Webhook shell.
+Included: Feedback object, Slack service, KPI trigger, Flow, Slack CMDT **types**, MCP invocables, app/tab/permset.
 
 ---
 
