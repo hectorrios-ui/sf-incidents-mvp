@@ -15,8 +15,13 @@ force-app/main/default/lwc/nF_FeedbackButton/
 force-app/main/default/flexipages/Contact_Record_Page.flexipage-meta.xml
 force-app/main/default/objects/Feedback__c/webLinks/
 
-# Credential files are safe to commit — secrets are replaced with REPLACE_ME placeholders.
-# After install: Setup → Named Credentials → Slack_Webhook → paste webhook URL.
+# Named Credentials / secrets — do NOT package.
+# Subscriber orgs create Slack_Webhook manually after install (Incoming Webhook URL).
+# Packaging legacy NC without NamedCredentialType fails install on modern API versions.
+force-app/main/default/namedCredentials/
+force-app/main/default/externalCredentials/
+
+# Credential notes kept in docs/PACKAGING-GUIDE.md post-install checklist.
 
 **/jsconfig.json
 **/.eslintrc.json

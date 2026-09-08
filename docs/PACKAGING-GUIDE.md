@@ -85,15 +85,38 @@ sf package install \
 Or share an install link from Setup in the Dev Hub / partner console once promoted.
 
 ### 5) Post-install (every org) — still manual
-Package cannot ship secrets or client Slack IDs:
+Package does **not** include Named Credentials (install would fail / secrets can’t ship):
 
-1. Named Credential **Slack_Webhook** → paste channel webhook  
+1. **Create Named Credential `Slack_Webhook`**
+   - Setup → Named Credentials → New Legacy (or New)
+   - Label: `Slack Webhook`
+   - Name: `Slack_Webhook`  ← must match exactly
+   - URL: your Slack Incoming Webhook URL  
+   - Identity Type: Named Principal / Anonymous as your UI allows  
+   - Authentication Protocol: **No Authentication**
+   - Save
 2. Activate Flow **Feedback_Send_Slack_On_New**  
 3. Assign permission set **SF Incident MVP**  
 4. Create/edit CMDT **Ops Incident Slack Config** Default (Claude user id, project label, auto-analyze)  
 5. Invite Claude to that client’s private channel  
 
 ---
+
+## Rebuild package after NC exclusion
+
+If install failed on `NamedCredential(Slack_Webhook)`:
+
+```bash
+git pull
+sf package version create \
+  --package "UAT Feedback Slack Claude" \
+  --installation-key-bypass \
+  --wait 40 \
+  --code-coverage \
+  --target-dev-hub DevHub
+```
+
+Then install the **new** `04t…` version.
 
 ## What gets packaged vs excluded
 
