@@ -40,8 +40,16 @@ sf org login web -a my-org
 ### Step 2: Deploy
 
 ```bash
+# Recommended helper (same deploy; CMDT records skipped via .forceignore)
+./scripts/deploy-org.sh Legend
+
+# Or:
 sf project deploy start --source-dir force-app/main/default -o feedback-demo
 ```
+
+> Custom Metadata **records** under `force-app/main/default/customMetadata/` are excluded
+> from deploy (see `.forceignore`) so org settings like Claude Slack User Id are preserved.
+> Configure those once in Setup. CMDT **type/field** definitions still deploy.
 
 ### Step 3: Open the Org
 
