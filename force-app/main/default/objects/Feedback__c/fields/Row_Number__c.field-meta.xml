@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Row_Number__c</fullName>
-    <description>Used to identify which row number the feedback item is referring to.</description>
+    <description>Row or step number from the test script this feedback refers to.</description>
+    <inlineHelpText>Optional. Enter the spreadsheet or script row/step number for faster triage.</inlineHelpText>
     <externalId>false</externalId>
     <label>Row Number</label>
     <length>10</length>

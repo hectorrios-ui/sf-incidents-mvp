@@ -2,6 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>AcknowledgedAt__c</fullName>
     <description>Timestamp when the feedback first moved out of status New (first triage).</description>
+    <inlineHelpText>Set automatically when the item is first assigned or leaves New. Used for triage KPIs.</inlineHelpText>
     <externalId>false</externalId>
     <label>Acknowledged At</label>
     <required>false</required>

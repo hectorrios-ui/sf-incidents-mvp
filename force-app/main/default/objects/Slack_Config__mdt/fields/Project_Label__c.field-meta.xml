@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Project_Label__c</fullName>
-    <description>Consultancy label for this org/channel binding, e.g. ClientA-UAT.</description>
+    <description>Consultancy label for this org/channel binding (for example ClientA-UAT).</description>
     <externalId>false</externalId>
     <fieldManageability>DeveloperControlled</fieldManageability>
-    <inlineHelpText>Shown in Slack so Claude knows which client/project this Feedback belongs to.</inlineHelpText>
+    <inlineHelpText>Shown in Slack Org Context so Claude knows which client/project this Feedback belongs to.</inlineHelpText>
     <label>Project Label</label>
     <length>80</length>
     <required>false</required>

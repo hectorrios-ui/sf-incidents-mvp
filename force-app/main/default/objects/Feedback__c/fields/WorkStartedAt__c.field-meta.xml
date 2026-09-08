@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>WorkStartedAt__c</fullName>
-    <description>Timestamp when someone started actively working on this feedback (Status first became In Progress or Dev In-Progress).</description>
+    <description>Timestamp when work first started (Status became In Progress or Dev In-Progress).</description>
+    <inlineHelpText>System-managed when Status first indicates active development work.</inlineHelpText>
     <externalId>false</externalId>
     <label>Work Started At</label>
     <required>false</required>

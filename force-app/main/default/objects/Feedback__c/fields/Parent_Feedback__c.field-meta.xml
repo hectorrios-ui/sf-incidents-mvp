@@ -2,7 +2,8 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Parent_Feedback__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
-    <description>Used to relate feedback records.</description>
+    <description>Links related child feedback to a parent feedback item.</description>
+    <inlineHelpText>Optional. Relate follow-up or split items back to the original feedback.</inlineHelpText>
     <label>Parent Feedback</label>
     <referenceTo>Feedback__c</referenceTo>
     <relationshipLabel>Feedback</relationshipLabel>

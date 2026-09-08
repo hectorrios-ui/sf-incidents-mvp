@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Issue_Name__c</fullName>
-    <description>Used to indicate the feedback issue.</description>
+    <description>Short title that identifies the feedback issue.</description>
     <externalId>false</externalId>
-    <inlineHelpText>Please indicate your feedback issue.</inlineHelpText>
+    <inlineHelpText>Required. Use a clear one-line summary (for example: Checkout button overlaps footer on mobile).</inlineHelpText>
     <label>Issue Name</label>
     <length>200</length>
     <required>true</required>

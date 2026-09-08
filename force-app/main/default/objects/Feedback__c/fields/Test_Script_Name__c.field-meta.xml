@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Test_Script_Name__c</fullName>
-    <description>Used to identify which test script the feedback item is referring to.</description>
+    <description>Name of the UAT test script this feedback refers to.</description>
+    <inlineHelpText>Optional. Enter the script or scenario name so testers and consultants can find context quickly.</inlineHelpText>
     <externalId>false</externalId>
     <label>Test Script Name</label>
     <length>100</length>

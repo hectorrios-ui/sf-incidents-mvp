@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Type__c</fullName>
-    <description>Used to indicate the feedback submitted by user.</description>
+    <description>Category of feedback submitted by the tester.</description>
+    <inlineHelpText>Choose Defect, Question, Incremental Enhancement, or New Enhancement.</inlineHelpText>
     <label>Type</label>
     <required>false</required>
     <trackFeedHistory>true</trackFeedHistory>
