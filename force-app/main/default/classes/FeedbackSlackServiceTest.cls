@@ -108,6 +108,14 @@ private class FeedbackSlackServiceTest {
         // Name is auto-generated (e.g. SF-NNN) — verify the Slack link open-bracket is present
         System.assert(mock.capturedBody.contains('\\u003c') || mock.capturedBody.contains('<'),
             'Payload should use Slack hyperlink syntax');
+        System.assert(mock.capturedBody.contains(String.valueOf(f.Id)),
+            'Payload should include the Salesforce record Id for Claude/MCP handoff');
+        System.assert(mock.capturedBody.contains('Next step'),
+            'Payload should include Claude/Cursor handoff guidance');
+        System.assert(
+            !mock.capturedBody.contains('Proposed fix (internal AI)'),
+            'Apex must not embed AI suggestions; analysis moves to Slack/Claude'
+        );
     }
 
     @IsTest
