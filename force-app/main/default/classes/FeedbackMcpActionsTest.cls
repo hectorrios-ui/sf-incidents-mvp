@@ -5,7 +5,7 @@ private class FeedbackMcpActionsTest {
         Feedback__c f = new Feedback__c(
             Issue_Name__c = 'Domain setup',
             Issue_Description__c = 'Need custom domain steps.',
-            Status__c = 'New',
+            Status__c = 'New'
         );
         insert f;
         f = [SELECT Name FROM Feedback__c WHERE Id = :f.Id];
