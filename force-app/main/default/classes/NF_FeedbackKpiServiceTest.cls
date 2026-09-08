@@ -1,5 +1,5 @@
 @IsTest
-private class NF_NF_FeedbackKpiServiceTest {
+private class NF_FeedbackKpiServiceTest {
 
     private static User pickAnyUser() {
         return [SELECT Id FROM User WHERE IsActive = true LIMIT 1];

@@ -1,5 +1,5 @@
 @IsTest
-private class NF_NF_FeedbackSlackServiceTest {
+private class NF_FeedbackSlackServiceTest {
     private class SuccessMock implements HttpCalloutMock {
         public HttpResponse respond(HttpRequest req) {
             HttpResponse res = new HttpResponse();
