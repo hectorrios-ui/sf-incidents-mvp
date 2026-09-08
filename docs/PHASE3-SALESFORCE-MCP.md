@@ -103,8 +103,8 @@ This branch deploys two Invocable Apex actions you can register as **custom host
 
 | Invocable label | Class | Purpose |
 |-----------------|-------|---------|
-| Get Feedback For MCP | `FeedbackMcpGetAction` | Load Feedback by `SF-017` or Id → JSON summary |
-| Update Feedback From MCP | `FeedbackMcpUpdateAction` | Update Status / Solution / Assigned To |
+| Get Feedback For MCP | `NF_FeedbackMcpGetAction` | Load Feedback by `SF-017` or Id → JSON summary |
+| Update Feedback From MCP | `NF_FeedbackMcpUpdateAction` | Update Status / Solution / Assigned To |
 
 Setup → MCP Servers → create/configure a **custom** server → add Apex Action tools → select those invocables.
 

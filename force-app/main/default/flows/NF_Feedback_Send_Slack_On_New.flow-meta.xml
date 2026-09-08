@@ -4,8 +4,8 @@
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <description>Record-triggered: send Slack notification when Feedback__c is New and not yet sent.</description>
     <environments>Default</environments>
-    <interviewLabel>Feedback Send Slack On New {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>Feedback Send Slack On New</label>
+    <interviewLabel>NF Feedback Send Slack On New {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>NF Feedback Send Slack On New</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -31,7 +31,7 @@
         <label>Send Feedback To Slack</label>
         <locationX>176</locationX>
         <locationY>134</locationY>
-        <actionName>FeedbackSlackService</actionName>
+        <actionName>NF_FeedbackSlackService</actionName>
         <actionType>apex</actionType>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
@@ -40,7 +40,7 @@
                 <elementReference>$Record.Id</elementReference>
             </value>
         </inputParameters>
-        <nameSegment>FeedbackSlackService</nameSegment>
+        <nameSegment>NF_FeedbackSlackService</nameSegment>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
     <start>

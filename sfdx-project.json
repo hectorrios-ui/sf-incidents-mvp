@@ -4,7 +4,7 @@
       "path": "force-app",
       "default": true,
       "package": "UAT Feedback Slack Claude",
-      "versionName": "Winter 26 MVP",
+      "versionName": "Winter 26 MVP NF rename",
       "versionNumber": "0.1.0.NEXT",
       "versionDescription": "UAT Feedback to Slack with org context and Claude-in-Slack handoff. No Apex LLM callouts."
     }

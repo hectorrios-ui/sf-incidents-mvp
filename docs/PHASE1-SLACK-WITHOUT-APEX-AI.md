@@ -2,7 +2,7 @@
 
 ## What changed
 
-`FeedbackSlackService` no longer calls `FeedbackLlmAdvisor`.
+`NF_FeedbackSlackService` no longer calls `FeedbackLlmAdvisor`.
 
 Salesforce now posts a clean Slack notification with:
 - Issue metadata
@@ -26,10 +26,10 @@ git checkout cursor/slack-notify-without-apex-ai-2c5f
 git pull
 
 sf project deploy start \
-  --source-dir force-app/main/default/classes/FeedbackSlackService.cls \
-  --source-dir force-app/main/default/classes/FeedbackSlackService.cls-meta.xml \
-  --source-dir force-app/main/default/classes/FeedbackSlackServiceTest.cls \
-  --source-dir force-app/main/default/classes/FeedbackSlackServiceTest.cls-meta.xml \
+  --source-dir force-app/main/default/classes/NF_FeedbackSlackService.cls \
+  --source-dir force-app/main/default/classes/NF_FeedbackSlackService.cls-meta.xml \
+  --source-dir force-app/main/default/classes/NF_NF_FeedbackSlackServiceTest.cls \
+  --source-dir force-app/main/default/classes/NF_NF_FeedbackSlackServiceTest.cls-meta.xml \
   -o Legend
 ```
 

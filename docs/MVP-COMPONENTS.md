@@ -14,14 +14,14 @@ Clean package after removing Apex LLM integration.
 ### Automation
 | Component | Purpose |
 |-----------|---------|
-| `Feedback_Send_Slack_On_New` (Flow) | When Status=New & not yet sent → call Apex |
-| `FeedbackSlackService` (+ test) | Post Slack message (facts, org context, auto-@Claude) |
-| `FeedbackTrigger` + `FeedbackKpiService` (+ test) | KPI timestamps (ack / start / resolve) |
+| `NF_Feedback_Send_Slack_On_New` (Flow) | When Status=New & not yet sent → call Apex |
+| `NF_FeedbackSlackService` (+ test) | Post Slack message (facts, org context, auto-@Claude) |
+| `NF_FeedbackTrigger` + `NF_FeedbackKpiService` (+ test) | KPI timestamps (ack / start / resolve) |
 
 ### Config (org-managed records; types deploy)
 | Component | Purpose |
 |-----------|---------|
-| `Ops_Incident_Slack_Config__mdt` | Webhook NC name, Claude user id, auto-analyze, project label |
+| `NF_Incident_Slack_Config__mdt` | Webhook NC name, Claude user id, auto-analyze, project label |
 | `Slack_User_Mapping__mdt` | Optional assignee @mentions |
 | `Slack_Webhook` Named Credential | Incoming webhook URL (secret in org) |
 | `SF_incident_MVP` permission set | Object/Apex/app access |
@@ -38,9 +38,9 @@ Clean package after removing Apex LLM integration.
 
 | Component | Purpose |
 |-----------|---------|
-| `FeedbackMcpGetAction` | Invocable: get Feedback by Name/Id → JSON |
-| `FeedbackMcpUpdateAction` | Invocable: update Status/Solution/Assignee |
-| `FeedbackMcpActionsTest` | Coverage |
+| `NF_FeedbackMcpGetAction` | Invocable: get Feedback by Name/Id → JSON |
+| `NF_FeedbackMcpUpdateAction` | Invocable: update Status/Solution/Assignee |
+| `NF_FeedbackMcpActionsTest` | Coverage |
 
 Use when Slack/Salesforce admins connect Hosted MCP to Claude in Slack.
 
@@ -51,7 +51,7 @@ Use when Slack/Salesforce admins connect Hosted MCP to Claude in Slack.
 | Removed | Why |
 |---------|-----|
 | `FeedbackLlmAdvisor` (+ test) | Apex LLM callouts retired |
-| `Ops_Incident_AI_Config__mdt` | Only served Apex LLM |
+| `Ops_Incident_AI_Config__mdt` (removed) | Was Apex LLM only |
 | `LLM_Provider_API` Named Credential | No longer used |
 | `LLM_Provider_API_Key` External Credential | No longer used |
 | `Feedback_Mark_In_Progress_After_Slack` | Intentional fault smoke test only |

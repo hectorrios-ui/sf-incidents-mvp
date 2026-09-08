@@ -44,7 +44,7 @@
 ### 5) Shared consultancy Slack workspace
 - Prefer private client channels  
 - Channel topic/description: `Client=Acme | Org=00D… | Sandbox=UAT`  
-- Set `Project_Label__c` on `Ops_Incident_Slack_Config.Default` per org (e.g. `Acme-UAT`)  
+- Set `Project_Label__c` on `NF_Incident_Slack_Config.Default` per org (e.g. `Acme-UAT`)  
 
 ## Setup checklist per client engagement
 

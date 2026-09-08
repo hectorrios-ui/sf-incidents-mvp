@@ -18,7 +18,7 @@
  * Designed for before-insert and before-update triggers so it only mutates the
  * in-memory records and requires no extra DML.
  */
-public with sharing class FeedbackKpiService {
+public with sharing class NF_FeedbackKpiService {
 
     @TestVisible
     private static final Set<String> WORK_STARTED_STATUSES = new Set<String>{

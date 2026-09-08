@@ -1,5 +1,5 @@
 @IsTest
-private class FeedbackMcpActionsTest {
+private class NF_FeedbackMcpActionsTest {
     @IsTest
     static void getFeedback_byName_returnsSummary() {
         Feedback__c f = new Feedback__c(
@@ -10,12 +10,12 @@ private class FeedbackMcpActionsTest {
         insert f;
         f = [SELECT Name FROM Feedback__c WHERE Id = :f.Id];
 
-        FeedbackMcpGetAction.Request req = new FeedbackMcpGetAction.Request();
+        NF_FeedbackMcpGetAction.Request req = new NF_FeedbackMcpGetAction.Request();
         req.feedbackName = f.Name;
 
         Test.startTest();
-        List<FeedbackMcpGetAction.Result> results = FeedbackMcpGetAction.execute(
-            new List<FeedbackMcpGetAction.Request>{ req }
+        List<NF_FeedbackMcpGetAction.Result> results = NF_FeedbackMcpGetAction.execute(
+            new List<NF_FeedbackMcpGetAction.Request>{ req }
         );
         Test.stopTest();
 
@@ -28,11 +28,11 @@ private class FeedbackMcpActionsTest {
 
     @IsTest
     static void getFeedback_missing_returnsNotFound() {
-        FeedbackMcpGetAction.Request req = new FeedbackMcpGetAction.Request();
+        NF_FeedbackMcpGetAction.Request req = new NF_FeedbackMcpGetAction.Request();
         req.feedbackName = 'SF-DOES-NOT-EXIST';
 
-        List<FeedbackMcpGetAction.Result> results = FeedbackMcpGetAction.execute(
-            new List<FeedbackMcpGetAction.Request>{ req }
+        List<NF_FeedbackMcpGetAction.Result> results = NF_FeedbackMcpGetAction.execute(
+            new List<NF_FeedbackMcpGetAction.Request>{ req }
         );
         System.assertEquals(false, results[0].found);
     }
@@ -46,14 +46,14 @@ private class FeedbackMcpActionsTest {
         );
         insert f;
 
-        FeedbackMcpUpdateAction.Request req = new FeedbackMcpUpdateAction.Request();
+        NF_FeedbackMcpUpdateAction.Request req = new NF_FeedbackMcpUpdateAction.Request();
         req.feedbackId = f.Id;
         req.status = 'In Progress';
         req.solution = 'Documented custom domain setup in sandbox.';
 
         Test.startTest();
-        List<FeedbackMcpUpdateAction.Result> results = FeedbackMcpUpdateAction.execute(
-            new List<FeedbackMcpUpdateAction.Request>{ req }
+        List<NF_FeedbackMcpUpdateAction.Result> results = NF_FeedbackMcpUpdateAction.execute(
+            new List<NF_FeedbackMcpUpdateAction.Request>{ req }
         );
         Test.stopTest();
 

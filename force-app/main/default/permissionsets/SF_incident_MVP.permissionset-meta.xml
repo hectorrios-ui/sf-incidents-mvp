@@ -8,19 +8,19 @@
         <visible>true</visible>
     </applicationVisibilities>
     <classAccesses>
-        <apexClass>FeedbackKpiService</apexClass>
+        <apexClass>NF_FeedbackKpiService</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>FeedbackMcpGetAction</apexClass>
+        <apexClass>NF_FeedbackMcpGetAction</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>FeedbackMcpUpdateAction</apexClass>
+        <apexClass>NF_FeedbackMcpUpdateAction</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>FeedbackSlackService</apexClass>
+        <apexClass>NF_FeedbackSlackService</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <fieldPermissions>

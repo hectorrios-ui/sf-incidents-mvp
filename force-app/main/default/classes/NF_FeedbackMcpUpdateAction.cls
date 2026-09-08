@@ -1,7 +1,7 @@
 /**
  * Invocable: update Feedback__c Status / Solution / Assigned To for Claude / MCP agents.
  */
-public with sharing class FeedbackMcpUpdateAction {
+public with sharing class NF_FeedbackMcpUpdateAction {
     public class Request {
         @InvocableVariable(required=false label='Feedback Name')
         public String feedbackName;
@@ -53,7 +53,7 @@ public with sharing class FeedbackMcpUpdateAction {
             out.message = 'Request is required.';
             return out;
         }
-        Feedback__c row = FeedbackMcpGetAction.findFeedback(req.feedbackId, req.feedbackName);
+        Feedback__c row = NF_FeedbackMcpGetAction.findFeedback(req.feedbackId, req.feedbackName);
         if (row == null) {
             out.message = 'Feedback not found. Pass feedbackName (e.g. SF-017) or feedbackId.';
             return out;

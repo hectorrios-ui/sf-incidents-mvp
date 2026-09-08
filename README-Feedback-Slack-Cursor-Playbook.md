@@ -59,13 +59,13 @@ That's it. No need to create the credential from scratch.
 
 ### Step 4 — Activate the Flow
 
-Setup → **Flows** → `Feedback_Send_Slack_On_New` → **Activate**.
+Setup → **Flows** → `NF_Feedback_Send_Slack_On_New` → **Activate**.
 
 ---
 
 ### Step 5 — Configure Slack Custom Metadata
 
-Setup → **Custom Metadata Types** → `Ops Incident Slack Config` → **Manage Records** → `Default`:
+Setup → **Custom Metadata Types** → `NF Incident Slack Config` → **Manage Records** → `Default`:
 - **Slack Named Credential**: `Slack_Webhook`
 - **Auto Analyze Enabled**: ✅ (optional)
 - **Claude Slack User Id**: Claude bot member id (optional)
@@ -119,7 +119,7 @@ AI analysis happens in **Claude in Slack**, not Apex.
 ```text
 Feedback__c created/updated (Status = New)
     -> Record-Triggered Flow
-    -> Apex: FeedbackSlackService (async callout)
+    -> Apex: NF_FeedbackSlackService (async callout)
         -> Slack message (facts + Record Id + optional @Claude auto-analyze)
         -> Feedback__c.SlackMessageTs__c = sent:timestamp
 
@@ -254,15 +254,15 @@ Born-assigned records (i.e. `Assigned_To__c` already set at insert) are treated 
 
 | Field API                          | Type     | Set by                             | When                                          |
 | ---------------------------------- | -------- | ---------------------------------- | --------------------------------------------- |
-| `FirstSlackPostAt__c`              | DateTime | `FeedbackSlackService` (async)     | On first successful Slack 2xx post            |
-| `AcknowledgedAt__c`                | DateTime | `FeedbackKpiService` (before ins/upd) | First time `Assigned_To__c` becomes non-null |
-| `TimeToAcknowledgeMinutes__c`      | Number   | `FeedbackKpiService`               | Same event, minutes from `CreatedDate`        |
-| `WorkStartedAt__c`                 | DateTime | `FeedbackKpiService`               | First time `Status__c` is `In Progress` / `Dev In-Progress` |
-| `TimeToStartMinutes__c`            | Number   | `FeedbackKpiService`               | Same event, minutes from `AcknowledgedAt__c`  |
-| `ResolvedAt__c`                    | DateTime | `FeedbackKpiService`               | First time `Status__c` is `Resolved` / `UAT Complete` |
-| `TimeToResolveHours__c`            | Number   | `FeedbackKpiService`               | Same event, hours from `CreatedDate`          |
+| `FirstSlackPostAt__c`              | DateTime | `NF_FeedbackSlackService` (async)     | On first successful Slack 2xx post            |
+| `AcknowledgedAt__c`                | DateTime | `NF_FeedbackKpiService` (before ins/upd) | First time `Assigned_To__c` becomes non-null |
+| `TimeToAcknowledgeMinutes__c`      | Number   | `NF_FeedbackKpiService`               | Same event, minutes from `CreatedDate`        |
+| `WorkStartedAt__c`                 | DateTime | `NF_FeedbackKpiService`               | First time `Status__c` is `In Progress` / `Dev In-Progress` |
+| `TimeToStartMinutes__c`            | Number   | `NF_FeedbackKpiService`               | Same event, minutes from `AcknowledgedAt__c`  |
+| `ResolvedAt__c`                    | DateTime | `NF_FeedbackKpiService`               | First time `Status__c` is `Resolved` / `UAT Complete` |
+| `TimeToResolveHours__c`            | Number   | `NF_FeedbackKpiService`               | Same event, hours from `CreatedDate`          |
 
-Trigger: `FeedbackTrigger` (before insert + before update) -> `FeedbackKpiService`.
+Trigger: `NF_FeedbackTrigger` (before insert + before update) -> `NF_FeedbackKpiService`.
 No extra DML; values are written in the same transaction as the edit.
 
 ### Reports you can build now

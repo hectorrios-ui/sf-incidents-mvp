@@ -95,9 +95,9 @@ Package does **not** include Named Credentials (install would fail / secrets can
    - Identity Type: Named Principal / Anonymous as your UI allows  
    - Authentication Protocol: **No Authentication**
    - Save
-2. Activate Flow **Feedback_Send_Slack_On_New**  
+2. Activate Flow **NF_Feedback_Send_Slack_On_New**  
 3. Assign permission set **SF Incident MVP**  
-4. Create/edit CMDT **Ops Incident Slack Config** Default (Claude user id, project label, auto-analyze)  
+4. Create/edit CMDT **NF Incident Slack Config** Default (Claude user id, project label, auto-analyze)  
 5. Invite Claude to that client’s private channel  
 
 ---

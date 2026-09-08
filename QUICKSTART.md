@@ -87,12 +87,12 @@ Then App Launcher → **UAT Feedback** (or search **Feedback**).
 
 ### 3. Activate Flow (Required)
 
-- Setup → Flows → **Feedback_Send_Slack_On_New**
+- Setup → Flows → **NF_Feedback_Send_Slack_On_New**
 - Click **Activate**
 
 ### 4. Verify Slack Custom Metadata
 
-- Setup → Custom Metadata Types → **Ops Incident Slack Config**
+- Setup → Custom Metadata Types → **NF Incident Slack Config**
 - Manage Records → **Default**
 - Slack Named Credential = `Slack_Webhook`
 - Optional: Auto Analyze + Claude Slack User Id + Project Label
@@ -119,8 +119,8 @@ Then App Launcher → **UAT Feedback** (or search **Feedback**).
 See `docs/MVP-COMPONENTS.md`. Core pieces:
 
 - ✅ `Feedback__c` + tab + UAT Feedback app
-- ✅ `FeedbackSlackService` + KPI trigger/services
-- ✅ Flow `Feedback_Send_Slack_On_New`
+- ✅ `NF_FeedbackSlackService` + KPI trigger/services
+- ✅ Flow `NF_Feedback_Send_Slack_On_New`
 - ✅ Slack Named Credential shell + Slack CMDT
 - ✅ MCP invocables (for when Claude in Slack is org-connected)
 - ❌ No Apex LLM / OpenAI / Anthropic credentials

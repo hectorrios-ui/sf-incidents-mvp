@@ -1,7 +1,7 @@
 /**
  * Invocable: load Feedback__c by Name (SF-NNN) or Id for Claude / MCP agents.
  */
-public with sharing class FeedbackMcpGetAction {
+public with sharing class NF_FeedbackMcpGetAction {
     public class Request {
         @InvocableVariable(required=false label='Feedback Name' description='Auto-number Name, e.g. SF-017')
         public String feedbackName;
