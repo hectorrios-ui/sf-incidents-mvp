@@ -62,6 +62,7 @@ fi
 echo ""
 echo "=========================================="
 echo "Step 1: Deploying metadata..."
+echo "(Custom Metadata records excluded via .forceignore)"
 echo "=========================================="
 
 sf project deploy start --source-dir force-app/main/default -o "$ORG_ALIAS" -w 10
