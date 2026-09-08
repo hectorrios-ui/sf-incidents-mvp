@@ -1,8 +1,16 @@
 public with sharing class FeedbackSlackService {
     private static final String DEFAULT_NC = 'Slack_Webhook';
+    private static final String DEFAULT_AUTO_ANALYZE_PROMPT =
+        'Analyze this UAT Feedback using the Org Context in this message (edition, sandbox flag, hostname). '
+        + 'Do not assume Enterprise features if the org type does not support them. '
+        + 'Propose a concrete Salesforce fix, list likely metadata/files to change, '
+        + 'and call out risks or open questions. Keep it internal and actionable.';
 
     @TestVisible
     private static Map<String, String> slackIdOverrideByUsername;
+
+    @TestVisible
+    private static Ops_Incident_Slack_Config__mdt slackConfigOverride;
 
     public class Request {
         @InvocableVariable(required=true label='Feedback Id')
@@ -51,8 +59,8 @@ public with sharing class FeedbackSlackService {
             req.setMethod('POST');
             req.setHeader('Content-Type', 'application/json');
             req.setTimeout(120000);
-            FeedbackLlmAdvisor.SuggestionOutcome suggestion = FeedbackLlmAdvisor.trySuggest(row);
-            req.setBody(buildPayload(row, suggestion));
+            // Salesforce posts facts only. AI analysis happens in Slack (Claude / Cursor / MCP).
+            req.setBody(buildPayload(row));
 
             try {
                 HttpResponse res = http.send(req);
@@ -74,8 +82,14 @@ public with sharing class FeedbackSlackService {
         }
     }
 
+    private static Ops_Incident_Slack_Config__mdt activeSlackConfig() {
+        return slackConfigOverride != null
+            ? slackConfigOverride
+            : Ops_Incident_Slack_Config__mdt.getInstance('Default');
+    }
+
     private static String resolveCalloutEndpoint() {
-        Ops_Incident_Slack_Config__mdt row = Ops_Incident_Slack_Config__mdt.getInstance('Default');
+        Ops_Incident_Slack_Config__mdt row = activeSlackConfig();
         String apiName =
             (row != null && String.isNotBlank(row.Slack_Named_Credential__c))
                 ? row.Slack_Named_Credential__c.trim()
@@ -89,39 +103,102 @@ public with sharing class FeedbackSlackService {
             + '/lightning/r/Feedback__c/' + recordId + '/view';
     }
 
-    private static String buildPayload(Feedback__c f, FeedbackLlmAdvisor.SuggestionOutcome suggestion) {
+    private static String buildPayload(Feedback__c f) {
         String nameLink = '<' + recordUrl(f.Id) + '|' + safe(f.Name) + '>';
         String title = ':memo: *UAT Feedback* ' + safe(f.Issue_Name__c) + ' (' + nameLink + ')';
+        String descriptionText = stripHtml(f.Issue_Description__c);
         String body =
             '*Status:* ' + safe(f.Status__c) + '\n' +
             '*Type:* ' + safe(f.Type__c) + '\n' +
             '*Persona:* ' + safe(f.Persona__c) + '\n' +
             '*Assigned To:* ' + renderAssignee(f) + '\n' +
+            '*Record Id:* `' + String.valueOf(f.Id) + '`\n' +
             (String.isNotBlank(f.Link_To_Record__c) ? '*Reproducible on record:* ' + f.Link_To_Record__c + '\n' : '') +
-            '\n*Issue Description:*\n' + truncate(stripHtml(f.Issue_Description__c), 1800);
-        String suggestionText = '*Proposed fix (internal AI):* '
-            + (suggestion != null && String.isNotBlank(suggestion.proposedFix) ? truncate(suggestion.proposedFix, 1500) : 'n/a');
-        String confidenceText = '*AI confidence:* '
-            + (suggestion != null && suggestion.confidence != null ? String.valueOf((suggestion.confidence * 100).setScale(0)) + '%' : 'n/a');
+            '\n*Issue Description:*\n' + (String.isNotBlank(descriptionText) ? truncate(descriptionText, 1800) : 'n/a');
 
-        Map<String, Object> payload = new Map<String, Object>{
-            'text' => 'UAT Feedback ' + safe(f.Name),
-            'blocks' => new List<Object>{
-                new Map<String, Object>{
-                    'type' => 'section',
-                    'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => title }
-                },
-                new Map<String, Object>{
-                    'type' => 'section',
-                    'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => body }
-                },
-                new Map<String, Object>{
-                    'type' => 'section',
-                    'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => suggestionText + '\n' + confidenceText }
-                }
+        String orgContext = buildOrgContextBlock();
+        String analyzeBlock = buildAutoAnalyzeBlock(f);
+        String fallbackText = String.isNotBlank(analyzeBlock)
+            ? analyzeBlock
+            : ('UAT Feedback ' + safe(f.Name));
+
+        List<Object> blocks = new List<Object>{
+            new Map<String, Object>{
+                'type' => 'section',
+                'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => title }
+            },
+            new Map<String, Object>{
+                'type' => 'section',
+                'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => body }
+            },
+            new Map<String, Object>{
+                'type' => 'section',
+                'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => orgContext }
             }
         };
+        if (String.isNotBlank(analyzeBlock)) {
+            blocks.add(new Map<String, Object>{
+                'type' => 'section',
+                'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => analyzeBlock }
+            });
+        } else {
+            blocks.add(new Map<String, Object>{
+                'type' => 'section',
+                'text' => new Map<String, Object>{
+                    'type' => 'mrkdwn',
+                    'text' => '_Next step:_ reply in this thread with Claude or Cursor to analyze this Feedback and propose a fix.'
+                }
+            });
+        }
+
+        Map<String, Object> payload = new Map<String, Object>{
+            // `text` is what many Slack bots wake on when @mentioned
+            'text' => fallbackText,
+            'blocks' => blocks
+        };
         return JSON.serialize(payload);
+    }
+
+    @TestVisible
+    private static String buildOrgContextBlock() {
+        Organization orgRow = [
+            SELECT Id, Name, OrganizationType, IsSandbox, InstanceName
+            FROM Organization
+            LIMIT 1
+        ];
+        String host = URL.getOrgDomainUrl().getHost();
+        Ops_Incident_Slack_Config__mdt cfg = activeSlackConfig();
+        String projectLabel = (cfg != null && String.isNotBlank(cfg.Project_Label__c))
+            ? cfg.Project_Label__c.trim()
+            : null;
+
+        String block =
+            '*Org Context* (source of truth for Claude — do not invent edition/features)\n' +
+            (String.isNotBlank(projectLabel) ? '*Project:* ' + projectLabel + '\n' : '') +
+            '*Org Name:* ' + safe(orgRow.Name) + '\n' +
+            '*Org Id:* `' + String.valueOf(orgRow.Id) + '`\n' +
+            '*Org Type:* ' + safe(orgRow.OrganizationType) + '\n' +
+            '*Is Sandbox:* ' + String.valueOf(orgRow.IsSandbox) + '\n' +
+            '*Instance:* ' + safe(orgRow.InstanceName) + '\n' +
+            '*My Domain Host:* `' + host + '`';
+        return block;
+    }
+
+    @TestVisible
+    private static String buildAutoAnalyzeBlock(Feedback__c f) {
+        Ops_Incident_Slack_Config__mdt cfg = activeSlackConfig();
+        if (cfg == null || cfg.Auto_Analyze_Enabled__c != true) {
+            return null;
+        }
+        if (String.isBlank(cfg.Claude_Slack_User_Id__c)) {
+            return null;
+        }
+        String prompt = String.isNotBlank(cfg.Auto_Analyze_Prompt__c)
+            ? cfg.Auto_Analyze_Prompt__c.trim()
+            : DEFAULT_AUTO_ANALYZE_PROMPT;
+        return '<@' + cfg.Claude_Slack_User_Id__c.trim() + '> '
+            + prompt
+            + '\nFeedback: `' + safe(f.Name) + '` · Record Id: `' + String.valueOf(f.Id) + '`';
     }
 
     @TestVisible

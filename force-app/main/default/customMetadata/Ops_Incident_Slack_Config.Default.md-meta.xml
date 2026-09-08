@@ -6,4 +6,20 @@
         <field>Slack_Named_Credential__c</field>
         <value xsi:type="xsd:string">Slack_Webhook</value>
     </values>
+    <values>
+        <field>Auto_Analyze_Enabled__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Claude_Slack_User_Id__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Auto_Analyze_Prompt__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Project_Label__c</field>
+        <value xsi:nil="true"/>
+    </values>
 </CustomMetadata>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Auto_Analyze_Enabled__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>When true, Slack alerts @mention Claude with an analyze prompt.</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Auto Analyze Enabled</label>
+    <type>Checkbox</type>
+</CustomField>
