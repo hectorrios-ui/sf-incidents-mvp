@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>TimeToStartMinutes__c</fullName>
-    <description>Minutes elapsed between Acknowledged At and Work Started At (queue wait after the item was claimed).</description>
+    <description>Minutes between Acknowledged At and Work Started At (queue wait after claim).</description>
+    <inlineHelpText>System-calculated KPI for how long work waited after triage.</inlineHelpText>
     <externalId>false</externalId>
     <label>Time To Start (min)</label>
     <precision>10</precision>

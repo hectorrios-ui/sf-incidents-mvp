@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>SlackMessageTs__c</fullName>
-    <description>Marker for automated Slack delivery (sent:timestamp) to avoid duplicates.</description>
+    <description>Delivery marker for automated Slack posts (sent:timestamp) to prevent duplicates.</description>
+    <inlineHelpText>System-managed. Do not edit unless resetting Slack delivery for retest.</inlineHelpText>
     <externalId>false</externalId>
     <label>Slack Message Timestamp</label>
     <length>80</length>

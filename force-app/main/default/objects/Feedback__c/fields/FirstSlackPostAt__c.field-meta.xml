@@ -2,6 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>FirstSlackPostAt__c</fullName>
     <description>When the first Slack notification for this feedback was posted successfully.</description>
+    <inlineHelpText>System-managed. Blank until the Slack Flow/Apex posts successfully.</inlineHelpText>
     <externalId>false</externalId>
     <label>First Slack Post At</label>
     <required>false</required>

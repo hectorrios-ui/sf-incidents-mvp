@@ -1,0 +1,21 @@
+# Rename map (NF_ refactor)
+
+| Old | New |
+|-----|-----|
+| `Ops_Incident_Slack_Config__mdt` | `Slack_Config__mdt` |
+| `FeedbackSlackService` | `NF_FeedbackSlackService` |
+| `FeedbackSlackServiceTest` | `NF_FeedbackSlackServiceTest` |
+| `FeedbackKpiService` | `NF_FeedbackKpiService` |
+| `FeedbackKpiServiceTest` | `NF_FeedbackKpiServiceTest` |
+| `FeedbackMcpGetAction` | `NF_FeedbackMcpGetAction` |
+| `FeedbackMcpUpdateAction` | `NF_FeedbackMcpUpdateAction` |
+| `FeedbackMcpActionsTest` | `NF_FeedbackMcpActionsTest` |
+| `FeedbackTrigger` | `NF_FeedbackTrigger` |
+| `Feedback_Send_Slack_On_New` | `NF_Feedback_Send_Slack_On_New` |
+
+`Feedback__c` object API name unchanged (data + reports stay stable).
+
+## After upgrading package version
+1. Activate Flow **NF Feedback Send Slack On New**
+2. Re-check CMDT: **Slack Config** → Default (recreate if needed — records not packaged)
+3. Perm set still `SF_incident_MVP`

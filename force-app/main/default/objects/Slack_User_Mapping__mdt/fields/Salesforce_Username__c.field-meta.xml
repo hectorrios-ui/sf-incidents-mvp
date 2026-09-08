@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Salesforce_Username__c</fullName>
+    <description>Exact Salesforce username of the user to mention in Slack (matches User.Username).</description>
+    <inlineHelpText>Copy from Setup → Users → Username. Must match exactly for assignee @mentions.</inlineHelpText>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Salesforce Username</label>
+    <length>80</length>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

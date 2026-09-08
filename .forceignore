@@ -3,10 +3,20 @@
 force-app/main/default/genAiPromptTemplates/
 force-app/main/default/genAiFunctions/
 
-# Credential files are safe to commit — secrets are replaced with REPLACE_ME placeholders.
-# After deploying to a new org, update the actual values in Setup:
-#   - Slack_Webhook NC → paste the Slack incoming webhook URL
-#   - LLM_Provider_API_Key External Credential → paste the AI API key
+# Custom Metadata RECORDS are org-specific (Claude Slack user id, auto-analyze flags,
+# named credential names, project labels, etc.). Deploying/packaging them overwrites
+# client sandbox configuration. Keep type/field defs in objects/; configure Default
+# records once per org in Setup.
+force-app/main/default/customMetadata/
+
+# Named Credentials / secrets — do NOT package.
+# Subscriber orgs create Slack_Webhook manually after install (Incoming Webhook URL).
+# Packaging legacy NC without NamedCredentialType fails install on modern API versions.
+# Repo keeps namedCredentials/Slack_Webhook as a source-deploy template only.
+force-app/main/default/namedCredentials/
+force-app/main/default/externalCredentials/
+
+# Credential notes kept in docs/PACKAGING-GUIDE.md post-install checklist.
 
 **/jsconfig.json
 **/.eslintrc.json

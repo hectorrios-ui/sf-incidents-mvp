@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Link_To_Record__c</fullName>
-    <description>Used to link record where issue occurred.</description>
-    <inlineHelpText>Please paste the link to the Case, Account, or Contact where you are experiencing an issue.</inlineHelpText>
+    <description>URL of the Salesforce record where the issue occurred.</description>
+    <inlineHelpText>Paste the Lightning link to the Case, Account, Contact, or other record involved.</inlineHelpText>
     <label>Link To Record</label>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>

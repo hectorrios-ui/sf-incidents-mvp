@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>LOE__c</fullName>
-    <description>Level of effort to complete deferred enhancement.</description>
+    <description>Level of effort estimate for deferred or enhancement feedback.</description>
     <externalId>false</externalId>
-    <inlineHelpText>Enter the level of effort needed to complete &apos;Deferred - Future Phase&apos; feedback items.</inlineHelpText>
+    <inlineHelpText>Use for Deferred - Future Phase items to estimate relative effort.</inlineHelpText>
     <label>LOE</label>
     <precision>10</precision>
     <required>false</required>

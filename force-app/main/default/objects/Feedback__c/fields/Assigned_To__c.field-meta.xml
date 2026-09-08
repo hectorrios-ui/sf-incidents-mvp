@@ -2,7 +2,8 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Assigned_To__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
-    <description>Used to indicate assignee looking into feedback issue.</description>
+    <description>Salesforce user responsible for triaging or fixing this feedback item.</description>
+    <inlineHelpText>Select the consultant or developer owning this item. Slack may @mention them if a user mapping exists.</inlineHelpText>
     <label>Assigned To</label>
     <referenceTo>User</referenceTo>
     <relationshipName>Feedbacks</relationshipName>

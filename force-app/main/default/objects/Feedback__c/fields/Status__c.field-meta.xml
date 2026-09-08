@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Status__c</fullName>
-    <description>Status of the feedback item tracked</description>
+    <description>Current workflow status of the feedback item.</description>
+    <inlineHelpText>Required. New items post to Slack; update as work progresses through triage, build, QA, and UAT.</inlineHelpText>
     <label>Status</label>
     <required>true</required>
     <trackFeedHistory>true</trackFeedHistory>
