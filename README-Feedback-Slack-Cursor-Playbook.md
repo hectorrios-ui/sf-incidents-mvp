@@ -65,7 +65,7 @@ Setup → **Flows** → `NF_Feedback_Send_Slack_On_New` → **Activate**.
 
 ### Step 5 — Configure Slack Custom Metadata
 
-Setup → **Custom Metadata Types** → `NF Incident Slack Config` → **Manage Records** → `Default`:
+Setup → **Custom Metadata Types** → `Slack Config` → **Manage Records** → `Default`:
 - **Slack Named Credential**: `Slack_Webhook`
 - **Auto Analyze Enabled**: ✅ (optional)
 - **Claude Slack User Id**: Claude bot member id (optional)

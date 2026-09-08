@@ -92,7 +92,7 @@ Then App Launcher → **UAT Feedback** (or search **Feedback**).
 
 ### 4. Verify Slack Custom Metadata
 
-- Setup → Custom Metadata Types → **NF Incident Slack Config**
+- Setup → Custom Metadata Types → **Slack Config**
 - Manage Records → **Default**
 - Slack Named Credential = `Slack_Webhook`
 - Optional: Auto Analyze + Claude Slack User Id + Project Label

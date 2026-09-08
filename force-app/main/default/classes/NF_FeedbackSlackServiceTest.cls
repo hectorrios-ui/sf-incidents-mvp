@@ -129,7 +129,7 @@ private class NF_NF_FeedbackSlackServiceTest {
         );
         insert f;
 
-        NF_FeedbackSlackService.slackConfigOverride = new NF_Incident_Slack_Config__mdt(
+        NF_FeedbackSlackService.slackConfigOverride = new Slack_Config__mdt(
             Auto_Analyze_Enabled__c = true,
             Claude_Slack_User_Id__c = 'U0CLAUDEBOT',
             Slack_Named_Credential__c = 'Slack_Webhook'
@@ -153,7 +153,7 @@ private class NF_NF_FeedbackSlackServiceTest {
 
     @IsTest
     static void buildAutoAnalyzeBlock_returnsNullWhenDisabled() {
-        NF_FeedbackSlackService.slackConfigOverride = new NF_Incident_Slack_Config__mdt(
+        NF_FeedbackSlackService.slackConfigOverride = new Slack_Config__mdt(
             Auto_Analyze_Enabled__c = false,
             Claude_Slack_User_Id__c = 'U0CLAUDEBOT'
         );

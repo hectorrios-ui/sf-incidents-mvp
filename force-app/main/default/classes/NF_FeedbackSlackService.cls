@@ -10,7 +10,7 @@ public with sharing class NF_FeedbackSlackService {
     private static Map<String, String> slackIdOverrideByUsername;
 
     @TestVisible
-    private static NF_Incident_Slack_Config__mdt slackConfigOverride;
+    private static Slack_Config__mdt slackConfigOverride;
 
     public class Request {
         @InvocableVariable(required=true label='Feedback Id')
@@ -82,14 +82,14 @@ public with sharing class NF_FeedbackSlackService {
         }
     }
 
-    private static NF_Incident_Slack_Config__mdt activeSlackConfig() {
+    private static Slack_Config__mdt activeSlackConfig() {
         return slackConfigOverride != null
             ? slackConfigOverride
-            : NF_Incident_Slack_Config__mdt.getInstance('Default');
+            : Slack_Config__mdt.getInstance('Default');
     }
 
     private static String resolveCalloutEndpoint() {
-        NF_Incident_Slack_Config__mdt row = activeSlackConfig();
+        Slack_Config__mdt row = activeSlackConfig();
         String apiName =
             (row != null && String.isNotBlank(row.Slack_Named_Credential__c))
                 ? row.Slack_Named_Credential__c.trim()
@@ -167,7 +167,7 @@ public with sharing class NF_FeedbackSlackService {
             LIMIT 1
         ];
         String host = URL.getOrgDomainUrl().getHost();
-        NF_Incident_Slack_Config__mdt cfg = activeSlackConfig();
+        Slack_Config__mdt cfg = activeSlackConfig();
         String projectLabel = (cfg != null && String.isNotBlank(cfg.Project_Label__c))
             ? cfg.Project_Label__c.trim()
             : null;
@@ -186,7 +186,7 @@ public with sharing class NF_FeedbackSlackService {
 
     @TestVisible
     private static String buildAutoAnalyzeBlock(Feedback__c f) {
-        NF_Incident_Slack_Config__mdt cfg = activeSlackConfig();
+        Slack_Config__mdt cfg = activeSlackConfig();
         if (cfg == null || cfg.Auto_Analyze_Enabled__c != true) {
             return null;
         }

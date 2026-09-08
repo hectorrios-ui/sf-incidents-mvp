@@ -17,7 +17,7 @@ sf project deploy start --source-dir force-app/main/default -o Legend
 ```
 
 ### 3) Turn it on in Custom Metadata
-Setup → Custom Metadata Types → **NF Incident Slack Config** → **Default** → Edit:
+Setup → Custom Metadata Types → **Slack Config** → **Default** → Edit:
 
 | Field | Value |
 |--------|--------|

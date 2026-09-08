@@ -21,7 +21,7 @@ Clean package after removing Apex LLM integration.
 ### Config (org-managed records; types deploy)
 | Component | Purpose |
 |-----------|---------|
-| `NF_Incident_Slack_Config__mdt` | Webhook NC name, Claude user id, auto-analyze, project label |
+| `Slack_Config__mdt` | Webhook NC name, Claude user id, auto-analyze, project label |
 | `Slack_User_Mapping__mdt` | Optional assignee @mentions |
 | `Slack_Webhook` Named Credential | Incoming webhook URL (secret in org) |
 | `SF_incident_MVP` permission set | Object/Apex/app access |
