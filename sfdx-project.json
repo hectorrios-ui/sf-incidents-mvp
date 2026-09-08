@@ -1,12 +1,12 @@
 {
   "packageDirectories": [
     {
-      "versionName": "ver 0.1",
-      "versionNumber": "0.1.0.NEXT",
       "path": "force-app",
-      "default": false,
+      "default": true,
       "package": "UAT Feedback Slack Claude",
-      "versionDescription": "UAT Feedback to Slack + Claude handoff"
+      "versionName": "Winter 26 MVP",
+      "versionNumber": "0.1.0.NEXT",
+      "versionDescription": "UAT Feedback to Slack with org context and Claude-in-Slack handoff. No Apex LLM callouts."
     }
   ],
   "name": "sf-incidents-mvp",
