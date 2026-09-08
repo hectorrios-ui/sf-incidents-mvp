@@ -18,4 +18,8 @@
         <field>Auto_Analyze_Prompt__c</field>
         <value xsi:nil="true"/>
     </values>
+    <values>
+        <field>Project_Label__c</field>
+        <value xsi:nil="true"/>
+    </values>
 </CustomMetadata>

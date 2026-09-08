@@ -110,8 +110,10 @@ private class FeedbackSlackServiceTest {
             'Payload should use Slack hyperlink syntax');
         System.assert(mock.capturedBody.contains(String.valueOf(f.Id)),
             'Payload should include the Salesforce record Id for Claude/MCP handoff');
-        System.assert(mock.capturedBody.contains('Next step'),
-            'Payload should include Claude/Cursor handoff guidance');
+        System.assert(
+            mock.capturedBody.contains('Org Context') || mock.capturedBody.contains('Org Id'),
+            'Payload should include org context for Claude accuracy'
+        );
         System.assert(
             !mock.capturedBody.contains('Proposed fix (internal AI)'),
             'Apex must not embed AI suggestions; analysis moves to Slack/Claude'
