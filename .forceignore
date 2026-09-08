@@ -3,6 +3,12 @@
 force-app/main/default/genAiPromptTemplates/
 force-app/main/default/genAiFunctions/
 
+# Custom Metadata RECORDS are org-specific (Claude Slack user id, auto-analyze flags,
+# named credential names, project labels, AI model, etc.). Deploying them overwrites
+# Legend/client sandbox configuration on every push. Keep type/field defs in objects/;
+# configure Default records once per org in Setup.
+force-app/main/default/customMetadata/
+
 # Credential files are safe to commit — secrets are replaced with REPLACE_ME placeholders.
 # After deploying to a new org, update the actual values in Setup:
 #   - Slack_Webhook NC → paste the Slack incoming webhook URL

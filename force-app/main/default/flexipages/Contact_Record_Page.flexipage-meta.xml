@@ -115,12 +115,8 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentInstanceProperties>
-                    <name>sObjectName</name>
-                    <value>Account</value>
-                </componentInstanceProperties>
-                <componentName>nfParentCmp</componentName>
-                <identifier>c_nfParentCmp</identifier>
+                <componentName>nF_CreateCase</componentName>
+                <identifier>c_nF_CreateCase</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>
