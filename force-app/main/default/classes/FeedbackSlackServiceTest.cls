@@ -116,6 +116,7 @@ private class FeedbackSlackServiceTest {
             !mock.capturedBody.contains('Proposed fix (internal AI)'),
             'Apex must not embed AI suggestions; analysis moves to Slack/Claude'
         );
+    }
 
     @IsTest
     static void sendToSlack_skipsWhenAlreadySent() {

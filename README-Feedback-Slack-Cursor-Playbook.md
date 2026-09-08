@@ -136,21 +136,21 @@ Setup → **Custom Metadata Types** → `Slack User Mapping` → **Manage Record
 - `SlackMessageTs__c` prevents duplicate sends.
 - Slack payload includes:
   - Feedback metadata (status, type, persona, link, description)
-  - Internal-only AI suggestion (`proposedFix`)
-  - AI confidence
+  - Record Id for Claude / Cursor / MCP handoff
+  - Collaboration prompt (analyze in-thread)
 
-### AI side (agnostic provider)
+AI suggestions are **not** generated in Apex anymore. Salesforce posts facts to Slack; Claude/Cursor in the thread propose fixes (Phase 2+).
 
-- Provider selected by metadata (`Ops_Incident_AI_Config__mdt`):
-  - `OpenAI_Chat`
-  - `Anthropic_Messages`
-- No AI fields are written to client-facing `Feedback__c`.
-- AI suggestion is visible only in internal Slack message.
+### AI side (legacy, optional)
+
+- `FeedbackLlmAdvisor` remains in the package but is **no longer called** by `FeedbackSlackService`.
+- Prefer Slack-native Claude / ClaudeForce + MCP instead of Apex callouts.
 
 ### Security / access
 
 - `SF_incident_MVP` permission set updated for new fields/classes.
-- Named Credential and External Credential already in place for Slack and AI.
+- Slack Named Credential is required for notifications.
+- LLM Named Credential is optional after Phase 1 (only if you still use `FeedbackLlmAdvisor` manually).
 
 ---
 
