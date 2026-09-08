@@ -51,8 +51,8 @@ public with sharing class FeedbackSlackService {
             req.setMethod('POST');
             req.setHeader('Content-Type', 'application/json');
             req.setTimeout(120000);
-            FeedbackLlmAdvisor.SuggestionOutcome suggestion = FeedbackLlmAdvisor.trySuggest(row);
-            req.setBody(buildPayload(row, suggestion));
+            // Salesforce posts facts only. AI analysis happens in Slack (Claude / Cursor / MCP).
+            req.setBody(buildPayload(row));
 
             try {
                 HttpResponse res = http.send(req);
@@ -89,7 +89,7 @@ public with sharing class FeedbackSlackService {
             + '/lightning/r/Feedback__c/' + recordId + '/view';
     }
 
-    private static String buildPayload(Feedback__c f, FeedbackLlmAdvisor.SuggestionOutcome suggestion) {
+    private static String buildPayload(Feedback__c f) {
         String nameLink = '<' + recordUrl(f.Id) + '|' + safe(f.Name) + '>';
         String title = ':memo: *UAT Feedback* ' + safe(f.Issue_Name__c) + ' (' + nameLink + ')';
         String descriptionText = stripHtml(f.Issue_Description__c);
@@ -98,8 +98,12 @@ public with sharing class FeedbackSlackService {
             '*Type:* ' + safe(f.Type__c) + '\n' +
             '*Persona:* ' + safe(f.Persona__c) + '\n' +
             '*Assigned To:* ' + renderAssignee(f) + '\n' +
+            '*Record Id:* `' + String.valueOf(f.Id) + '`\n' +
             (String.isNotBlank(f.Link_To_Record__c) ? '*Reproducible on record:* ' + f.Link_To_Record__c + '\n' : '') +
             '\n*Issue Description:*\n' + (String.isNotBlank(descriptionText) ? truncate(descriptionText, 1800) : 'n/a');
+        String handoff =
+            '_Next step:_ reply in this thread with Claude or Cursor to analyze this Feedback and propose a fix. '
+            + 'Salesforce is the system of record; Slack is the collaboration surface.';
 
         List<Object> blocks = new List<Object>{
             new Map<String, Object>{
@@ -109,18 +113,12 @@ public with sharing class FeedbackSlackService {
             new Map<String, Object>{
                 'type' => 'section',
                 'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => body }
+            },
+            new Map<String, Object>{
+                'type' => 'section',
+                'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => handoff }
             }
         };
-
-        if (suggestion != null && String.isNotBlank(suggestion.proposedFix)) {
-            String suggestionText = '*Proposed fix (internal AI):* ' + truncate(suggestion.proposedFix, 1500);
-            String confidenceText = '*AI confidence:* '
-                + (suggestion.confidence != null ? String.valueOf((suggestion.confidence * 100).setScale(0)) + '%' : 'n/a');
-            blocks.add(new Map<String, Object>{
-                'type' => 'section',
-                'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => suggestionText + '\n' + confidenceText }
-            });
-        }
 
         Map<String, Object> payload = new Map<String, Object>{
             'text' => 'UAT Feedback ' + safe(f.Name),

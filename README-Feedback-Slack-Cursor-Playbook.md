@@ -160,12 +160,12 @@ Setup → **Custom Metadata Types** → `Slack User Mapping` → **Manage Record
 Feedback__c created/updated (Status = New)
     -> Record-Triggered Flow
     -> Apex: FeedbackSlackService (async callout)
-        -> FeedbackLlmAdvisor (optional AI suggestion)
-        -> Slack message to internal channel
+        -> Slack message to internal channel (facts + record link + Id)
         -> Feedback__c.SlackMessageTs__c = sent:timestamp
 
 Slack thread
     -> Team triage discussion
+    -> Claude / ClaudeForce (optional MCP Salesforce tools) suggests fix
     -> @cursor command to implement fix
     -> PR generated/reviewed
     -> Feedback status updated in Salesforce
