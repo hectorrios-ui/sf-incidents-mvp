@@ -108,6 +108,54 @@ private class FeedbackSlackServiceTest {
         // Name is auto-generated (e.g. SF-NNN) — verify the Slack link open-bracket is present
         System.assert(mock.capturedBody.contains('\\u003c') || mock.capturedBody.contains('<'),
             'Payload should use Slack hyperlink syntax');
+        System.assert(mock.capturedBody.contains(String.valueOf(f.Id)),
+            'Payload should include the Salesforce record Id for Claude/MCP handoff');
+        System.assert(mock.capturedBody.contains('Next step'),
+            'Payload should include Claude/Cursor handoff guidance');
+        System.assert(
+            !mock.capturedBody.contains('Proposed fix (internal AI)'),
+            'Apex must not embed AI suggestions; analysis moves to Slack/Claude'
+        );
+    }
+
+    @IsTest
+    static void sendToSlack_autoMentionsClaudeWhenEnabled() {
+        Feedback__c f = new Feedback__c(
+            Issue_Name__c = 'Auto analyze',
+            Issue_Description__c = 'Should wake Claude.',
+            Status__c = 'New'
+        );
+        insert f;
+
+        FeedbackSlackService.slackConfigOverride = new Ops_Incident_Slack_Config__mdt(
+            Auto_Analyze_Enabled__c = true,
+            Claude_Slack_User_Id__c = 'U0CLAUDEBOT',
+            Slack_Named_Credential__c = 'Slack_Webhook'
+        );
+
+        FeedbackSlackService.Request req = new FeedbackSlackService.Request();
+        req.feedbackId = f.Id;
+
+        CapturingMock mock = new CapturingMock();
+        Test.setMock(HttpCalloutMock.class, mock);
+        Test.startTest();
+        FeedbackSlackService.sendToSlack(new List<FeedbackSlackService.Request>{ req });
+        Test.stopTest();
+
+        System.assertNotEquals(null, mock.capturedBody);
+        System.assert(mock.capturedBody.contains('<@U0CLAUDEBOT>') || mock.capturedBody.contains('\\u003c@U0CLAUDEBOT\\u003e'),
+            'Payload should @mention Claude bot. Body=' + mock.capturedBody);
+        System.assert(mock.capturedBody.contains('Analyze this UAT Feedback') || mock.capturedBody.contains('Propose a concrete'),
+            'Payload should include auto-analyze prompt');
+    }
+
+    @IsTest
+    static void buildAutoAnalyzeBlock_returnsNullWhenDisabled() {
+        FeedbackSlackService.slackConfigOverride = new Ops_Incident_Slack_Config__mdt(
+            Auto_Analyze_Enabled__c = false,
+            Claude_Slack_User_Id__c = 'U0CLAUDEBOT'
+        );
+        System.assertEquals(null, FeedbackSlackService.buildAutoAnalyzeBlock(new Feedback__c()));
     }
 
     @IsTest
