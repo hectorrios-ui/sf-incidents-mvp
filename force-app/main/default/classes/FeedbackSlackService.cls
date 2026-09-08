@@ -1,7 +1,9 @@
 public with sharing class FeedbackSlackService {
     private static final String DEFAULT_NC = 'Slack_Webhook';
     private static final String DEFAULT_AUTO_ANALYZE_PROMPT =
-        'Analyze this UAT Feedback. Propose a concrete Salesforce fix, list likely metadata/files to change, '
+        'Analyze this UAT Feedback using the Org Context in this message (edition, sandbox flag, hostname). '
+        + 'Do not assume Enterprise features if the org type does not support them. '
+        + 'Propose a concrete Salesforce fix, list likely metadata/files to change, '
         + 'and call out risks or open questions. Keep it internal and actionable.';
 
     @TestVisible
@@ -114,6 +116,7 @@ public with sharing class FeedbackSlackService {
             (String.isNotBlank(f.Link_To_Record__c) ? '*Reproducible on record:* ' + f.Link_To_Record__c + '\n' : '') +
             '\n*Issue Description:*\n' + (String.isNotBlank(descriptionText) ? truncate(descriptionText, 1800) : 'n/a');
 
+        String orgContext = buildOrgContextBlock();
         String analyzeBlock = buildAutoAnalyzeBlock(f);
         String fallbackText = String.isNotBlank(analyzeBlock)
             ? analyzeBlock
@@ -127,6 +130,10 @@ public with sharing class FeedbackSlackService {
             new Map<String, Object>{
                 'type' => 'section',
                 'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => body }
+            },
+            new Map<String, Object>{
+                'type' => 'section',
+                'text' => new Map<String, Object>{ 'type' => 'mrkdwn', 'text' => orgContext }
             }
         };
         if (String.isNotBlank(analyzeBlock)) {
@@ -150,6 +157,31 @@ public with sharing class FeedbackSlackService {
             'blocks' => blocks
         };
         return JSON.serialize(payload);
+    }
+
+    @TestVisible
+    private static String buildOrgContextBlock() {
+        Organization orgRow = [
+            SELECT Id, Name, OrganizationType, IsSandbox, InstanceName
+            FROM Organization
+            LIMIT 1
+        ];
+        String host = URL.getOrgDomainUrl().getHost();
+        Ops_Incident_Slack_Config__mdt cfg = activeSlackConfig();
+        String projectLabel = (cfg != null && String.isNotBlank(cfg.Project_Label__c))
+            ? cfg.Project_Label__c.trim()
+            : null;
+
+        String block =
+            '*Org Context* (source of truth for Claude — do not invent edition/features)\n' +
+            (String.isNotBlank(projectLabel) ? '*Project:* ' + projectLabel + '\n' : '') +
+            '*Org Name:* ' + safe(orgRow.Name) + '\n' +
+            '*Org Id:* `' + String.valueOf(orgRow.Id) + '`\n' +
+            '*Org Type:* ' + safe(orgRow.OrganizationType) + '\n' +
+            '*Is Sandbox:* ' + String.valueOf(orgRow.IsSandbox) + '\n' +
+            '*Instance:* ' + safe(orgRow.InstanceName) + '\n' +
+            '*My Domain Host:* `' + host + '`';
+        return block;
     }
 
     @TestVisible
